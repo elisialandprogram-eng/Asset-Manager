@@ -1,49 +1,73 @@
 name: Unity License Activation
 
-# Run this workflow ONCE to obtain your UNITY_LICENSE secret.
+# Generates a Unity_lic.ulf license file by logging into Unity inside Docker.
+# This avoids the Unity portal entirely (no .alf upload needed).
 #
-# How it works:
-#   Unity runs in a Docker container in batch mode to generate a
-#   license request file (.alf). You upload that to Unity's portal
-#   and get back a license file (.ulf) which becomes your secret.
+# Prerequisites — add these two secrets first:
+#   UNITY_EMAIL     your Unity account email
+#   UNITY_PASSWORD  your Unity account password
 #
 # Steps:
-#   1. Actions tab -> Unity License Activation -> Run workflow
-#   2. Wait for it to finish, then download the "activation-file" artifact (.alf)
-#   3. Go to https://license.unity3d.com, sign in, and upload the .alf file
-#   4. Download the .ulf file Unity returns
-#   5. Repo Settings -> Secrets -> Actions -> New repository secret
+#   1. Add UNITY_EMAIL and UNITY_PASSWORD secrets to your repo
+#      (Settings -> Secrets -> Actions -> New repository secret)
+#   2. Actions tab -> Unity License Activation -> Run workflow
+#   3. Download the "unity-license" artifact — it contains Unity_lic.ulf
+#   4. Open the .ulf file in a text editor, copy the ENTIRE contents
+#   5. Add a new secret:
 #        Name:  UNITY_LICENSE
-#        Value: paste the ENTIRE contents of the .ulf file
-#   6. You can now delete the artifact — it is a one-time request
+#        Value: paste the full .ulf file contents
+#
+# After that the unity-build.yml workflow will work.
 
 on:
   workflow_dispatch:
 
 jobs:
-  activation:
-    name: Generate Unity activation file
+  activate:
+    name: Activate Unity and export license
     runs-on: ubuntu-latest
 
     steps:
-      - name: Generate .alf activation file
+      - name: Activate Unity with credentials
+        env:
+          UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         run: |
-          # Pull the GameCI Unity editor image for WebGL
-          docker pull unityci/editor:ubuntu-6000.0.23f1-webgl-3
+          mkdir -p /tmp/unity-license
 
-          # Run Unity headlessly to produce the activation request file
           docker run --rm \
-            -v "$GITHUB_WORKSPACE:/workspace" \
-            -w /workspace \
+            -e UNITY_EMAIL="$UNITY_EMAIL" \
+            -e UNITY_PASSWORD="$UNITY_PASSWORD" \
+            -v /tmp/unity-license:/license \
             unityci/editor:ubuntu-6000.0.23f1-webgl-3 \
-            bash -c "unity-editor -batchmode -createManualActivationFile -logfile /dev/stdout; exit 0"
+            bash -c "
+              set -e
+              echo 'Activating Unity personal license...'
+              unity-editor \
+                -batchmode \
+                -nographics \
+                -logfile /dev/stdout \
+                -username \"\$UNITY_EMAIL\" \
+                -password \"\$UNITY_PASSWORD\" \
+                -quit || true
 
-          echo "Generated files:"
-          ls -la Unity_*.alf 2>/dev/null || echo "No .alf file found — check logs above"
+              echo 'Searching for license file...'
+              find / -name 'Unity_lic.ulf' 2>/dev/null | head -5
 
-      - name: Upload activation file
+              LIC=\$(find / -name 'Unity_lic.ulf' 2>/dev/null | head -1)
+              if [ -n \"\$LIC\" ]; then
+                cp \"\$LIC\" /license/Unity_lic.ulf
+                echo 'License file exported successfully.'
+              else
+                echo 'ERROR: Unity_lic.ulf not found.'
+                echo 'Unity may require interactive login or 2FA.'
+                exit 1
+              fi
+            "
+
+      - name: Upload license file
         uses: actions/upload-artifact@v4
         with:
-          name: activation-file
-          path: Unity_*.alf
+          name: unity-license
+          path: /tmp/unity-license/Unity_lic.ulf
           retention-days: 1
