@@ -9,6 +9,10 @@ import UnityLauncher from "@/pages/UnityLauncher";
 
 const queryClient = new QueryClient();
 
+// Warm the browser cache for the Unity loader before the user hits /dashboard
+const _unityPreload = new Image();
+_unityPreload.src = "/unity/Build/UnityLoader.js";
+
 function Router() {
   return (
     <Switch>

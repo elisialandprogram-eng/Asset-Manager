@@ -42,6 +42,14 @@ const distDir = path.join(
   "dist",
   "public",
 );
+
+// Correct MIME types for Unity WebGL assets
+app.use((req, res, next) => {
+  if (req.path.endsWith(".wasm")) res.type("application/wasm");
+  else if (req.path.endsWith(".data")) res.type("application/octet-stream");
+  next();
+});
+
 app.use(express.static(distDir));
 
 // Serve game assets from /assets path
