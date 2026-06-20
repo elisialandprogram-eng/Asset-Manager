@@ -4,18 +4,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  get-alf:
-    name: Generate Authentic ALF Signature 🔑
+  activation:
+    name: Request manual activation file 🔑
     runs-on: ubuntu-latest
     steps:
       - name: Request manual activation file
-        id: view
-        uses: game-ci/unity-request-activation-file@v4
-        with:
-          unityVersion: 6000.0.23f1
+        id: getManualLicenseFile
+        uses: game-ci/unity-request-activation-file@v2
 
-      - name: Upload Artifact
+      - name: Expose as artifact
         uses: actions/upload-artifact@v4
         with:
           name: Unity-Activation-File
-          path: ${{ steps.view.outputs.filePath }}
+          path: ${{ steps.getManualLicenseFile.outputs.filePath }}
