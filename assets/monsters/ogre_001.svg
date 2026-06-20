@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 200" width="160" height="200">
+  <rect width="160" height="200" fill="#0a0f0a" rx="4"/>
+  <!-- Massive body -->
+  <ellipse cx="80" cy="115" rx="55" ry="60" fill="#3d6b1d" stroke="#16a34a" stroke-width="2"/>
+  <!-- Head -->
+  <circle cx="80" cy="55" r="40" fill="#4d8425" stroke="#16a34a" stroke-width="2"/>
+  <!-- Horns -->
+  <polygon points="55,25 45,5 65,20" fill="#1c1917" stroke="#16a34a" stroke-width="1.5"/>
+  <polygon points="105,25 115,5 95,20" fill="#1c1917" stroke="#16a34a" stroke-width="1.5"/>
+  <!-- Brow ridge -->
+  <path d="M 45 48 Q 80 40 115 48" fill="#3d6b1d" stroke="#16a34a" stroke-width="3"/>
+  <!-- Eyes -->
+  <circle cx="63" cy="55" r="10" fill="#fbbf24"/>
+  <circle cx="63" cy="55" r="5" fill="#1f2937"/>
+  <circle cx="97" cy="55" r="10" fill="#fbbf24"/>
+  <circle cx="97" cy="55" r="5" fill="#1f2937"/>
+  <!-- Nose -->
+  <ellipse cx="80" cy="68" rx="8" ry="5" fill="#2d5a12"/>
+  <circle cx="76" cy="69" r="3" fill="#1f2937"/>
+  <circle cx="84" cy="69" r="3" fill="#1f2937"/>
+  <!-- Tusks -->
+  <polygon points="68,80 62,95 73,92" fill="#f5f5dc" stroke="#d4a017" stroke-width="1"/>
+  <polygon points="92,80 98,95 87,92" fill="#f5f5dc" stroke="#d4a017" stroke-width="1"/>
+  <!-- Club arm -->
+  <rect x="4" y="90" width="28" height="16" fill="#4d8425" stroke="#16a34a" stroke-width="1.5" rx="5"/>
+  <rect x="2" y="60" width="18" height="35" fill="#92400e" stroke="#d97706" stroke-width="2" rx="5"/>
+  <ellipse cx="11" cy="58" rx="15" ry="10" fill="#92400e" stroke="#d97706" stroke-width="2"/>
+  <!-- Other arm -->
+  <rect x="128" y="90" width="28" height="16" fill="#4d8425" stroke="#16a34a" stroke-width="1.5" rx="5"/>
+  <!-- Legs -->
+  <rect x="42" y="165" width="28" height="30" fill="#3d6b1d" stroke="#16a34a" stroke-width="2" rx="5"/>
+  <rect x="90" y="165" width="28" height="30" fill="#3d6b1d" stroke="#16a34a" stroke-width="2" rx="5"/>
+  <!-- Label -->
+  <text x="80" y="198" font-family="serif" font-size="9" fill="#22c55e" text-anchor="middle">OGRE</text>
+</svg>

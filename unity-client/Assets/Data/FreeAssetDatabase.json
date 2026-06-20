@@ -1,0 +1,750 @@
+{
+  "version": "2.0",
+  "phase": "5.8",
+  "generatedDate": "2026-06-20",
+  "scanDate": "2026-06-20",
+  "description": "LIVE asset mapping based on actual filesystem scan of Assets/Thirdparty/. Only real discovered files are referenced here. ProcGenFallback entries are used for slots with no real source available.",
+  "thirdpartyRoot": "Assets/Thirdparty",
+  "caseNote": "Folder is 'Thirdparty' (lowercase p) — differs from original FreeAssetDatabase.json which assumed 'ThirdParty' (uppercase P). FreeAssetImporter now resolves both.",
+
+  "discoveredPacks": [
+    {
+      "id": "medieval-village-pack",
+      "name": "Medieval Village Pack",
+      "localPath": "Assets/Thirdparty/Medieval Village Pack",
+      "license": "CC0 (Quaternius)",
+      "licenseFile": "Assets/Thirdparty/Medieval Village Pack/License.txt",
+      "status": "PRESENT",
+      "buildingFBX": [
+        "Bell_Tower", "Blacksmith", "House_1", "House_2", "House_3", "House_4",
+        "Inn", "Mill", "Sawmill", "Stable"
+      ],
+      "propFBX": [
+        "Bag", "Bag_Open", "Bags", "Barrel", "Bell", "Bench_1", "Bench_2",
+        "Bonfire", "Bonfire_Lit", "Cart", "Cauldron", "Crate", "Door_Round",
+        "Door_Straight", "Fence", "Gazebo", "Hay", "MarketStand_1", "MarketStand_2",
+        "Package_1", "Package_2", "Path_Square", "Path_Straight",
+        "Rock_1", "Rock_2", "Rock_3", "Sawmill_saw", "Smoke", "Stairs", "Well",
+        "Window_1", "Window_2", "Window_3", "Window_4"
+      ],
+      "textures": [],
+      "note": "No embedded textures. All models use vertex colours or flat shading. Apply URP/Lit with basecolor only."
+    },
+    {
+      "id": "nature-pack",
+      "name": "Nature Pack",
+      "localPath": "Assets/Thirdparty/Nature Pack",
+      "license": "CC0 (Quaternius)",
+      "licenseFile": "Assets/Thirdparty/Nature Pack/License_Standard.txt",
+      "status": "PRESENT",
+      "preferredFBXFolder": "FBX (Unity)",
+      "fbxUnity": [
+        "CommonTree_1", "CommonTree_2", "CommonTree_3", "CommonTree_4", "CommonTree_5",
+        "DeadTree_1", "DeadTree_2", "DeadTree_3", "DeadTree_4", "DeadTree_5",
+        "Pine_1", "Pine_2", "Pine_3", "Pine_4", "Pine_5",
+        "TwistedTree_2",
+        "Bush_Common", "Bush_Common_Flowers",
+        "Clover_1", "Clover_2",
+        "Fern_1",
+        "Flower_3_Group", "Flower_3_Single", "Flower_4_Group", "Flower_4_Single",
+        "Grass_Common_Short", "Grass_Common_Tall", "Grass_Wispy_Short", "Grass_Wispy_Tall",
+        "Mushroom_Common", "Mushroom_Laetiporus",
+        "Pebble_Round_1", "Pebble_Round_2", "Pebble_Round_3", "Pebble_Round_4", "Pebble_Round_5",
+        "Pebble_Square_1", "Pebble_Square_2", "Pebble_Square_3", "Pebble_Square_4",
+        "Pebble_Square_5", "Pebble_Square_6",
+        "Petal_1", "Petal_2", "Petal_3", "Petal_4", "Petal_5",
+        "Plant_1", "Plant_1_Big", "Plant_7", "Plant_7_Big",
+        "Rock_Medium_1", "Rock_Medium_2", "Rock_Medium_3",
+        "RockPath_Round_Small_1", "RockPath_Round_Small_2", "RockPath_Round_Small_3",
+        "RockPath_Round_Thin", "RockPath_Round_Wide",
+        "RockPath_Square_Small_1", "RockPath_Square_Small_2", "RockPath_Square_Small_3",
+        "RockPath_Square_Thin", "RockPath_Square_Wide"
+      ],
+      "textures": [
+        "Textures/Flowers.png",
+        "Textures/Grass.png",
+        "Textures/Leaf_Pine_C.png",
+        "Textures/Leaves_GiantPine_C.png",
+        "Textures/Leaves_NormalTree_C.png",
+        "Textures/Leaves_TwistedTree_C.png",
+        "Textures/Leaves_TwistedTree.png"
+      ]
+    },
+    {
+      "id": "ultimate-monsters",
+      "name": "Ultimate Monsters",
+      "localPath": "Assets/Thirdparty/Ultimate Monsters",
+      "license": "CC0 (Quaternius)",
+      "licenseFile": "Assets/Thirdparty/Ultimate Monsters/License.txt",
+      "status": "PRESENT",
+      "sharedTexture": "Atlas_Monsters.png",
+      "bigFBX": [
+        "Alien", "Birb", "BlueDemon", "Bunny", "Cactoro", "Demon", "Dino",
+        "Fish", "Frog", "Monkroose", "MushroomKing", "Ninja",
+        "Orc", "Orc_Skull", "Tribal", "Yeti"
+      ],
+      "blobFBX": [
+        "Alien", "Birb", "Cactoro", "Cat", "Chicken", "Dog", "Fish",
+        "GreenBlob", "GreenSpikyBlob", "Mushnub", "Mushnub_Evolved",
+        "Ninja", "Orc", "Pigeon", "PinkBlob", "Wizard", "Yeti"
+      ],
+      "note": "All monsters share Atlas_Monsters.png texture. Big/ = large humanoid/creature monsters. Blob/ = stylised chibi-style. Big pack preferred for MMO combat monsters."
+    }
+  ],
+
+  "missingPacks": [
+    {
+      "id": "quaternius-characters",
+      "name": "Quaternius Animated Characters",
+      "url": "https://quaternius.com/packs/ultimateanimatedcharacters.html",
+      "needed_for": ["Characters/npc_villager", "Characters/npc_farmer", "Characters/npc_soldier", "Characters/npc_merchant", "Characters/npc_guard"],
+      "status": "MISSING — using ProcGenFallback for all 5 character slots"
+    },
+    {
+      "id": "quaternius-dungeon",
+      "name": "Quaternius Dungeon Kit",
+      "url": "https://quaternius.com/packs/dungeonkit.html",
+      "needed_for": ["Environment/ruin_pillar_01", "Environment/ruin_arch_01", "World/ancient_ruin_01", "World/ancient_ruin_02", "World/monument_obelisk", "World/shrine_01", "World/statue_ancient", "Props/statue_knight", "Props/statue_king"],
+      "status": "MISSING — using ProcGenFallback for ruin/monument slots"
+    },
+    {
+      "id": "quaternius-farm",
+      "name": "Quaternius Farm Kit",
+      "url": "https://quaternius.com/packs/ultimatefarmingkit.html",
+      "needed_for": ["Buildings/building_farm_001", "Resources/node_farm_basic"],
+      "status": "PARTIAL — Mill.fbx from Medieval Village Pack used as substitute"
+    },
+    {
+      "id": "quaternius-crystals",
+      "name": "Quaternius Crystals & Gems",
+      "url": "https://quaternius.com/packs/crystalsandgems.html",
+      "needed_for": ["Resources/node_crystal_common", "Resources/node_crystal_rare", "Resources/node_crystal_epic"],
+      "status": "MISSING — using Pebble_Round FBX + colour material variants as substitute"
+    },
+    {
+      "id": "unity-particle-pack",
+      "name": "Unity Particle Pack",
+      "url": "https://assetstore.unity.com/packages/vfx/particles/particle-pack-127175",
+      "needed_for": "All 15 VFX keys",
+      "status": "MISSING — using ProcGenFallback VFX billboards for all 15 VFX slots"
+    },
+    {
+      "id": "opengameart-audio",
+      "name": "OpenGameArt Audio (CC0)",
+      "url": "https://opengameart.org",
+      "needed_for": "All 16 audio keys",
+      "status": "MISSING — using silent AudioClip placeholders for all 16 audio slots"
+    },
+    {
+      "id": "mixamo-animations",
+      "name": "Mixamo Animations",
+      "url": "https://www.mixamo.com/",
+      "needed_for": "AnimatorController clips for all 14 monsters + 5 characters",
+      "status": "MISSING — AnimatorControllers created with empty state references, ready to receive clips when imported"
+    }
+  ],
+
+  "assetMappings": {
+
+    "Buildings": {
+      "building_palace_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Bell_Tower.fbx",
+        "rationale": "Tallest, most imposing structure — best available palace stand-in",
+        "realAsset": true, "lod": true, "animatorRequired": false,
+        "materials": "URP_Lit_Stone", "priority": 1
+      },
+      "building_farm_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Mill.fbx",
+        "rationale": "Mill is the most farm-contextual building available",
+        "realAsset": true, "lod": true, "animatorRequired": false, "materials": "URP_Lit_Wood"
+      },
+      "building_lumbermill_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Sawmill.fbx",
+        "rationale": "Direct match — Sawmill = Lumbermill",
+        "realAsset": true, "lod": true, "animatorRequired": false, "materials": "URP_Lit_Wood"
+      },
+      "building_quarry_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Stable.fbx",
+        "rationale": "Open-structure building repurposed as quarry work area",
+        "realAsset": true, "lod": true, "animatorRequired": false, "materials": "URP_Lit_Stone"
+      },
+      "building_ironmine_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/House_3.fbx",
+        "rationale": "Small stone house, repurposed as mine entrance building",
+        "realAsset": true, "lod": true, "materials": "URP_Lit_Stone"
+      },
+      "building_goldmine_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/House_4.fbx",
+        "rationale": "Variant house, gold-tinted material to signal gold mine",
+        "realAsset": true, "lod": true, "materials": "URP_Lit_Gold"
+      },
+      "building_barracks_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Inn.fbx",
+        "rationale": "Largest communal building available — good barracks stand-in",
+        "realAsset": true, "lod": true, "materials": "URP_Lit_Stone", "priority": 1
+      },
+      "building_academy_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/House_1.fbx",
+        "rationale": "Clean house with good silhouette for knowledge institution",
+        "realAsset": true, "lod": true, "materials": "URP_Lit_Stone"
+      },
+      "building_hospital_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/House_2.fbx",
+        "rationale": "House variant, white/cream material to suggest hospital/healer",
+        "realAsset": true, "lod": true, "materials": "URP_Lit_White"
+      },
+      "building_market_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Gazebo.fbx",
+        "rationale": "Open-roof structure directly suitable as a market pavilion",
+        "realAsset": true, "lod": true, "materials": "URP_Lit_Wood"
+      },
+      "building_watchtower_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Bell_Tower.fbx",
+        "rationale": "Bell Tower is a tall tower — direct watchtower analogue",
+        "realAsset": true, "lod": true, "materials": "URP_Lit_Stone"
+      },
+      "building_walls_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Fence.fbx",
+        "rationale": "Fence is the only wall-segment available; scale × 3 for wall height",
+        "realAsset": true, "scale": 3.0, "lod": false, "materials": "URP_Lit_Stone"
+      },
+      "building_embassy_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Inn.fbx",
+        "rationale": "Inn is the largest prestige building — good embassy stand-in",
+        "realAsset": true, "lod": true, "colorVariant": "prestigious", "materials": "URP_Lit_Stone"
+      },
+      "building_forge_001": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Blacksmith.fbx",
+        "rationale": "Direct match — Blacksmith = Forge",
+        "realAsset": true, "lod": true, "materials": "URP_Lit_Metal"
+      }
+    },
+
+    "BuildingTiers": {
+      "building_palace_early": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/House_1.fbx",
+        "realAsset": true, "scale": 1.0
+      },
+      "building_palace_developed": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/House_3.fbx",
+        "realAsset": true, "scale": 1.3
+      },
+      "building_palace_advanced": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Bell_Tower.fbx",
+        "realAsset": true, "scale": 1.0
+      },
+      "building_barracks_early": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/House_2.fbx",
+        "realAsset": true, "scale": 1.0
+      },
+      "building_barracks_developed": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Stable.fbx",
+        "realAsset": true, "scale": 1.2
+      },
+      "building_barracks_advanced": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Inn.fbx",
+        "realAsset": true, "scale": 1.0
+      },
+      "building_farm_early": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Hay.fbx",
+        "realAsset": true, "scale": 1.5
+      },
+      "building_farm_developed": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Mill.fbx",
+        "realAsset": true, "scale": 1.0
+      },
+      "building_farm_advanced": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Sawmill.fbx",
+        "realAsset": true, "scale": 1.2
+      },
+      "_remaining_33_tiers": {
+        "note": "All other building tier variants (lumbermill, quarry, ironmine, goldmine, market, watchtower, walls, embassy, forge × early/developed/advanced = 33 additional tiers) use ProcGenFallbackFactory composite meshes. They share the base building's colour palette and are scaled proportionally by tier.",
+        "realAsset": false,
+        "fallback": "ProcGenFallbackFactory"
+      }
+    },
+
+    "Monsters": {
+      "monster_bandit_t1": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Big/FBX/Orc.fbx",
+        "rationale": "Orc = armed humanoid warrior — best T1 bandit",
+        "realAsset": true, "scale": 1.0,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death", "Sleep", "Roam"],
+        "animationSource": "ProcAnim — stubs until Mixamo retarget",
+        "priority": 1
+      },
+      "monster_bandit_t2": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Big/FBX/Tribal.fbx",
+        "rationale": "Tribal warrior with weapon = T2 armed bandit",
+        "realAsset": true, "scale": 1.1,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death"]
+      },
+      "monster_bandit_t3": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Big/FBX/Ninja.fbx",
+        "rationale": "Ninja = agile T3 bandit / rogue archetype",
+        "realAsset": true, "scale": 1.15,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death"]
+      },
+      "monster_direwolf_t1": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Blob/FBX/Dog.fbx",
+        "rationale": "Dog FBX = closest wolf/canine body shape available",
+        "realAsset": true, "scale": 1.2,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Run", "Attack", "Death", "Sleep"]
+      },
+      "monster_direwolf_t2": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Blob/FBX/Dog.fbx",
+        "rationale": "Same model, larger scale + dark colour variant",
+        "realAsset": true, "scale": 1.5, "colorVariant": "dark",
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Run", "Attack", "Death"]
+      },
+      "monster_direwolf_t3": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Big/FBX/Yeti.fbx",
+        "rationale": "Yeti = large furred quadruped-like monster for T3 dire wolf",
+        "realAsset": true, "scale": 1.6,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death"]
+      },
+      "monster_ogre_t2": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Big/FBX/MushroomKing.fbx",
+        "rationale": "MushroomKing = hulking large creature, good T2 ogre",
+        "realAsset": true, "scale": 1.4,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death"]
+      },
+      "monster_ogre_t3": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Big/FBX/Yeti.fbx",
+        "rationale": "Yeti = large heavy monster for T3 ogre",
+        "realAsset": true, "scale": 1.7,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death"]
+      },
+      "monster_ogre_t4": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Big/FBX/Orc_Skull.fbx",
+        "rationale": "Orc_Skull variant = armoured elite ogre at T4",
+        "realAsset": true, "scale": 2.0,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death"]
+      },
+      "monster_guardian_t3": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Blob/FBX/GreenBlob.fbx",
+        "rationale": "Blob guardian — otherworldly T3 area sentinel",
+        "realAsset": true, "scale": 1.5,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death"]
+      },
+      "monster_guardian_t4": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Big/FBX/Demon.fbx",
+        "rationale": "Demon = powerful T4 guardian archetype",
+        "realAsset": true, "scale": 1.8,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death"]
+      },
+      "monster_guardian_t5": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Big/FBX/BlueDemon.fbx",
+        "rationale": "BlueDemon = elite T5 guardian, distinct colour from T4",
+        "realAsset": true, "scale": 2.2,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death"]
+      },
+      "monster_dragon_t4": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Big/FBX/Dino.fbx",
+        "rationale": "Dino = reptilian winged creature — closest dragon available",
+        "realAsset": true, "scale": 2.0,
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death", "Fly", "FlyIdle"],
+        "priority": 1
+      },
+      "monster_dragon_t5": {
+        "pack": "ultimate-monsters",
+        "sourceFile": "Ultimate Monsters/Big/FBX/Dino.fbx",
+        "rationale": "T5 dragon = same Dino mesh, 3.5× scale with red colour variant",
+        "realAsset": true, "scale": 3.5, "colorVariant": "red",
+        "texture": "Ultimate Monsters/Atlas_Monsters.png",
+        "animatorRequired": true, "animatorClips": ["Idle", "Walk", "Attack", "Death", "Fly", "FlyIdle"],
+        "priority": 1
+      }
+    },
+
+    "Resources": {
+      "node_farm_basic": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Hay.fbx",
+        "rationale": "Hay bale cluster = farm resource node",
+        "realAsset": true, "lod": false
+      },
+      "node_lumber_basic": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/CommonTree_1.fbx",
+        "rationale": "Oak tree = lumber resource node",
+        "realAsset": true, "lod": true,
+        "texture": "Nature Pack/Textures/Leaves_NormalTree_C.png"
+      },
+      "node_stone_basic": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Rock_Medium_1.fbx",
+        "rationale": "Rock_Medium = stone deposit",
+        "realAsset": true, "lod": true
+      },
+      "node_iron_basic": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Rock_Medium_2.fbx",
+        "rationale": "Rock_Medium variant + dark/metallic material = iron vein",
+        "realAsset": true, "lod": true, "materials": "URP_Lit_Iron"
+      },
+      "node_gold_basic": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Rock_Medium_3.fbx",
+        "rationale": "Rock_Medium variant + gold material = gold deposit",
+        "realAsset": true, "lod": true, "materials": "URP_Lit_Gold"
+      },
+      "node_crystal_common": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Pebble_Round_1.fbx",
+        "rationale": "Pebble cluster + blue emissive material = common crystal node",
+        "realAsset": true, "materials": "URP_Lit_Crystal_Blue"
+      },
+      "node_crystal_rare": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Pebble_Round_3.fbx",
+        "rationale": "Pebble cluster + purple emissive material = rare crystal node",
+        "realAsset": true, "scale": 1.3, "materials": "URP_Lit_Crystal_Purple"
+      },
+      "node_crystal_epic": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Rock_Medium_1.fbx",
+        "rationale": "Rock cluster at large scale + gold-pink emissive = epic crystal formation",
+        "realAsset": true, "scale": 1.8, "materials": "URP_Lit_Crystal_Epic",
+        "priority": 1
+      }
+    },
+
+    "Terrain": {
+      "biome_grasslands_base": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/Textures/Grass.png",
+        "realAsset": true, "type": "TerrainTexture"
+      },
+      "biome_grasslands_detail": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/Textures/Flowers.png",
+        "realAsset": true, "type": "TerrainTexture"
+      },
+      "biome_forest_base": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/Textures/Leaves_NormalTree_C.png",
+        "realAsset": true, "type": "TerrainTexture"
+      },
+      "biome_forest_detail": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/Textures/Leaves_TwistedTree.png",
+        "realAsset": true, "type": "TerrainTexture"
+      },
+      "biome_highland_base": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/Textures/Leaves_TwistedTree_C.png",
+        "realAsset": true, "type": "TerrainTexture",
+        "note": "Brownish leaf texture repurposed as highland ground cover"
+      },
+      "biome_snow_base": {
+        "realAsset": false, "fallback": "ProcGenSolidTex",
+        "fallbackColor": [0.95, 0.96, 0.98, 1.0]
+      },
+      "biome_snow_detail": {
+        "realAsset": false, "fallback": "ProcGenSolidTex",
+        "fallbackColor": [0.88, 0.90, 0.95, 1.0]
+      },
+      "biome_desert_base": {
+        "realAsset": false, "fallback": "ProcGenSolidTex",
+        "fallbackColor": [0.87, 0.78, 0.52, 1.0]
+      },
+      "biome_swamp_base": {
+        "realAsset": false, "fallback": "ProcGenSolidTex",
+        "fallbackColor": [0.28, 0.35, 0.20, 1.0]
+      },
+      "biome_volcanic_base": {
+        "realAsset": false, "fallback": "ProcGenSolidTex",
+        "fallbackColor": [0.18, 0.14, 0.14, 1.0]
+      },
+      "cliff_universal": {
+        "realAsset": false, "fallback": "ProcGenSolidTex",
+        "fallbackColor": [0.52, 0.50, 0.46, 1.0]
+      }
+    },
+
+    "Environment": {
+      "tree_oak_01": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/CommonTree_1.fbx",
+        "realAsset": true, "lod": true,
+        "texture": "Nature Pack/Textures/Leaves_NormalTree_C.png"
+      },
+      "tree_pine_01": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Pine_1.fbx",
+        "realAsset": true, "lod": true,
+        "texture": "Nature Pack/Textures/Leaf_Pine_C.png"
+      },
+      "tree_dead_01": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/DeadTree_1.fbx",
+        "realAsset": true, "lod": true
+      },
+      "shrub_bush_01": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Bush_Common.fbx",
+        "realAsset": true, "lod": false
+      },
+      "grass_patch_01": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Grass_Common_Short.fbx",
+        "realAsset": true, "lod": false
+      },
+      "rock_large_01": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Rock_Medium_1.fbx",
+        "realAsset": true, "lod": true, "scale": 1.8
+      },
+      "rock_cluster_01": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Pebble_Round_1.fbx",
+        "realAsset": true, "lod": false,
+        "note": "Cluster multiple Pebble_Round instances in prefab"
+      },
+      "road_segment_01": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/RockPath_Square_Wide.fbx",
+        "realAsset": true, "lod": false,
+        "note": "RockPath = cobblestone path mesh — repurposed as road segment"
+      },
+      "ruin_pillar_01": {
+        "realAsset": false, "fallback": "ProcGenFallbackFactory",
+        "note": "No dungeon pack present"
+      },
+      "ruin_arch_01": {
+        "realAsset": false, "fallback": "ProcGenFallbackFactory"
+      },
+      "river_section_01": {
+        "realAsset": false, "fallback": "ProcGenFallbackFactory",
+        "note": "No water mesh in any downloaded pack"
+      },
+      "lake_water_plane": {
+        "realAsset": false, "fallback": "ProcGenFallbackFactory"
+      },
+      "mountain_ridge_01": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Rock_Medium_2.fbx",
+        "realAsset": true, "scale": 3.0, "lod": true,
+        "note": "Large-scale rock used as mountain ridge element"
+      },
+      "fog_volume_01": {
+        "realAsset": false, "fallback": "ProcGenVFXFallback",
+        "note": "No particle pack — ParticleSystem stub created"
+      },
+      "cloud_layer_01": {
+        "realAsset": false, "fallback": "ProcGenVFXFallback"
+      }
+    },
+
+    "KingdomProps": {
+      "road_decal_cobble": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Path_Square.fbx",
+        "realAsset": true
+      },
+      "market_stall_01": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/MarketStand_1.fbx",
+        "realAsset": true
+      },
+      "market_stall_02": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/MarketStand_2.fbx",
+        "realAsset": true
+      },
+      "crate_01": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Crate.fbx",
+        "realAsset": true
+      },
+      "barrel_01": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Barrel.fbx",
+        "realAsset": true
+      },
+      "sack_01": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Bag.fbx",
+        "realAsset": true
+      },
+      "wagon_01": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Cart.fbx",
+        "realAsset": true
+      },
+      "fence_wood_01": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Fence.fbx",
+        "realAsset": true
+      },
+      "fence_stone_01": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Stairs.fbx",
+        "realAsset": true,
+        "note": "Stairs repurposed as low stone wall segment"
+      },
+      "garden_flower_01": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Flower_3_Single.fbx",
+        "realAsset": true,
+        "texture": "Nature Pack/Textures/Flowers.png"
+      },
+      "garden_bed_01": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/Clover_1.fbx",
+        "realAsset": true
+      },
+      "tree_kingdom_oak": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/CommonTree_2.fbx",
+        "realAsset": true,
+        "texture": "Nature Pack/Textures/Leaves_NormalTree_C.png"
+      },
+      "fountain_stone": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Well.fbx",
+        "realAsset": true,
+        "note": "Well is the best fountain substitute — same stone basin concept"
+      },
+      "campfire_01": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Bonfire_Lit.fbx",
+        "realAsset": true
+      },
+      "statue_knight": {
+        "realAsset": false, "fallback": "ProcGenFallbackFactory",
+        "note": "No dungeon/statue pack present"
+      },
+      "statue_king": {
+        "realAsset": false, "fallback": "ProcGenFallbackFactory"
+      },
+      "training_dummy_01": {
+        "realAsset": false, "fallback": "ProcGenFallbackFactory"
+      }
+    },
+
+    "WorldLandmarks": {
+      "ancient_ruin_01": {
+        "realAsset": false, "fallback": "ProcGenFallbackFactory",
+        "note": "No dungeon/ruins pack"
+      },
+      "ancient_ruin_02": {
+        "realAsset": false, "fallback": "ProcGenFallbackFactory"
+      },
+      "monument_obelisk": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Bell_Tower.fbx",
+        "realAsset": true, "scale": 0.6,
+        "note": "Bell Tower at reduced scale = obelisk/tall monument"
+      },
+      "watchtower_01": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Buildings/FBX/Bell_Tower.fbx",
+        "realAsset": true, "scale": 1.0
+      },
+      "shrine_01": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Well.fbx",
+        "realAsset": true, "scale": 0.8,
+        "note": "Well repurposed as small roadside shrine"
+      },
+      "statue_ancient": {
+        "realAsset": false, "fallback": "ProcGenFallbackFactory"
+      },
+      "destroyed_camp_01": {
+        "pack": "medieval-village-pack",
+        "sourceFile": "Medieval Village Pack/Props/FBX/Bonfire.fbx",
+        "realAsset": true,
+        "note": "Unlit bonfire = abandoned/destroyed camp"
+      },
+      "road_decal_dirt": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/RockPath_Round_Wide.fbx",
+        "realAsset": true,
+        "note": "Round rock path = dirt road aesthetic"
+      },
+      "biome_transition_blend": {
+        "pack": "nature-pack",
+        "sourceFile": "Nature Pack/FBX (Unity)/RockPath_Round_Thin.fbx",
+        "realAsset": true,
+        "note": "Thin path decal used as biome border blend strip"
+      }
+    },
+
+    "Characters": {
+      "_all": {
+        "note": "Quaternius Animated Characters pack not downloaded. All 5 character slots use ProcGenFallbackFactory blue-biped composite meshes with Animator stubs ready to receive Mixamo clips.",
+        "realAsset": false
+      },
+      "npc_villager":  { "realAsset": false, "fallback": "ProcGenFallbackFactory", "priority": 1 },
+      "npc_farmer":   { "realAsset": false, "fallback": "ProcGenFallbackFactory" },
+      "npc_soldier":  { "realAsset": false, "fallback": "ProcGenFallbackFactory", "priority": 1 },
+      "npc_merchant": { "realAsset": false, "fallback": "ProcGenFallbackFactory" },
+      "npc_guard":    { "realAsset": false, "fallback": "ProcGenFallbackFactory" }
+    },
+
+    "VFX": {
+      "_all": {
+        "note": "Unity Particle Pack not imported. All 15 VFX slots use ProcGenVFXFallback (magenta billboard + ParticleSystem stub). Gameplay is unaffected — all VFX calls succeed, producing a visible stub.",
+        "realAsset": false, "fallback": "ProcGenVFXFallback"
+      }
+    },
+
+    "Audio": {
+      "_all": {
+        "note": "No audio files downloaded. All 16 audio slots use 1-second silent AudioClip placeholders. All AudioSource.Play() calls succeed silently. Game is fully playable.",
+        "realAsset": false, "fallback": "SilentAudioClip"
+      }
+    }
+  }
+}

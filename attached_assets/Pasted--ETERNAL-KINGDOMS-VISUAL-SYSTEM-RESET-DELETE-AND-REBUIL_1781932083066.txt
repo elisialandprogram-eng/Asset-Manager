@@ -1,0 +1,284 @@
+# ETERNAL KINGDOMS — VISUAL SYSTEM RESET (DELETE AND REBUILD)
+
+IMPORTANT:
+
+READ FIRST:
+
+1. PROJECT_MASTER.md
+2. ROADMAP.md
+3. ARCHITECTURE_STATE.md
+
+Update all three files after completion.
+
+---
+
+## CRITICAL INSTRUCTION
+
+The current visual implementation has FAILED.
+
+Current implementation uses:
+
+* cubes
+* voxel blocks
+* primitive geometry
+* generated polygons
+* procedural placeholder structures
+
+THIS ENTIRE VISUAL SYSTEM MUST BE DELETED.
+
+Do NOT improve it.
+
+Do NOT refactor it.
+
+Do NOT add effects.
+
+DELETE IT COMPLETELY.
+
+---
+
+## REMOVE COMPLETELY
+
+Delete:
+
+* WorldScene.ts
+* KingdomScene.ts
+* TerrainRenderer.ts
+* EnvironmentRenderer.ts
+* Any cube rendering code
+* Any Box/Rect/Polygon based terrain
+* Any procedural building generation
+* Any placeholder geometry generation
+
+Search the entire project and remove:
+
+drawRect
+drawPolygon
+Graphics.rect
+Graphics.poly
+cube generation
+height blocks
+voxel generation
+
+No cubes must remain anywhere.
+
+---
+
+## NEW APPROACH
+
+We are abandoning procedural visuals.
+
+The game must become:
+
+SPRITE-BASED ISOMETRIC MMO.
+
+Visual target:
+
+* League of Kingdoms
+* Rise of Kingdoms
+* Call of Dragons
+
+---
+
+## NEW RENDERING RULES
+
+Keep:
+
+PixiJS v8
+
+But ALL world visuals must be rendered using:
+
+Sprite
+AnimatedSprite
+Container
+ParticleContainer
+
+ONLY.
+
+NO Graphics API except for debug mode.
+
+Graphics API may only draw:
+
+* selection circles
+* debug grid
+
+Nothing else.
+
+---
+
+## ASSET-FIRST PIPELINE
+
+Create:
+
+client/src/game/assets_v2/
+
+Structure:
+
+assets_v2/
+terrain/
+buildings/
+kingdoms/
+monsters/
+resources/
+decorations/
+effects/
+ui/
+
+Create AssetManifest.ts.
+
+Every visible object in game MUST come from an image asset.
+
+No generated geometry.
+
+---
+
+## TEMPORARY ART
+
+Until final art exists:
+
+Generate or source medieval isometric PNG assets.
+
+Required assets:
+
+Terrain:
+
+* grass
+* forest
+* mountain
+* snow
+* dirt
+* road
+* river
+
+Buildings:
+
+* palace
+* academy
+* treasury
+* warehouse
+* barracks
+* stable
+* archery range
+* siege workshop
+* watch tower
+* alliance center
+* farm
+* lumber mill
+* quarry
+* iron mine
+* gold mine
+
+World:
+
+* village
+* town
+* castle
+* capital
+
+Resources:
+
+* farmland
+* logging camp
+* quarry
+* ore deposit
+* crystal formation
+
+Monsters:
+
+* bandit camp
+* wolf den
+* ogre camp
+* guardian ruins
+* dragon lair
+
+Decorations:
+
+* trees
+* rocks
+* ruins
+* statues
+* bridges
+* banners
+* torches
+
+---
+
+## WORLD REBUILD
+
+Create completely new:
+
+SpriteWorldScene.ts
+
+World is rendered using ONLY sprites.
+
+Terrain:
+
+Use layered terrain tiles.
+
+NO BLOCK HEIGHTS.
+
+NO CUBES.
+
+World camera:
+
+* drag
+* zoom
+* inertia
+* edge scrolling
+
+---
+
+## KINGDOM REBUILD
+
+Create:
+
+SpriteKingdomScene.ts
+
+Kingdom must look like a living city.
+
+Player sees:
+
+* palace
+* roads
+* walls
+* buildings
+* decorations
+
+Buildings occupy actual positions.
+
+No cards.
+
+No dashboard look.
+
+---
+
+## MANDATORY RULE
+
+If any implementation uses:
+
+cube
+voxel
+rectangles
+primitive terrain
+procedural buildings
+
+THEN THE IMPLEMENTATION IS INVALID.
+
+---
+
+## SUCCESS CRITERIA
+
+1. Zero cubes.
+2. Zero voxels.
+3. Zero procedural buildings.
+4. Entire world uses sprites.
+5. Entire kingdom uses sprites.
+6. Every visible object comes from an image asset.
+7. Visual system documented.
+
+Update:
+
+PROJECT_MASTER.md
+ROADMAP.md
+ARCHITECTURE_STATE.md
+
+STOP AFTER COMPLETION.

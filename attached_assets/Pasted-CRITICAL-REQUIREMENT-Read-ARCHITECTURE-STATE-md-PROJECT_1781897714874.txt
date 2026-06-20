@@ -1,0 +1,38 @@
+CRITICAL REQUIREMENT: Read "ARCHITECTURE_STATE.md", "PROJECT_MASTER.md", and "ROADMAP.md" before writing code. 
+
+The current 2D fallback layout is completely unacceptable and looks like a generic card interface instead of a strategy game. Referencing "Screenshot 2026-06-20 at 12.59.21 AM.jpg" (Kingdom view showing a flat vertical block diagram) and "Screenshot 2026-06-20 at 12.59.32 AM.jpg" (World Map showing a flat top-down dot matrix with no spatial perspective or navigation controls), we must rewrite both viewports completely using a true 2.5D Isometric HTML5 Canvas projection engine to exactly emulate the visual style and mechanics of League of Kingdoms (LOK).
+
+Implement the following precise upgrades across both viewports immediately:
+
+1. CORE MATHEMATICAL PROJECTION ENGINE (Isometric 2.5D Projection)
+   - Do not use absolute HTML layout blocks or flat top-down 2D arrays. Implement the standard 2.5D isometric coordinate transformations:
+     * screenX = (isoX - isoY) * (tileWidth / 2) + centerOffset.x + currentPan.x
+     * screenY = (isoX + isoY) * (tileHeight / 2) + centerOffset.y + currentPan.y
+   - Standardize tile dimensions to a crisp isometric ratio: tileWidth = 64px, tileHeight = 32px (or 128px by 64px for ultra fidelity).
+
+2. WORLD MAP OVERHAUL (WorldMap2D.tsx)
+   - CANVAS RENDERING LOOP: Convert the container to an active HTML5 `<canvas>` rendering loop with requestAnimationFrame.
+   - GRID LINES & BIOMES: Draw an actual isometric diamond grid. Fill each diamond tile cleanly based on its biome data using vibrant, high-saturation colors (Plains: vivid strategy green, Forests: deep lush strategy green, Mountains/Wastelands: sharp sandy/rocky textures). Outline the active grid cells subtly to give that classic tactical strategy tiling feel.
+   - MOUSE & TOUCH NAVIGATION (PANNING & ZOOMING): 
+     * Implement active canvas event listeners (`mousedown`, `mousemove`, `mouseup`). Left-click dragging must translate smoothly into `currentPan.x` and `currentPan.y` changes to float across the map effortlessly.
+     * Implement wheel events (`wheel`) to dynamically scale the context rendering matrix via a zoom multiplier, centering the zoom relative to the mouse cursor position.
+   - STRATEGIC OBJECT RENDERING (LOK ACCURACY):
+     * Do not pack floating flat circle icons on top of each other. Scale down the distribution density of objects across coordinates.
+     * Render entities as scaled, isometric billboard structures sitting at the base intersection of their respective diamond cells.
+     * Draw individual, easily identifiable vector graphics or clear isometric silhouettes for: kingdoms (mini castle towers), monsters (distinctive dark skull icons), and resources (glistening multi-faceted crystal prisms).
+   - RAYCAST INTERACTIVITY: On mouse click, map the screen pixel coordinates (`clientX`, `clientY`) backward into the inverse isometric formula to find the exact clicked `isoX` and `isoY` grid cell. If an entity occupies that coordinate, trigger the `onSelectEntity` prop instantly to fire up the `WorldInfoPanel`.
+
+3. KINGDOM VIEW OVERHAUL (KingdomScene2D.tsx)
+   - GRAPHIC BASE GRIDS: Replace the card rows entirely with a single unified isometric canvas landscape or absolute isometric isometric-transformed CSS grid matrix ($transform: rotateX(60deg) rotateZ(-45deg)$).
+   - RADIAL SLOT COORDINATES: Explicitly map out the precise layout locations to form a beautiful, natural base settlement landscape:
+     * Center Plot (0, 0): Large, imposing multi-tiered Palace citadel graphic.
+     * Inner Ring Slots (3 slots at radius 14, evenly spaced at 120° offsets): Beautifully positioned isometric structures for Barracks, Academy, and Storage.
+     * Outer Fields Slots (8 slots at radius 28, distributed radially): Designated farm pastures, lumber yards, quarry stones, and mine shaft assets.
+   - COMPONENT RENDER AND MODALS: Render empty plots as clean, isometric green crosshair target plates sitting flat on the ground tile. Hovering (`onPointerOver`) over any plot must draw an energetic gold selection ring around its base boundary; clicking must bring up the proper BuildModal or UpgradeModal directly.
+
+4. COMPLETE WEBGL PURGE & CODE CLEANUP
+   - Remove all deprecated, unused 3D files entirely from the codebase (`World3DCanvas.tsx`, `KingdomScene3D.tsx`, `WorldCamera.tsx`, `ThreeErrorBoundary.tsx`, and `TerrainMesh.tsx`).
+   - Remove `three`, `@react-three/fiber`, and `@react-three/drei` completely from `artifacts/eternal-kingdoms/package.json` to reduce build weight and completely eliminate WebGL dependencies. Run `pnpm install` or your clean package installation script immediately to finalize the removal.
+
+5. DOCUMENTATION SIGN-OFF
+   - Ensure all build cycles run completely clean with zero errors. Once you have validated the panning, zooming, and click-precision of the new isometric engine, update "ARCHITECTURE_STATE.md", "PROJECT_MASTER.md", and "ROADMAP.md" to detail the completion of the 2.5D Isometric Canvas refinement engine.

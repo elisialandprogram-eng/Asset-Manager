@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="200" height="220">
+  <rect width="200" height="220" fill="#030712" rx="4"/>
+  <!-- Massive stone body -->
+  <rect x="45" y="90" width="110" height="100" fill="#1e293b" stroke="#7c3aed" stroke-width="3" rx="5"/>
+  <!-- Stone head -->
+  <rect x="60" y="35" width="80" height="65" fill="#1e293b" stroke="#7c3aed" stroke-width="3" rx="5"/>
+  <!-- Crown / head piece -->
+  <polygon points="65,35 70,15 80,35" fill="#4c1d95" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="90,35 100,10 110,35" fill="#4c1d95" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="120,35 130,15 135,35" fill="#4c1d95" stroke="#7c3aed" stroke-width="2"/>
+  <!-- Glowing eyes -->
+  <ellipse cx="82" cy="60" rx="12" ry="9" fill="#7c3aed"/>
+  <ellipse cx="82" cy="60" rx="7" ry="5" fill="#a855f7"/>
+  <ellipse cx="82" cy="60" rx="3" ry="3" fill="#e9d5ff"/>
+  <ellipse cx="118" cy="60" rx="12" ry="9" fill="#7c3aed"/>
+  <ellipse cx="118" cy="60" rx="7" ry="5" fill="#a855f7"/>
+  <ellipse cx="118" cy="60" rx="3" ry="3" fill="#e9d5ff"/>
+  <!-- Rune markings on body -->
+  <line x1="65" y1="120" x2="135" y2="120" stroke="#7c3aed" stroke-width="2" opacity="0.8"/>
+  <line x1="75" y1="105" x2="125" y2="135" stroke="#7c3aed" stroke-width="1.5" opacity="0.6"/>
+  <line x1="125" y1="105" x2="75" y2="135" stroke="#7c3aed" stroke-width="1.5" opacity="0.6"/>
+  <!-- Massive fists -->
+  <rect x="5" y="100" width="40" height="40" fill="#1e293b" stroke="#7c3aed" stroke-width="2" rx="5"/>
+  <rect x="155" y="100" width="40" height="40" fill="#1e293b" stroke="#7c3aed" stroke-width="2" rx="5"/>
+  <!-- Legs -->
+  <rect x="52" y="185" width="38" height="30" fill="#1e293b" stroke="#7c3aed" stroke-width="2" rx="3"/>
+  <rect x="110" y="185" width="38" height="30" fill="#1e293b" stroke="#7c3aed" stroke-width="2" rx="3"/>
+  <!-- Glow aura -->
+  <ellipse cx="100" cy="110" rx="100" ry="100" fill="none" stroke="#7c3aed" stroke-width="1" opacity="0.2"/>
+  <!-- Label -->
+  <text x="100" y="218" font-family="serif" font-size="9" fill="#a855f7" text-anchor="middle">ANCIENT GUARDIAN</text>
+</svg>

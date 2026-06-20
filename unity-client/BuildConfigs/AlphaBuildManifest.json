@@ -1,0 +1,88 @@
+{
+  "version": "0.5.7-alpha",
+  "buildDate": "2026-06-20",
+  "phase": "5.7",
+  "phaseName": "Alpha Content Lock & Playable Alpha Build",
+  "targets": [
+    {
+      "platform": "WebGL",
+      "buildType": "Development",
+      "outputDir": "Builds/Alpha/WebGL-Dev",
+      "compressionFormat": "Brotli",
+      "codeOptimization": "None",
+      "scriptingBackend": "IL2CPP",
+      "stripEngineCode": false,
+      "allowDebugging": true,
+      "developmentBuild": true,
+      "autoconnectProfiler": false,
+      "defines": ["DEVELOPMENT_BUILD", "EK_ALPHA", "EK_WEBGL"]
+    },
+    {
+      "platform": "WebGL",
+      "buildType": "Staging",
+      "outputDir": "Builds/Alpha/WebGL-Staging",
+      "compressionFormat": "Brotli",
+      "codeOptimization": "Speed",
+      "scriptingBackend": "IL2CPP",
+      "stripEngineCode": true,
+      "allowDebugging": false,
+      "developmentBuild": false,
+      "defines": ["EK_ALPHA", "EK_WEBGL", "EK_STAGING"]
+    },
+    {
+      "platform": "WebGL",
+      "buildType": "Production",
+      "outputDir": "Builds/Alpha/WebGL-Production",
+      "compressionFormat": "Brotli",
+      "codeOptimization": "Speed",
+      "scriptingBackend": "IL2CPP",
+      "stripEngineCode": true,
+      "allowDebugging": false,
+      "developmentBuild": false,
+      "defines": ["EK_ALPHA", "EK_WEBGL"]
+    },
+    {
+      "platform": "Windows",
+      "buildType": "Development",
+      "outputDir": "Builds/Alpha/Windows-Dev",
+      "architecture": "x86_64",
+      "scriptingBackend": "IL2CPP",
+      "allowDebugging": true,
+      "developmentBuild": true,
+      "defines": ["DEVELOPMENT_BUILD", "EK_ALPHA", "EK_STANDALONE"]
+    },
+    {
+      "platform": "Android",
+      "buildType": "Development",
+      "outputDir": "Builds/Alpha/Android-Dev",
+      "targetArchitecture": ["ARM64"],
+      "minSdkVersion": 24,
+      "targetSdkVersion": 34,
+      "scriptingBackend": "IL2CPP",
+      "splitAPK": true,
+      "developmentBuild": true,
+      "defines": ["DEVELOPMENT_BUILD", "EK_ALPHA", "EK_ANDROID"]
+    }
+  ],
+  "addressables": {
+    "buildRemoteCatalog": true,
+    "remoteLoadPath": "https://cdn.eternalkingdoms.io/addressables/{BuildTarget}",
+    "localBuildPath": "ServerData/{BuildTarget}",
+    "contentUpdateMode": "UpdatePreviousContent"
+  },
+  "scenes": [
+    "Assets/Scenes/Bootstrap.unity",
+    "Assets/Scenes/Login.unity",
+    "Assets/Scenes/Kingdom.unity",
+    "Assets/Scenes/World.unity",
+    "Assets/Scenes/Demo.unity"
+  ],
+  "qualityGates": {
+    "requireNoPlaceholders": true,
+    "requireNoMissingMaterials": true,
+    "requireNoMissingAnimations": false,
+    "maximumMissingAddressables": 0,
+    "minimumAddressableCoverage": 80,
+    "blockOnCriticalViolations": true
+  }
+}

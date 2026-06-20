@@ -1,0 +1,144 @@
+You are working on a large-scale MMO game called **Eternal Kingdoms**.
+
+You are part of a multi-agent development system.
+
+You MUST strictly follow governance files and phase boundaries.
+
+---
+
+⚠️ GLOBAL MANDATORY RULE
+
+Before doing anything:
+
+1. Read:
+
+   * PROJECT_MASTER.md
+   * ROADMAP.md
+   * ARCHITECTURE_STATE.md
+
+2. Treat them as SINGLE SOURCE OF TRUTH
+
+3. After completing work:
+
+   * Update ROADMAP.md (mark completed features)
+   * Update ARCHITECTURE_STATE.md (technical updates)
+   * Update PROJECT_MASTER.md ONLY if core vision changes
+
+Failure to follow this rule invalidates the task.
+
+---
+
+CURRENT PROJECT STATUS
+
+Completed systems:
+
+* Phase 1.1: Economy Engine (resource ticks, upgrades)
+* Phase 1.2: Live UI Integration (dashboard, queues, HUD)
+
+Backend systems are stable.
+
+DO NOT modify existing working systems unless explicitly required.
+
+---
+
+YOU ARE NOW EXECUTING A UNIFIED BUILD: PHASE 1.3 → 1.5
+
+This is a single coordinated milestone group.
+
+DO NOT SKIP PHASES.
+
+DO NOT ADD NEW GAME SYSTEMS OUTSIDE SCOPE.
+
+---
+
+PHASE 1.3 — KINGDOM EXPANSION FRAMEWORK (BACKEND FOUNDATION)
+
+GOAL:
+Define how kingdoms expand structurally.
+
+FEATURES:
+
+* Building slot system controlled by Palace level
+* Slot limits per building type (Farm, Mine, etc.)
+* Kingdom structure model (logical slots)
+* Unlock rules for building availability
+* Backend validation for build limits
+
+DO NOT create UI for construction.
+
+---
+
+PHASE 1.4 — KINGDOM CONSTRUCTION SYSTEM (CORE GAME LOOP)
+
+GOAL:
+Enable players to construct new buildings.
+
+FEATURES:
+
+* Build new structures (Farm, Lumber, Quarry, Iron, Gold)
+* Validate slots + palace level restrictions
+* Deduct resources on construction
+* Add construction timer system
+* Store construction state in backend
+* Add basic API for construction actions
+
+LIMITED UI:
+
+* Simple "Build Building" modal only
+
+---
+
+PHASE 1.5 — CONSTRUCTION UX + VISUAL FEEDBACK LAYER
+
+GOAL:
+Make construction understandable and playable.
+
+FEATURES:
+
+* Construction queue UI
+* Progress timers
+* Status indicators (building / completed / blocked)
+* Live updates via polling or socket
+
+NO new mechanics.
+
+---
+
+STRICT CONSTRAINTS (APPLIES TO ALL PHASES)
+
+DO NOT:
+
+* Add world map
+* Add combat system
+* Add monsters or AI systems
+* Add alliances
+* Add NFTs, blockchain, or token systems
+* Modify existing economy engine logic
+* Introduce tile-based or card-based systems
+* Redesign architecture
+
+ONLY extend existing systems.
+
+---
+
+ARCHITECTURE RULE
+
+* Backend = game logic authority
+* Frontend = display only
+* game-engine = rule computation layer
+* No duplicated logic anywhere
+
+---
+
+OUTPUT REQUIREMENTS
+
+After completion:
+
+* Confirm all phases (1.3–1.5) completed
+* Show updated ROADMAP.md
+* Show ARCHITECTURE_STATE.md updates
+* Confirm no breaking changes
+* Confirm economy engine still intact
+* Provide implementation summary per phase
+
+STOP after completing all phases.

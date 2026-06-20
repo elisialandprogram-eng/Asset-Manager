@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#1a0a2e" rx="4"/>
+  <!-- Base -->
+  <rect x="20" y="130" width="160" height="60" fill="#2d1b4e" stroke="#7c3aed" stroke-width="2"/>
+  <!-- Main tower -->
+  <rect x="70" y="60" width="60" height="80" fill="#3b1f6e" stroke="#7c3aed" stroke-width="2"/>
+  <!-- Side towers -->
+  <rect x="20" y="90" width="45" height="50" fill="#2d1b4e" stroke="#7c3aed" stroke-width="1.5"/>
+  <rect x="135" y="90" width="45" height="50" fill="#2d1b4e" stroke="#7c3aed" stroke-width="1.5"/>
+  <!-- Battlements main -->
+  <rect x="70" y="50" width="10" height="15" fill="#3b1f6e" stroke="#7c3aed" stroke-width="1"/>
+  <rect x="87" y="50" width="10" height="15" fill="#3b1f6e" stroke="#7c3aed" stroke-width="1"/>
+  <rect x="104" y="50" width="10" height="15" fill="#3b1f6e" stroke="#7c3aed" stroke-width="1"/>
+  <rect x="121" y="50" width="10" height="15" fill="#3b1f6e" stroke="#7c3aed" stroke-width="1"/>
+  <!-- Flag -->
+  <line x1="100" y1="20" x2="100" y2="60" stroke="#7c3aed" stroke-width="2"/>
+  <polygon points="100,20 120,30 100,40" fill="#a855f7"/>
+  <!-- Window -->
+  <rect x="90" y="80" width="20" height="25" fill="#7c3aed" rx="2"/>
+  <!-- Gate -->
+  <rect x="85" y="150" width="30" height="40" fill="#1a0a2e" rx="2"/>
+  <!-- Label -->
+  <text x="100" y="195" font-family="serif" font-size="9" fill="#a855f7" text-anchor="middle">PALACE</text>
+</svg>

@@ -1,0 +1,24 @@
+CRITICAL CONTEXT REQUIREMENT: Before writing any code, read "ARCHITECTURE_STATE.md", "PROJECT_MASTER.md", and "ROADMAP.md".
+
+DIAGNOSTIC MANDATE (ACTUAL DEVELOPER LOGIN):
+The canvases are STILL rendering completely black, and the new ThreeErrorBoundary is not rendering a red error card. This means the crash is happening at a higher level, completely blocking the React tree from mounting or running.
+
+You must now use your developer credentials to log into the application directly, bypass the front page, and look at the live page execution:
+- Admin Credentials:
+  * Email: dev@eternalkingdoms.com
+  * Password: Check your local worldSeeder.ts or use 'Rcbk123@#' as documented.
+- Debugging Task: Use your internal browser/terminal test environments to log in and inspect the window's global errors. Look specifically for:
+  1. Failed asset imports or 404s fetching Three.js modules in the built `index-CYRAw1Us.js` bundle.
+  2. Canvas container height evaluation (ensure clientHeight is actually > 0 at runtime).
+  3. Context creation blocking from your testing environment.
+
+Please execute these adjustments:
+
+1. FORCE A VISUAL BACKUP PLAN (2D FALLBACK)
+   - If WebGL context creation (`gl`) returns null or fails to initialize entirely within the browser container, modify the dashboard and world map layout files to automatically unmount the 3D `<Canvas>` completely and render a clean, standard 2D HTML/CSS fallback placeholder grid so the game layout doesn't break into a black void.
+
+2. LOG WINDOW-LEVEL ERRORS TO SERVER
+   - Add a temporary `window.addEventListener('error')` and `window.addEventListener('unhandledrejection')` listener inside your frontend entry point (`main.tsx` or `index.html`) that catches any unhandled bundle/runtime crashes and sends them back to the Express server logs via a simple console log or a dummy fetch endpoint so you can see the exact browser crash text on your backend terminal.
+
+3. POST-LOG RECORDING
+   - Do not stop until you have isolated the exact high-level crash preventing the React components from mounting. Update the three master architecture files when the true root cause is identified and patched.

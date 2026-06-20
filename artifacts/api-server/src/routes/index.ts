@@ -1,0 +1,46 @@
+import { Router, type IRouter } from "express";
+import healthRouter from "./health";
+import authRouter from "./auth";
+import kingdomsRouter from "./kingdoms";
+import gameStateRouter from "./gameState";
+import buildingsRouter from "./buildings";
+import constructionRouter from "./construction";
+import assetsRouter from "./assets";
+import worldsRouter from "./worlds";
+import worldMapRouter from "./worldMap";
+import adminSpawnsRouter from "./adminSpawns";
+import clientErrorsRouter from "./clientErrors";
+import marchesRouter from "./marches";
+import worldNodesRouter from "./worldNodes";
+import heroesRouter from "./heroes";
+import troopsRouter from "./troops";
+import hospitalRouter from "./hospital";
+import reportsRouter from "./reports";
+import combatRouter from "./combat";
+import inventoryRouter from "./inventory";
+import actionPointsRouter from "./actionPoints";
+
+const router: IRouter = Router();
+
+router.use(healthRouter);
+router.use(clientErrorsRouter);
+router.use("/auth", authRouter);
+router.use("/kingdoms", kingdomsRouter);
+router.use("/kingdoms", gameStateRouter);
+router.use("/kingdoms", constructionRouter);
+router.use("/buildings", buildingsRouter);
+router.use("/assets", assetsRouter);
+router.use("/worlds", worldsRouter);
+router.use("/worlds", worldMapRouter);
+router.use("/admin/spawns", adminSpawnsRouter);
+router.use("/marches", marchesRouter);
+router.use("/worlds", worldNodesRouter);
+router.use("/heroes", heroesRouter);
+router.use("/troops", troopsRouter);
+router.use("/hospital", hospitalRouter);
+router.use("/reports", reportsRouter);
+router.use("/monsters", combatRouter);
+router.use("/inventory", inventoryRouter);
+router.use("/kingdoms", actionPointsRouter);
+
+export default router;

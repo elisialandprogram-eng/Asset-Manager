@@ -1,0 +1,430 @@
+# ETERNAL KINGDOMS
+# UNITY PHASE 5.5 — ART ASSET INTEGRATION & VERTICAL SLICE
+
+IMPORTANT
+
+BEFORE DOING ANYTHING:
+
+READ COMPLETELY:
+
+1. PROJECT_MASTER.md
+2. ROADMAP.md
+3. ARCHITECTURE_STATE.md
+4. UNITY_PROGRESS.md
+5. PHASE5_VISUAL_REPORT.md
+6. ALL UNITY DOCUMENTATION
+7. ALL PHASE 1–5 FILES
+
+AFTER COMPLETION UPDATE:
+
+- PROJECT_MASTER.md
+- ROADMAP.md
+- ARCHITECTURE_STATE.md
+- UNITY_PROGRESS.md
+
+====================================================================
+OBJECTIVE
+====================================================================
+
+The visual architecture already exists.
+
+This phase MUST integrate REAL production-quality art assets and remove ALL remaining placeholders.
+
+Goal:
+
+Launch Unity and immediately see a beautiful playable kingdom-building MMO.
+
+Target quality:
+
+- League of Kingdoms
+- Rise of Kingdoms
+- Call of Dragons
+
+ABSOLUTELY FORBIDDEN:
+
+- Cubes
+- Capsules
+- Primitive placeholders
+- Grey boxes
+- Debug meshes
+- Temporary materials
+
+DELETE every remaining placeholder visual.
+
+====================================================================
+U5.5.1 — ASSET PIPELINE FOUNDATION
+====================================================================
+
+Create:
+
+Assets/EternalKingdoms/Art/
+
+Folder structure:
+
+Environment/
+Terrain/
+Buildings/
+Monsters/
+Resources/
+Characters/
+VFX/
+UI/
+Audio/
+Materials/
+Animations/
+Addressables/
+
+Create:
+
+ArtAssetRegistry.cs
+
+Responsibilities:
+
+- Central asset registry
+- Addressables lookup
+- Fallback asset handling
+- Validation checks
+- Missing asset reporting
+
+Create editor validation tools.
+
+At startup log:
+
+Missing assets
+Broken references
+Unassigned prefabs
+
+====================================================================
+U5.5.2 — TERRAIN ART INTEGRATION
+====================================================================
+
+Create and integrate final terrain visuals.
+
+Biomes:
+
+Grasslands
+Forest
+Snow
+Desert
+Highlands
+Swamp
+Volcanic
+
+Each biome receives:
+
+Base layer
+Secondary layer
+Detail layer
+Rock layer
+
+Integrate:
+
+Trees
+Grass
+Bushes
+Flowers
+Rocks
+Cliffs
+
+Add:
+
+Road meshes
+River meshes
+Lake meshes
+
+Terrain must feel alive.
+
+No flat-colored surfaces.
+
+====================================================================
+U5.5.3 — KINGDOM ART INTEGRATION
+====================================================================
+
+Replace ALL kingdom placeholders.
+
+Integrate production-ready prefabs for:
+
+Palace
+Farm
+Lumber Mill
+Quarry
+Iron Mine
+Gold Mine
+Barracks
+Academy
+Hospital
+Wall
+Storage
+Alliance Hall
+
+Requirements:
+
+LOD Groups.
+
+Construction stages:
+
+Foundation
+Scaffolding
+Complete
+
+Completed buildings:
+
+Idle animations
+Smoke
+Flags
+Torch lights
+
+Palace must visually dominate kingdom skyline.
+
+====================================================================
+U5.5.4 — RESOURCE NODE ART
+====================================================================
+
+Replace every placeholder node.
+
+Integrate final prefabs:
+
+Farm Node
+Lumber Node
+Stone Node
+Iron Node
+Gold Node
+Crystal Node
+
+Node states:
+
+Available
+Gathering
+Exhausted
+Respawning
+
+Crystals:
+
+Animated shader
+Particles
+Glow
+Light source
+
+====================================================================
+U5.5.5 — MONSTER ART INTEGRATION
+====================================================================
+
+Integrate final monsters.
+
+Categories:
+
+Bandits
+Dire Wolves
+Ogres
+Ancient Guardians
+Dragons
+
+Each monster requires:
+
+Idle animation
+Hit animation
+Attack animation
+Death animation
+
+Integrate Animator Controllers.
+
+LOD mandatory.
+
+====================================================================
+U5.5.6 — KINGDOM POPULATION SYSTEM
+====================================================================
+
+Create:
+
+CitizenManager.cs
+
+Spawn ambient NPC citizens.
+
+Examples:
+
+Villagers
+Farmers
+Soldiers
+Merchants
+
+Behaviors:
+
+Walk roads
+Idle
+Talk
+Work
+Sit
+
+Population scales with Palace level.
+
+Kingdom must feel alive.
+
+====================================================================
+U5.5.7 — WORLD LIFE SYSTEM
+====================================================================
+
+Create:
+
+AmbientLifeManager.cs
+
+Spawn:
+
+Birds
+Butterflies
+Ambient animals
+Wind particles
+Falling leaves
+
+Biome-specific life.
+
+====================================================================
+U5.5.8 — UI FINALIZATION
+====================================================================
+
+Integrate fantasy UI atlas.
+
+Apply final theme to:
+
+Login
+Kingdom HUD
+World HUD
+Inventory
+Battle Reports
+Hospital
+March UI
+Resource HUD
+
+Replace ALL prototype sprites.
+
+Add:
+
+Hover effects
+Button sounds
+Panel transitions
+
+====================================================================
+U5.5.9 — AUDIO INTEGRATION
+====================================================================
+
+Integrate actual audio clips.
+
+Categories:
+
+Music
+Ambient
+Combat
+UI
+World
+
+Biome ambience:
+
+Forest birds
+Wind
+Volcanic rumble
+Swamp insects
+Snow wind
+
+Kingdom ambience:
+
+Citizens
+Hammering
+Animals
+Market sounds
+
+====================================================================
+U5.5.10 — VERTICAL SLICE
+====================================================================
+
+Player experience:
+
+Login
+↓
+Enter Kingdom
+↓
+See fully rendered kingdom
+↓
+Citizens walking
+↓
+Buildings animated
+↓
+Open World
+↓
+See forests, rivers, mountains
+↓
+See monsters roaming
+↓
+See resource nodes
+↓
+Send march
+↓
+Watch animated banner move
+↓
+Receive battle report
+
+This complete flow must work.
+
+====================================================================
+U5.5.11 — DEMO SCENE
+====================================================================
+
+Create:
+
+DemoScene.unity
+
+Contains:
+
+One complete kingdom
+One world region
+All resource nodes
+All monster categories
+Full VFX
+Full UI
+
+Purpose:
+
+Instant visual showcase.
+
+====================================================================
+U5.5.12 — PERFORMANCE VALIDATION
+====================================================================
+
+Validate:
+
+Desktop WebGL:
+60 FPS target
+
+Android:
+30 FPS target
+
+Stress test:
+
+500 entities visible.
+
+Use:
+
+Pooling
+LOD
+GPU Instancing
+Addressables
+Occlusion Culling
+
+====================================================================
+DELIVERABLES
+====================================================================
+
+Provide:
+
+1. Asset integration report.
+2. Missing asset report.
+3. Demo scene report.
+4. Performance report.
+5. Vertical slice report.
+
+Update:
+
+PROJECT_MASTER.md
+ROADMAP.md
+ARCHITECTURE_STATE.md
+UNITY_PROGRESS.md
+
+STOP AFTER COMPLETION.

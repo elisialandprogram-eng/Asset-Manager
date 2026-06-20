@@ -1,0 +1,259 @@
+# ETERNAL KINGDOMS — PHASE 2.8 ART DIRECTION & SCENE COMPOSITION
+
+IMPORTANT:
+
+Read and update:
+
+- PROJECT_MASTER.md
+- ROADMAP.md
+- ARCHITECTURE_STATE.md
+
+======================================================================
+OBJECTIVE
+======================================================================
+
+The PixiJS rendering architecture is complete.
+
+DO NOT rewrite the engine.
+
+DO NOT rewrite camera systems.
+
+DO NOT rewrite isometric math.
+
+DO NOT rewrite GameEngine.
+
+The current issue is VISUAL QUALITY.
+
+This phase focuses entirely on replacing placeholder visuals and improving scene composition.
+
+======================================================================
+KEEP EXISTING
+======================================================================
+
+Keep:
+
+- GameEngine
+- CameraController
+- IsoMath
+- SceneManager
+- AssetManager
+- WorldScene architecture
+- KingdomScene architecture
+
+Only improve visuals.
+
+======================================================================
+REMOVE PLACEHOLDERS
+======================================================================
+
+Remove:
+
+- Brown cube mountains
+- Primitive terrain blocks
+- Simple tree placeholders
+- Simple crystal placeholders
+- Generic castle placeholder
+
+No primitive geometry should remain visible.
+
+======================================================================
+TERRAIN IMPROVEMENTS
+======================================================================
+
+Terrain should use sprite tiles.
+
+Required terrain sprites:
+
+- grass
+- forest
+- dirt
+- mountain
+- snow
+- rocky terrain
+- crystal terrain
+
+Tiles should blend naturally.
+
+Add terrain variations.
+
+At least:
+
+8 grass variants
+6 forest variants
+6 mountain variants
+
+Randomize placement.
+
+======================================================================
+WORLD DENSITY RULES
+======================================================================
+
+Current world is overcrowded.
+
+Implement spawn density rules.
+
+Maximum visible density:
+
+- kingdoms: sparse
+- monsters: moderate
+- resources: moderate
+- crystals: rare
+
+Prevent overlapping entities.
+
+Minimum separation distance:
+
+Kingdom ↔ Kingdom = 8 tiles
+Resource ↔ Resource = 4 tiles
+Monster ↔ Monster = 4 tiles
+Crystal ↔ Crystal = 6 tiles
+
+======================================================================
+KINGDOM VISUAL REWORK
+======================================================================
+
+Replace single castle view.
+
+Create actual kingdom layout.
+
+Kingdom contains:
+
+CENTER:
+
+- Palace
+
+INNER RING:
+
+- Academy
+- Treasury
+- Warehouse
+- Alliance Center
+
+OUTER RING:
+
+- Barracks
+- Stable
+- Archery Range
+- Siege Workshop
+
+OUTSIDE WALLS:
+
+- Farms
+- Lumber Camps
+- Quarries
+- Mines
+
+Add:
+
+- roads
+- walls
+- gates
+- banners
+- torches
+- trees
+- statues
+- decorations
+
+Kingdom should look inhabited.
+
+======================================================================
+VISUAL BUILDING SYSTEM
+======================================================================
+
+Every building type requires unique art.
+
+Required:
+
+Town Hall
+Academy
+Warehouse
+Treasury
+Barracks
+Stable
+Archery Range
+Siege Workshop
+Watch Tower
+Alliance Center
+Farm
+Lumber Mill
+Quarry
+Iron Mine
+Gold Mine
+
+Each building must occupy physical space.
+
+======================================================================
+WORLD KINGDOM REPRESENTATION
+======================================================================
+
+On world map:
+
+Replace generic settlements.
+
+Kingdoms should visually evolve.
+
+L1-4:
+
+small village
+
+L5-9:
+
+fortified town
+
+L10-14:
+
+castle
+
+L15-20:
+
+capital city
+
+======================================================================
+RESOURCE VISUALS
+======================================================================
+
+Resources become:
+
+Food → farmland
+Wood → logging camp
+Stone → quarry
+Iron → ore mine
+Gold → mine entrance
+Crystal → crystal formation
+
+No markers.
+
+======================================================================
+MONSTER VISUALS
+======================================================================
+
+Bandits → camp
+Wolves → den
+Ogres → giant camp
+Guardians → ruins
+Dragons → lair
+
+======================================================================
+SCENE COMPOSITION RULES
+======================================================================
+
+World should contain:
+
+- forests
+- ruins
+- rivers
+- cliffs
+- roads
+- lakes
+- bridges
+
+Never leave large empty areas.
+
+Never overcrowd regions.
+
+======================================================================
+FINAL DELIVERABLE
+
+Do not modify engine architecture.
+
+Only improve assets, scene composition, density rules and visual quality.

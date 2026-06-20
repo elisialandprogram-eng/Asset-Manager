@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120">
+  <rect width="160" height="120" fill="#050a0f" rx="4"/>
+  <!-- Body -->
+  <ellipse cx="80" cy="75" rx="50" ry="28" fill="#374151" stroke="#6b7280" stroke-width="2"/>
+  <!-- Head -->
+  <ellipse cx="40" cy="55" rx="28" ry="22" fill="#4b5563" stroke="#6b7280" stroke-width="2"/>
+  <!-- Snout -->
+  <ellipse cx="20" cy="60" rx="15" ry="10" fill="#6b7280" stroke="#9ca3af" stroke-width="1.5"/>
+  <!-- Ears -->
+  <polygon points="25,35 15,15 35,30" fill="#374151" stroke="#6b7280" stroke-width="1.5"/>
+  <polygon points="50,33 45,15 58,30" fill="#374151" stroke="#6b7280" stroke-width="1.5"/>
+  <!-- Inner ears -->
+  <polygon points="26,33 19,20 32,30" fill="#dc2626" opacity="0.7"/>
+  <!-- Eyes -->
+  <circle cx="32" cy="50" r="6" fill="#fbbf24"/>
+  <circle cx="32" cy="50" r="3" fill="#111111"/>
+  <circle cx="46" cy="49" r="6" fill="#fbbf24"/>
+  <circle cx="46" cy="49" r="3" fill="#111111"/>
+  <!-- Teeth / growl -->
+  <path d="M 10 64 Q 20 70 30 64" fill="none" stroke="#9ca3af" stroke-width="1.5"/>
+  <line x1="15" y1="64" x2="15" y2="70" stroke="#f9fafb" stroke-width="1.5"/>
+  <line x1="20" y1="65" x2="20" y2="72" stroke="#f9fafb" stroke-width="1.5"/>
+  <line x1="25" y1="65" x2="25" y2="70" stroke="#f9fafb" stroke-width="1.5"/>
+  <!-- Tail -->
+  <path d="M 125 65 Q 150 45 145 75" fill="none" stroke="#4b5563" stroke-width="6" stroke-linecap="round"/>
+  <!-- Legs -->
+  <rect x="42" y="92" width="12" height="22" fill="#374151" stroke="#6b7280" stroke-width="1.5" rx="3"/>
+  <rect x="62" y="94" width="12" height="20" fill="#374151" stroke="#6b7280" stroke-width="1.5" rx="3"/>
+  <rect x="88" y="94" width="12" height="20" fill="#374151" stroke="#6b7280" stroke-width="1.5" rx="3"/>
+  <rect x="108" y="92" width="12" height="22" fill="#374151" stroke="#6b7280" stroke-width="1.5" rx="3"/>
+  <!-- Label -->
+  <text x="80" y="118" font-family="serif" font-size="8" fill="#9ca3af" text-anchor="middle">WOLF</text>
+</svg>

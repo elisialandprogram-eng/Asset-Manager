@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#0f0a0a" rx="4"/>
+  <!-- Building -->
+  <rect x="20" y="90" width="160" height="80" fill="#1c0a0a" stroke="#dc2626" stroke-width="2"/>
+  <!-- Roof -->
+  <polygon points="10,90 190,90 190,75 10,75" fill="#7f1d1d" stroke="#dc2626" stroke-width="2"/>
+  <!-- Windows -->
+  <rect x="35" y="105" width="25" height="20" fill="#b91c1c" rx="2"/>
+  <rect x="75" y="105" width="25" height="20" fill="#b91c1c" rx="2"/>
+  <rect x="140" y="105" width="25" height="20" fill="#b91c1c" rx="2"/>
+  <!-- Door -->
+  <rect x="85" y="135" width="30" height="35" fill="#450a0a" rx="2"/>
+  <!-- Banner -->
+  <line x1="100" y1="20" x2="100" y2="75" stroke="#dc2626" stroke-width="3"/>
+  <rect x="100" y="25" width="30" height="20" fill="#dc2626"/>
+  <!-- Sword and shield on banner -->
+  <line x1="108" y1="28" x2="122" y2="42" stroke="#fbbf24" stroke-width="2"/>
+  <ellipse cx="111" cy="38" rx="5" ry="6" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+  <!-- Battlements -->
+  <rect x="20" y="67" width="15" height="10" fill="#7f1d1d" stroke="#dc2626" stroke-width="1"/>
+  <rect x="45" y="67" width="15" height="10" fill="#7f1d1d" stroke="#dc2626" stroke-width="1"/>
+  <rect x="70" y="67" width="15" height="10" fill="#7f1d1d" stroke="#dc2626" stroke-width="1"/>
+  <rect x="120" y="67" width="15" height="10" fill="#7f1d1d" stroke="#dc2626" stroke-width="1"/>
+  <rect x="145" y="67" width="15" height="10" fill="#7f1d1d" stroke="#dc2626" stroke-width="1"/>
+  <!-- Label -->
+  <text x="100" y="195" font-family="serif" font-size="9" fill="#dc2626" text-anchor="middle">BARRACKS</text>
+</svg>

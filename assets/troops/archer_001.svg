@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160" width="120" height="160">
+  <rect width="120" height="160" fill="#0a0a0a" rx="4"/>
+  <!-- Cloak body -->
+  <rect x="38" y="68" width="44" height="55" fill="#14532d" stroke="#166534" stroke-width="1.5" rx="3"/>
+  <!-- Hood / head -->
+  <circle cx="60" cy="52" r="17" fill="#d4a574" stroke="#166534" stroke-width="1.5"/>
+  <!-- Hood -->
+  <ellipse cx="60" cy="40" rx="18" ry="12" fill="#14532d" stroke="#166534" stroke-width="1.5"/>
+  <!-- Eyes -->
+  <circle cx="53" cy="52" r="3" fill="#1f2937"/>
+  <circle cx="67" cy="52" r="3" fill="#1f2937"/>
+  <!-- Arms - drawing bow -->
+  <rect x="14" y="68" width="24" height="8" fill="#14532d" stroke="#166534" stroke-width="1" rx="3"/>
+  <rect x="82" y="68" width="24" height="8" fill="#14532d" stroke="#166534" stroke-width="1" rx="3"/>
+  <!-- Bow -->
+  <path d="M 10 45 Q 0 70 10 95" fill="none" stroke="#92400e" stroke-width="3"/>
+  <line x1="10" y1="45" x2="10" y2="95" stroke="#6b7280" stroke-width="1"/>
+  <!-- Arrow -->
+  <line x1="10" y1="70" x2="95" y2="70" stroke="#d4a574" stroke-width="2"/>
+  <polygon points="95,70 85,65 85,75" fill="#9ca3af"/>
+  <line x1="10" y1="70" x2="20" y2="65" stroke="#14532d" stroke-width="2"/>
+  <line x1="10" y1="70" x2="20" y2="75" stroke="#14532d" stroke-width="2"/>
+  <!-- Quiver on back -->
+  <rect x="85" y="72" width="8" height="25" fill="#92400e" stroke="#d97706" stroke-width="1" rx="2"/>
+  <line x1="87" y1="72" x2="87" y2="65" stroke="#d4a574" stroke-width="1.5"/>
+  <line x1="90" y1="72" x2="90" y2="63" stroke="#d4a574" stroke-width="1.5"/>
+  <line x1="93" y1="72" x2="93" y2="67" stroke="#d4a574" stroke-width="1.5"/>
+  <!-- Legs -->
+  <rect x="43" y="120" width="13" height="28" fill="#14532d" stroke="#166534" stroke-width="1" rx="2"/>
+  <rect x="64" y="120" width="13" height="28" fill="#14532d" stroke="#166534" stroke-width="1" rx="2"/>
+  <!-- Label -->
+  <text x="60" y="157" font-family="serif" font-size="8" fill="#22c55e" text-anchor="middle">ARCHER</text>
+</svg>

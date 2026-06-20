@@ -1,0 +1,353 @@
+# ETERNAL KINGDOMS
+
+# UNITY PHASE 5.7 — ALPHA CONTENT LOCK & PLAYABLE ALPHA BUILD
+
+IMPORTANT
+
+BEFORE DOING ANYTHING:
+
+READ COMPLETELY:
+
+1. PROJECT_MASTER.md
+2. ROADMAP.md
+3. ARCHITECTURE_STATE.md
+4. UNITY_PROGRESS.md
+5. PHASE5_VISUAL_REPORT.md
+6. PHASE55_REPORT.md
+7. PHASE56_REPORT.md
+8. ALPHA_READINESS_REPORT.md
+9. ALL UNITY DOCUMENTATION
+
+AFTER COMPLETION UPDATE:
+
+* PROJECT_MASTER.md
+* ROADMAP.md
+* ARCHITECTURE_STATE.md
+* UNITY_PROGRESS.md
+
+====================================================================
+OBJECTIVE
+=========
+
+All engineering systems are complete.
+
+THIS PHASE MUST DELIVER THE FIRST PLAYABLE ALPHA BUILD.
+
+Primary objective:
+
+Remove all remaining grey-box visuals and ship a polished vertical slice suitable for:
+
+* Internal playtesting
+* Closed alpha
+* Investor demonstrations
+* Trailer capture
+* Screenshots and marketing
+
+====================================================================
+U5.7.1 — PRIORITY 1 ART INTEGRATION
+===================================
+
+Integrate ALL Priority 1 assets immediately.
+
+Required assets:
+
+Palace prefab
+Barracks prefab
+Crystal node prefab
+Bandit monster
+Dire Wolf monster
+Ogre monster
+Ancient Guardian monster
+Dragon monster
+2 NPC prefabs
+Day skybox
+Night skybox
+Volume Profiles
+Core VFX assets
+
+Wire every asset into:
+
+Addressables
+ArtAssetRegistry
+Visual controllers
+Animation controllers
+LOD groups
+
+No manual scene placement.
+
+Everything must spawn dynamically.
+
+====================================================================
+U5.7.2 — BUILDING VISUAL EVOLUTION
+==================================
+
+Every building must visually evolve by level.
+
+Minimum:
+
+Level 1–3 = Early settlement
+Level 4–6 = Developed structure
+Level 7–10 = Advanced structure
+
+Implement:
+
+BuildingUpgradeVisualController.cs
+
+Features:
+
+* Automatic model swapping
+* Upgrade transition animation
+* Construction scaffolding
+* Completion celebration
+
+====================================================================
+U5.7.3 — KINGDOM BEAUTIFICATION PASS
+====================================
+
+Kingdom scene must resemble a living medieval city.
+
+Add:
+
+Road decals
+Market props
+Crates
+Wagons
+Fences
+Gardens
+Trees
+Statues
+Fountains
+Campfires
+Training dummies
+
+Population density:
+
+Scales by Palace level.
+
+Kingdom must never feel empty.
+
+====================================================================
+U5.7.4 — WORLD BEAUTIFICATION PASS
+==================================
+
+World scene improvements:
+
+Dense forests
+Riverbanks
+Mountain ridges
+Ruins
+Ancient monuments
+Road network
+Biome transition blending
+
+Add rare landmarks:
+
+Ancient ruins
+Watch towers
+Destroyed camps
+Shrines
+Statues
+
+World must feel explorable.
+
+====================================================================
+U5.7.5 — ADVANCED MONSTER BEHAVIOUR
+===================================
+
+Create:
+
+MonsterAIController.cs
+
+Behaviours:
+
+Idle
+Patrol
+Sleep
+Roam
+Investigate
+Combat Alert
+Return Home
+
+Rare monsters:
+
+Roam larger territories.
+
+Dragons:
+
+Periodic flight animation.
+
+====================================================================
+U5.7.6 — ALPHA POLISH PASS
+==========================
+
+Polish all player interactions.
+
+Requirements:
+
+Camera shake
+Hover feedback
+Button sounds
+Selection sounds
+Smooth scene transitions
+Loading screens
+Animated notifications
+Context-sensitive hints
+
+No abrupt transitions.
+
+====================================================================
+U5.7.7 — PHOTO MODE
+===================
+
+Create:
+
+PhotoModeController.cs
+
+Features:
+
+Hide UI
+Free camera
+Zoom
+Rotate
+Time of day controls
+Weather controls
+4K screenshot capture
+
+Purpose:
+
+Marketing screenshots.
+
+====================================================================
+U5.7.8 — TRAILER MODE
+=====================
+
+Create:
+
+TrailerCaptureController.cs
+
+Features:
+
+Predefined cinematic paths.
+
+Shots:
+
+Kingdom flythrough
+World exploration
+March movement
+Monster combat
+Sunrise
+Night kingdom
+Storm weather
+
+Export-ready camera sequences.
+
+====================================================================
+U5.7.9 — CLOSED ALPHA PLAYTEST TOOLS
+====================================
+
+Create:
+
+PlaytestManager.cs
+
+Features:
+
+Spawn resources
+Spawn monsters
+Instant upgrades
+Skip timers
+Teleport
+God mode
+Infinite AP
+
+Development only.
+
+Disabled in production.
+
+====================================================================
+U5.7.10 — ALPHA BUILD PIPELINE
+==============================
+
+Produce:
+
+Development Alpha Build
+Staging Alpha Build
+Production Alpha Build
+
+Platforms:
+
+WebGL
+Windows
+Android
+
+Generate:
+
+Build manifest
+Asset manifest
+Version manifest
+
+====================================================================
+U5.7.11 — FINAL ALPHA VALIDATION
+================================
+
+Create:
+
+AlphaLaunchValidator.cs
+
+Validate:
+
+No placeholders
+No missing assets
+No pink materials
+No broken Addressables
+No missing animations
+No primitive meshes
+No broken references
+
+Output:
+
+ALPHA_LAUNCH_REPORT.md
+
+====================================================================
+SUCCESS CRITERIA
+================
+
+A new player must be able to:
+
+Login
+Enter Kingdom
+Explore Kingdom
+Open World
+Gather Resources
+Fight Monsters
+View Battle Reports
+Return Home
+
+While experiencing:
+
+Beautiful visuals
+Animations
+Audio
+Weather
+Day/Night cycle
+Cinematics
+
+====================================================================
+DELIVERABLES
+============
+
+Provide:
+
+1. Alpha launch report.
+2. Art integration report.
+3. Performance report.
+4. Playtest report.
+5. Build pipeline report.
+
+Update:
+
+PROJECT_MASTER.md
+ROADMAP.md
+ARCHITECTURE_STATE.md
+UNITY_PROGRESS.md
+
+STOP AFTER COMPLETION.

@@ -1,0 +1,16 @@
+{
+  "configName": "Production",
+  "environmentName": "production",
+  "apiBaseUrl": "https://api.eternalkingdoms.com",
+  "webSocketUrl": "wss://api.eternalkingdoms.com",
+  "buildDefines": ["UNITY_ENV_PRODUCTION"],
+  "compressionFormat": "Brotli",
+  "exceptionSupport": "None",
+  "il2cppOptimization": "Speed",
+  "webglMemorySize": 512,
+  "stripEngineCode": true,
+  "allowDebugging": false,
+  "developmentBuild": false,
+  "targets": ["WebGL", "Android", "iOS"],
+  "notes": "Production release. Brotli compression. IL2CPP speed. All platforms."
+}

@@ -1,0 +1,393 @@
+# ETERNAL KINGDOMS — UNITY MIGRATION PHASE 0
+
+# DELETE EXISTING VISUAL CLIENT AND PREPARE FOR UNITY
+
+IMPORTANT:
+
+BEFORE DOING ANYTHING:
+
+READ:
+
+1. PROJECT_MASTER.md
+2. ROADMAP.md
+3. ARCHITECTURE_STATE.md
+
+Update these files continuously throughout the migration.
+
+=====================================================================
+CRITICAL DECISION
+=================
+
+Eternal Kingdoms will NO LONGER use:
+
+* React game rendering
+* PixiJS rendering
+* Canvas rendering
+* Isometric browser renderer
+* WorldCanvas
+* WorldScene
+* KingdomScene
+* CameraController
+* IsoMath
+* AssetManager
+* Any browser-based game engine
+
+The game client will be completely rebuilt using:
+
+UNITY 6 LTS + URP
+
+This is a COMPLETE REPLACEMENT.
+
+DO NOT REFACTOR.
+
+DO NOT IMPROVE.
+
+DELETE AND REBUILD.
+
+=====================================================================
+STEP 1 — DELETE ALL EXISTING VISUAL GAME CODE
+=============================================
+
+PERMANENTLY DELETE all visual game systems.
+
+DELETE ENTIRE DIRECTORIES:
+
+src/game/
+
+Delete all files related to:
+
+* PixiJS
+* World rendering
+* Kingdom rendering
+* Isometric rendering
+* Terrain rendering
+* Camera systems
+* Sprite rendering
+* World map visualizations
+* Kingdom visualizations
+
+Examples:
+
+WorldCanvas
+World3DCanvas
+KingdomScene3D
+WorldScene
+KingdomScene
+TerrainRenderer
+EnvironmentRenderer
+CameraController
+IsoMath
+AssetManager
+SelectionSystem
+AnimationSystem
+
+Delete ALL dead imports.
+
+Delete ALL unused code.
+
+=====================================================================
+STEP 2 — REMOVE DEPENDENCIES
+============================
+
+Remove completely:
+
+* pixi.js
+* @pixi/*
+* canvas rendering libraries
+* obsolete visual dependencies
+
+Clean:
+
+package.json
+pnpm-lock.yaml
+
+Application must compile cleanly after removal.
+
+=====================================================================
+STEP 3 — REACT APPLICATION BECOMES PORTAL ONLY
+==============================================
+
+The React application is now only:
+
+ACCOUNT + PORTAL FRONTEND
+
+Keep:
+
+* Login
+* Registration
+* Dashboard
+* Account Settings
+* Profile
+* Kingdom Statistics
+* Resource Statistics
+
+REMOVE:
+
+* Interactive world map
+* Interactive kingdom scene
+* Browser rendering systems
+
+Create placeholder pages:
+
+/kingdom
+
+Display:
+
+"Kingdom gameplay is available in the Unity Client."
+
+/world
+
+Display:
+
+"World exploration is available in the Unity Client."
+
+Add a prominent button:
+
+"Launch Unity Client"
+
+Implementation can remain placeholder for now.
+
+=====================================================================
+STEP 4 — CREATE UNITY CLIENT DIRECTORY
+======================================
+
+Create:
+
+/unity-client/
+
+This folder becomes the future Unity project root.
+
+Create documentation files:
+
+unity-client/
+
+README.md
+UNITY_ARCHITECTURE.md
+UNITY_NETWORKING.md
+UNITY_WORLD_SYSTEM.md
+UNITY_KINGDOM_SYSTEM.md
+UNITY_ART_PIPELINE.md
+UNITY_BUILD_PIPELINE.md
+UNITY_API_CONTRACT.md
+
+=====================================================================
+STEP 5 — UNITY TECH STACK
+=========================
+
+Document the following architecture.
+
+Engine:
+
+Unity 6 LTS
+
+Render Pipeline:
+
+Universal Render Pipeline (URP)
+
+Platforms:
+
+* WebGL
+* Android
+* iOS
+
+Backend:
+
+Existing Fastify API.
+
+Database:
+
+Supabase PostgreSQL.
+
+Realtime:
+
+WebSockets / Socket.IO.
+
+=====================================================================
+STEP 6 — UNITY PROJECT STRUCTURE
+================================
+
+Document exact project layout.
+
+Assets/
+
+Scripts/
+Core/
+Networking/
+Authentication/
+World/
+Kingdom/
+Buildings/
+Troops/
+Monsters/
+Resources/
+Alliances/
+NFT/
+UI/
+Camera/
+Managers/
+Utilities/
+
+Art/
+Terrain/
+Buildings/
+Units/
+Monsters/
+Resources/
+Effects/
+UI/
+
+Prefabs/
+Scenes/
+ScriptableObjects/
+Addressables/
+
+=====================================================================
+STEP 7 — WORLD ENGINE SPECIFICATION
+===================================
+
+Document:
+
+World Size:
+
+2048 x 2048 grid.
+
+Chunk Size:
+
+64 x 64.
+
+Streaming:
+
+Chunk-based loading and unloading.
+
+Camera:
+
+Fixed isometric.
+
+Kingdom footprint:
+
+2 x 2.
+
+Resource footprint:
+
+1 x 1.
+
+Monster footprint:
+
+1 x 1.
+
+Future alliance structures:
+
+4 x 4 or larger.
+
+=====================================================================
+STEP 8 — KINGDOM SYSTEM SPECIFICATION
+=====================================
+
+Kingdom layout uses FIXED BUILDING NODES.
+
+Center:
+
+Palace.
+
+Inner Ring:
+
+Academy
+Treasury
+Warehouse
+Alliance Center
+
+Military Ring:
+
+Barracks
+Stable
+Archery Range
+Siege Workshop
+
+Outer Ring:
+
+Farms
+Lumber Mills
+Quarries
+Mines
+
+No procedural placement.
+
+No random layouts.
+
+=====================================================================
+STEP 9 — API AUDIT
+==================
+
+Audit every backend API.
+
+Create:
+
+UNITY_API_CONTRACT.md
+
+Document:
+
+* endpoint
+* method
+* request schema
+* response schema
+* auth requirements
+* intended Unity usage
+
+Identify missing APIs.
+
+Do NOT implement missing APIs yet.
+
+=====================================================================
+STEP 10 — SUPABASE MIGRATION PLAN
+=================================
+
+Create:
+
+SUPABASE_MIGRATION_PLAN.md
+
+Document:
+
+* existing schema inventory
+* repository abstraction review
+* migration sequence
+* environment variables
+* storage migration strategy
+* rollback strategy
+
+Migration execution will occur later.
+
+=====================================================================
+STEP 11 — DEVELOPMENT ACCOUNT
+=============================
+
+Ensure account exists:
+
+Email:
+
+[dev@eternalkingdoms.com](mailto:dev@eternalkingdoms.com)
+
+Password:
+
+Rcbk123@#
+
+Seed only if missing.
+
+=====================================================================
+SUCCESS CRITERIA
+================
+
+1. All legacy browser rendering code permanently deleted.
+2. Application builds successfully.
+3. React app acts only as account/portal frontend.
+4. Unity architecture fully documented.
+5. Backend remains operational.
+6. Supabase migration plan completed.
+7. Governance files updated.
+
+Update:
+
+PROJECT_MASTER.md
+ROADMAP.md
+ARCHITECTURE_STATE.md
+
+STOP AFTER COMPLETION.

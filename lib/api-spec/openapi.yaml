@@ -1,0 +1,2449 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Eternal Kingdoms API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication operations
+  - name: kingdoms
+    description: Kingdom management
+  - name: buildings
+    description: Building management
+  - name: resources
+    description: Resource management
+  - name: assets
+    description: Asset registry
+  - name: worlds
+    description: World and map data
+  - name: marches
+    description: March creation, listing, and cancellation
+  - name: admin
+    description: Admin-only management endpoints (requires admin role)
+  - name: heroes
+    description: Hero inventory and management
+  - name: troops
+    description: Troop inventory and definitions (T1-T5)
+  - name: hospital
+    description: Hospital wounded tracking and healing
+  - name: reports
+    description: Battle report history
+  - name: combat
+    description: PvE monster attack flow
+
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: User registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Username or email already taken
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current authenticated user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /kingdoms/mine:
+    get:
+      operationId: getMyKingdom
+      tags: [kingdoms]
+      summary: Get the authenticated user's kingdom
+      responses:
+        "200":
+          description: User's kingdom
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Kingdom"
+        "404":
+          description: Kingdom not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /kingdoms/{id}:
+    get:
+      operationId: getKingdom
+      tags: [kingdoms]
+      summary: Get a kingdom by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Kingdom details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Kingdom"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /kingdoms/{id}/summary:
+    get:
+      operationId: getKingdomSummary
+      tags: [kingdoms]
+      summary: Get a kingdom's dashboard summary (resources, buildings, troops)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Kingdom summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KingdomSummary"
+
+  /kingdoms/{id}/buildings:
+    get:
+      operationId: getKingdomBuildings
+      tags: [buildings]
+      summary: Get all buildings in a kingdom
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of buildings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Building"
+
+  /kingdoms/{id}/resources:
+    get:
+      operationId: getKingdomResources
+      tags: [resources]
+      summary: Get current resources for a kingdom
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Kingdom resources
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Resources"
+
+  /kingdoms/{id}/state:
+    get:
+      operationId: getKingdomState
+      tags: [kingdoms]
+      summary: Full authoritative game state for a kingdom
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Complete kingdom game state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KingdomState"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /kingdoms/{id}/queue:
+    get:
+      operationId: getKingdomQueue
+      tags: [kingdoms]
+      summary: Get active upgrade queue for a kingdom
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Active upgrade queue
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UpgradeQueueItem"
+
+  /buildings/{buildingId}/upgrade:
+    post:
+      operationId: upgradeBuilding
+      tags: [buildings]
+      summary: Queue a building upgrade
+      parameters:
+        - name: buildingId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "202":
+          description: Upgrade started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpgradeResponse"
+        "402":
+          description: Insufficient resources
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsufficientResourcesError"
+        "409":
+          description: Cannot upgrade (already upgrading or max level)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /buildings/{buildingId}/upgrade-preview:
+    get:
+      operationId: getUpgradePreview
+      tags: [buildings]
+      summary: Preview cost and duration of next upgrade without committing
+      parameters:
+        - name: buildingId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Upgrade preview
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpgradePreview"
+
+  /assets:
+    get:
+      operationId: listAssets
+      tags: [assets]
+      summary: List all assets in the registry
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [building, troop, monster, dragon, skin, terrain, ui]
+      responses:
+        "200":
+          description: Asset list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Asset"
+
+  /assets/{assetId}:
+    get:
+      operationId: getAsset
+      tags: [assets]
+      summary: Get a single asset by its registry ID
+      parameters:
+        - name: assetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Asset details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Asset"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /worlds:
+    get:
+      operationId: listWorlds
+      tags: [worlds]
+      summary: List all active worlds
+      responses:
+        "200":
+          description: World list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/World"
+
+  /worlds/{worldId}/map:
+    get:
+      operationId: getWorldMap
+      tags: [worlds]
+      summary: Get full world map data including kingdoms, monster spawns, and crystal nodes
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Full world map data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorldMapData"
+        "404":
+          description: World not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /worlds/{worldId}/kingdoms:
+    get:
+      operationId: getWorldKingdoms
+      tags: [worlds]
+      summary: List all kingdoms in a world with map positions
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Kingdom list with positions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/KingdomMapEntry"
+
+  /worlds/{worldId}/spawns:
+    get:
+      operationId: getWorldSpawns
+      tags: [worlds]
+      summary: List all monster spawns in a world
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Monster spawn list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MonsterSpawnFull"
+
+  /worlds/{worldId}/place-kingdom:
+    post:
+      operationId: devPlaceKingdom
+      tags: [worlds]
+      summary: Place a kingdom at specific map coordinates (DEV ONLY — admin role required)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlaceKingdomInput"
+      responses:
+        "200":
+          description: Kingdom placed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlaceKingdomResponse"
+        "403":
+          description: Admin role required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Kingdom not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /worlds/{worldId}/active-spawns:
+    get:
+      operationId: getWorldActiveSpawns
+      tags: [worlds]
+      summary: Get all active world spawns (resource nodes + monster camps) for a world
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Active world spawns with expiry timestamps
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActiveSpawnsResponse"
+        "400":
+          description: Invalid world ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/spawns/stats:
+    get:
+      operationId: getAdminSpawnsStats
+      tags: [admin]
+      summary: Get aggregate spawn statistics for a world (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: worldId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Spawn statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpawnStats"
+        "400":
+          description: worldId is required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/spawns/generate:
+    post:
+      operationId: postAdminSpawnsGenerate
+      tags: [admin]
+      summary: Trigger an immediate spawn cycle for a world (admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SpawnActionRequest"
+      responses:
+        "200":
+          description: Spawn cycle result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpawnGenerateResponse"
+        "400":
+          description: worldId is required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/spawns/reset:
+    post:
+      operationId: postAdminSpawnsReset
+      tags: [admin]
+      summary: Delete all spawns for a world and regenerate from scratch (admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SpawnActionRequest"
+      responses:
+        "200":
+          description: Reset result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpawnResetResponse"
+        "400":
+          description: worldId is required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/spawns/cleanup:
+    post:
+      operationId: postAdminSpawnsCleanup
+      tags: [admin]
+      summary: Delete stale expired/depleted spawn rows older than 1 hour (admin only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SpawnActionRequest"
+      responses:
+        "200":
+          description: Cleanup result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpawnCleanupResponse"
+        "400":
+          description: worldId is required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Admin access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /kingdoms/{id}/construction-queue:
+    get:
+      operationId: getConstructionQueue
+      tags: [buildings]
+      summary: Get active new-building construction queue for a kingdom
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Active construction queue
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ConstructionQueueItem"
+        "404":
+          description: Kingdom not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /kingdoms/{id}/construction-options:
+    get:
+      operationId: getConstructionOptions
+      tags: [buildings]
+      summary: Get available building types to construct with costs and slot availability
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Construction options
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionOptions"
+        "404":
+          description: Kingdom not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /kingdoms/{id}/construct:
+    post:
+      operationId: constructBuilding
+      tags: [buildings]
+      summary: Start construction of a new building
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConstructBuildingInput"
+      responses:
+        "202":
+          description: Construction started
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionResponse"
+        "402":
+          description: Insufficient resources
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InsufficientResourcesError"
+        "409":
+          description: Slot limit reached or palace tier insufficient
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Kingdom not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /marches:
+    post:
+      operationId: createMarch
+      tags: [marches]
+      summary: Create a gather march
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarchCreateBody"
+      responses:
+        "201":
+          description: March created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarchCreateResult"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Not your kingdom
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Kingdom or spawn not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    get:
+      operationId: listMarches
+      tags: [marches]
+      summary: List active marches for a kingdom
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: kingdomId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Active marches
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarchListResult"
+
+  /marches/{id}:
+    delete:
+      operationId: cancelMarch
+      tags: [marches]
+      summary: Cancel (recall) an outbound march
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: March recalled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: March not in outbound state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /worlds/{worldId}/resource-nodes:
+    get:
+      operationId: getResourceNodes
+      tags: [worlds]
+      summary: Get active resource nodes in a world
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Active resource nodes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceNodesResponse"
+
+  /worlds/{worldId}/monster-nodes:
+    get:
+      operationId: getMonsterNodes
+      tags: [worlds]
+      summary: Get active monster spawn nodes in a world
+      parameters:
+        - name: worldId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Active monster nodes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MonsterNodesResponse"
+
+  # ── Phase 4: Heroes ────────────────────────────────────────────────────────
+
+  /heroes:
+    get:
+      operationId: listHeroes
+      tags: [heroes]
+      summary: List heroes for a kingdom
+      parameters:
+        - name: kingdomId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Hero list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HeroListResponse"
+
+  /heroes/{id}:
+    get:
+      operationId: getHero
+      tags: [heroes]
+      summary: Get a single hero
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Hero detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HeroResponse"
+
+  # ── Phase 4: Troops ────────────────────────────────────────────────────────
+
+  /troops:
+    get:
+      operationId: getTroopInventory
+      tags: [troops]
+      summary: Get troop counts for a kingdom
+      parameters:
+        - name: kingdomId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Troop counts keyed by TroopKey
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TroopInventoryResponse"
+
+  /troops/definitions:
+    get:
+      operationId: getTroopDefinitions
+      tags: [troops]
+      summary: Get all T1-T5 troop stat definitions
+      responses:
+        "200":
+          description: Troop definitions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TroopDefinitionsResponse"
+
+  # ── Phase 4: Hospital ──────────────────────────────────────────────────────
+
+  /hospital:
+    get:
+      operationId: getHospital
+      tags: [hospital]
+      summary: Get hospital state (wounded troop counts with lazy heal applied)
+      parameters:
+        - name: kingdomId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Hospital state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HospitalResponse"
+
+  # ── Phase 4: Battle Reports ────────────────────────────────────────────────
+
+  /reports:
+    get:
+      operationId: listBattleReports
+      tags: [reports]
+      summary: List battle reports for a kingdom
+      parameters:
+        - name: kingdomId
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: Paginated battle reports
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BattleReportListResponse"
+
+  /reports/{id}:
+    get:
+      operationId: getBattleReport
+      tags: [reports]
+      summary: Get a single battle report
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Battle report detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BattleReportResponse"
+
+  # ── Phase 4: Combat (PvE monster attack) ──────────────────────────────────
+
+  /monsters/{spawnId}:
+    get:
+      operationId: getMonsterSpawn
+      tags: [combat]
+      summary: Get monster spawn info + AP cost for attacking
+      parameters:
+        - name: spawnId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Monster spawn detail with AP cost
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MonsterSpawnDetailResponse"
+
+  /monsters/{spawnId}/attack:
+    post:
+      operationId: attackMonster
+      tags: [combat]
+      summary: Send troops to attack a monster spawn (creates an attack_monster march)
+      parameters:
+        - name: spawnId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AttackMarchRequest"
+      responses:
+        "201":
+          description: March created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttackMarchResponse"
+        "400":
+          description: Validation error (bad troops, insufficient AP, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # ── Phase 4: Action Points ────────────────────────────────────────────────
+
+  /kingdoms/{id}/ap:
+    get:
+      operationId: getKingdomAP
+      tags: [combat]
+      summary: Get current action points for a kingdom (lazy regen applied)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Current and max AP
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActionPointResponse"
+
+  # ── Phase 4: Inventory ────────────────────────────────────────────────────
+
+  /inventory:
+    get:
+      operationId: getInventory
+      tags: [combat]
+      summary: Get item inventory for a kingdom
+      parameters:
+        - name: kingdomId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Item inventory keyed by itemKey
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [kingdomId, items]
+                properties:
+                  kingdomId:
+                    type: integer
+                  items:
+                    type: object
+                    additionalProperties:
+                      type: integer
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    RegisterInput:
+      type: object
+      required: [username, email, password]
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 24
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        kingdomName:
+          type: string
+          minLength: 3
+          maxLength: 48
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      required: [token, user]
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+
+    User:
+      type: object
+      required: [id, username, email, role, createdAt]
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [player, moderator, admin]
+        createdAt:
+          type: string
+          format: date-time
+        lastLoginAt:
+          type: ["string", "null"]
+          format: date-time
+
+    Kingdom:
+      type: object
+      required: [id, userId, name, worldId, power, createdAt]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        name:
+          type: string
+        worldId:
+          type: integer
+        mapX:
+          type: ["integer", "null"]
+        mapY:
+          type: ["integer", "null"]
+        power:
+          type: integer
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    KingdomSummary:
+      type: object
+      required: [kingdom, resources, buildingCount, troopCount]
+      properties:
+        kingdom:
+          $ref: "#/components/schemas/Kingdom"
+        resources:
+          $ref: "#/components/schemas/Resources"
+        buildingCount:
+          type: integer
+        troopCount:
+          type: integer
+        power:
+          type: integer
+
+    Building:
+      type: object
+      required: [id, kingdomId, buildingType, level, assetId]
+      properties:
+        id:
+          type: integer
+        kingdomId:
+          type: integer
+        buildingType:
+          type: string
+          enum: [palace, farm, lumber_mill, quarry, iron_mine, gold_mine, barracks, wall, watch_tower]
+        level:
+          type: integer
+        assetId:
+          type: string
+        isConstructing:
+          type: boolean
+        constructionEndsAt:
+          type: ["string", "null"]
+          format: date-time
+        positionX:
+          type: ["integer", "null"]
+        positionY:
+          type: ["integer", "null"]
+
+    Resources:
+      type: object
+      required: [kingdomId, food, wood, stone, iron, gold, updatedAt]
+      properties:
+        kingdomId:
+          type: integer
+        food:
+          type: integer
+        wood:
+          type: integer
+        stone:
+          type: integer
+        iron:
+          type: integer
+        gold:
+          type: integer
+        updatedAt:
+          type: string
+          format: date-time
+
+    Asset:
+      type: object
+      required: [assetId, category, name, variant, version, placeholder]
+      properties:
+        assetId:
+          type: string
+          description: "Unique registry ID e.g. building_farm_001"
+        category:
+          type: string
+          enum: [building, troop, monster, dragon, skin, terrain, ui]
+        name:
+          type: string
+        variant:
+          type: string
+        version:
+          type: integer
+        placeholder:
+          type: boolean
+        imageUrl:
+          type: ["string", "null"]
+        nftContractAddress:
+          type: ["string", "null"]
+        nftTokenId:
+          type: ["string", "null"]
+        metadata:
+          type: object
+          additionalProperties: true
+
+    ResourceAmounts:
+      type: object
+      required: [food, wood, stone, iron, gold]
+      properties:
+        food:
+          type: integer
+        wood:
+          type: integer
+        stone:
+          type: integer
+        iron:
+          type: integer
+        gold:
+          type: integer
+
+    PalaceTierConfig:
+      type: object
+      required: [maxResourceBuildings, maxBarracks, maxWalls, maxWatchTowers, unlocksFeatures]
+      properties:
+        maxResourceBuildings:
+          type: integer
+        maxBarracks:
+          type: integer
+        maxWalls:
+          type: integer
+        maxWatchTowers:
+          type: integer
+        unlocksFeatures:
+          type: array
+          items:
+            type: string
+
+    UpgradeQueueItem:
+      type: object
+      required: [id, kingdomId, buildingId, fromLevel, toLevel, startsAt, endsAt, status]
+      properties:
+        id:
+          type: integer
+        kingdomId:
+          type: integer
+        buildingId:
+          type: integer
+        fromLevel:
+          type: integer
+        toLevel:
+          type: integer
+        foodCost:
+          type: integer
+        woodCost:
+          type: integer
+        stoneCost:
+          type: integer
+        ironCost:
+          type: integer
+        goldCost:
+          type: integer
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [queued, in_progress, completed, cancelled]
+
+    KingdomState:
+      type: object
+      required: [kingdom, resources, buildings, activeQueue, productionRates, resourceCaps, palaceTier, power, resourcesLastUpdated]
+      properties:
+        kingdom:
+          $ref: "#/components/schemas/Kingdom"
+        resources:
+          $ref: "#/components/schemas/Resources"
+        buildings:
+          type: array
+          items:
+            $ref: "#/components/schemas/Building"
+        activeQueue:
+          type: array
+          items:
+            $ref: "#/components/schemas/UpgradeQueueItem"
+        productionRates:
+          $ref: "#/components/schemas/ResourceAmounts"
+        resourceCaps:
+          $ref: "#/components/schemas/ResourceAmounts"
+        palaceTier:
+          $ref: "#/components/schemas/PalaceTierConfig"
+        power:
+          type: integer
+        resourcesLastUpdated:
+          type: string
+          format: date-time
+
+    UpgradeResponse:
+      type: object
+      required: [message, upgrade, durationSeconds, endsAt, costDeducted]
+      properties:
+        message:
+          type: string
+        upgrade:
+          $ref: "#/components/schemas/UpgradeQueueItem"
+        durationSeconds:
+          type: integer
+        endsAt:
+          type: string
+          format: date-time
+        costDeducted:
+          $ref: "#/components/schemas/ResourceAmounts"
+
+    UpgradePreview:
+      type: object
+      required: [buildingId, buildingType, currentLevel, targetLevel, canUpgrade, cost, durationSeconds, canAfford]
+      properties:
+        buildingId:
+          type: integer
+        buildingType:
+          type: string
+        currentLevel:
+          type: integer
+        targetLevel:
+          type: integer
+        canUpgrade:
+          type: boolean
+        reason:
+          type: ["string", "null"]
+        cost:
+          $ref: "#/components/schemas/ResourceAmounts"
+        durationSeconds:
+          type: integer
+        canAfford:
+          type: boolean
+        shortfall:
+          $ref: "#/components/schemas/ResourceAmounts"
+
+    InsufficientResourcesError:
+      type: object
+      required: [error, required]
+      properties:
+        error:
+          type: string
+        shortfall:
+          $ref: "#/components/schemas/ResourceAmounts"
+        required:
+          $ref: "#/components/schemas/ResourceAmounts"
+
+    World:
+      type: object
+      required: [id, name, status, maxKingdoms, currentKingdoms]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [active, inactive, full, maintenance]
+        maxKingdoms:
+          type: integer
+        currentKingdoms:
+          type: integer
+        season:
+          type: ["integer", "null"]
+        startedAt:
+          type: ["string", "null"]
+          format: date-time
+
+    ConstructionQueueItem:
+      type: object
+      required: [id, kingdomId, buildingId, buildingType, startsAt, endsAt, status]
+      properties:
+        id:
+          type: integer
+        kingdomId:
+          type: integer
+        buildingId:
+          type: integer
+        buildingType:
+          type: string
+          enum: [palace, farm, lumber_mill, quarry, iron_mine, gold_mine, barracks, wall, watch_tower]
+        foodCost:
+          type: integer
+        woodCost:
+          type: integer
+        stoneCost:
+          type: integer
+        ironCost:
+          type: integer
+        goldCost:
+          type: integer
+        startsAt:
+          type: string
+          format: date-time
+        endsAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [in_progress, completed, cancelled]
+
+    ConstructionOption:
+      type: object
+      required: [buildingType, label, cost, durationSeconds, slotAvailable, canAfford, shortfall]
+      properties:
+        buildingType:
+          type: string
+          enum: [palace, farm, lumber_mill, quarry, iron_mine, gold_mine, barracks, wall, watch_tower]
+        label:
+          type: string
+        cost:
+          $ref: "#/components/schemas/ResourceAmounts"
+        durationSeconds:
+          type: integer
+        slotAvailable:
+          type: boolean
+        slotReason:
+          type: ["string", "null"]
+        canAfford:
+          type: boolean
+        shortfall:
+          $ref: "#/components/schemas/ResourceAmounts"
+
+    ConstructionOptions:
+      type: object
+      required: [palaceLevel, palaceTier, options]
+      properties:
+        palaceLevel:
+          type: integer
+        palaceTier:
+          $ref: "#/components/schemas/PalaceTierConfig"
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConstructionOption"
+
+    ConstructBuildingInput:
+      type: object
+      required: [buildingType]
+      properties:
+        buildingType:
+          type: string
+          enum: [farm, lumber_mill, quarry, iron_mine, gold_mine, barracks, wall, watch_tower]
+
+    ConstructionResponse:
+      type: object
+      required: [message, construction, building, durationSeconds, endsAt, costDeducted]
+      properties:
+        message:
+          type: string
+        construction:
+          $ref: "#/components/schemas/ConstructionQueueItem"
+        building:
+          $ref: "#/components/schemas/Building"
+        durationSeconds:
+          type: integer
+        endsAt:
+          type: string
+          format: date-time
+        costDeducted:
+          $ref: "#/components/schemas/ResourceAmounts"
+
+    KingdomMapEntry:
+      type: object
+      required: [id, name, power, worldId, isActive]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        mapX:
+          type: ["integer", "null"]
+        mapY:
+          type: ["integer", "null"]
+        power:
+          type: integer
+        worldId:
+          type: integer
+        isActive:
+          type: boolean
+
+    MonsterInfo:
+      type: object
+      required: [id, name, tier, power, hp, assetId]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        tier:
+          type: string
+          enum: [common, uncommon, rare, elite, boss, ancient]
+        power:
+          type: integer
+        hp:
+          type: integer
+        assetId:
+          type: string
+
+    MonsterSpawnFull:
+      type: object
+      required: [id, worldId, x, y, currentHp, monster]
+      properties:
+        id:
+          type: integer
+        worldId:
+          type: integer
+        x:
+          type: integer
+        y:
+          type: integer
+        currentHp:
+          type: integer
+        respawnAt:
+          type: ["string", "null"]
+          format: date-time
+        monster:
+          $ref: "#/components/schemas/MonsterInfo"
+
+    CrystalNodeEntry:
+      type: object
+      required: [id, worldId, x, y, crystalType, crystalYield]
+      properties:
+        id:
+          type: integer
+        worldId:
+          type: integer
+        x:
+          type: integer
+        y:
+          type: integer
+        crystalType:
+          type: string
+          enum: [fire, ice, earth, lightning, void, holy]
+        crystalYield:
+          type: integer
+        harvestedByKingdomId:
+          type: ["integer", "null"]
+
+    WorldWithSeed:
+      type: object
+      required: [id, name, status, maxKingdoms, currentKingdoms]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [active, inactive, full, maintenance]
+        maxKingdoms:
+          type: integer
+        currentKingdoms:
+          type: integer
+        season:
+          type: ["integer", "null"]
+        seed:
+          type: ["integer", "null"]
+
+    WorldMapData:
+      type: object
+      required: [world, kingdoms, spawns, crystals]
+      properties:
+        world:
+          $ref: "#/components/schemas/WorldWithSeed"
+        kingdoms:
+          type: array
+          items:
+            $ref: "#/components/schemas/KingdomMapEntry"
+        spawns:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonsterSpawnFull"
+        crystals:
+          type: array
+          items:
+            $ref: "#/components/schemas/CrystalNodeEntry"
+
+    PlaceKingdomInput:
+      type: object
+      required: [kingdomId, x, y]
+      properties:
+        kingdomId:
+          type: integer
+        x:
+          type: integer
+          minimum: 0
+          maximum: 10000
+        y:
+          type: integer
+          minimum: 0
+          maximum: 10000
+
+    PlaceKingdomCoords:
+      type: object
+      required: [id, mapX, mapY]
+      properties:
+        id:
+          type: integer
+        mapX:
+          type: integer
+        mapY:
+          type: integer
+
+    PlaceKingdomResponse:
+      type: object
+      required: [message, kingdom]
+      properties:
+        message:
+          type: string
+        kingdom:
+          $ref: "#/components/schemas/PlaceKingdomCoords"
+
+    WorldSpawn:
+      type: object
+      required: [id, worldId, spawnType, spawnSubtype, level, tileX, tileY, posX, posY, biome, status, spawnedAt, expiresAt]
+      properties:
+        id:
+          type: integer
+        worldId:
+          type: integer
+        spawnType:
+          type: string
+          enum: [resource, monster]
+          description: "Top-level category: resource node or monster camp"
+        spawnSubtype:
+          type: string
+          description: "Specific variety — e.g. farm, lumber, iron, gold, crystal, bandit, dire_wolf, ogre, guardian, dragon"
+        level:
+          type: integer
+          minimum: 1
+          maximum: 20
+          description: "Gameplay power level — drives loot and difficulty"
+        tileX:
+          type: integer
+          description: "World-space tile X coordinate (0–9999)"
+        tileY:
+          type: integer
+          description: "World-space tile Y coordinate (0–9999)"
+        posX:
+          type: integer
+          description: "World-space sub-tile X position (0–10000) — used for 3D rendering"
+        posY:
+          type: integer
+          description: "World-space sub-tile Y position (0–10000) — used for 3D rendering"
+        biome:
+          type: string
+          enum: [plains, forest, hills, mountains, peaks, crystal, water]
+          description: "Terrain biome at spawn location"
+        status:
+          type: string
+          enum: [active, expired, depleted]
+        spawnedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+          description: "When this spawn auto-expires if not interacted with"
+        depletedAt:
+          type: ["string", "null"]
+          format: date-time
+
+    ActiveSpawnsResponse:
+      type: object
+      required: [worldId, spawns]
+      properties:
+        worldId:
+          type: integer
+        spawns:
+          type: array
+          items:
+            $ref: "#/components/schemas/WorldSpawn"
+
+    SpawnStats:
+      type: object
+      required: [totalActive, totalExpired, totalDepleted, bySubtype, byBiome]
+      properties:
+        totalActive:
+          type: integer
+        totalExpired:
+          type: integer
+        totalDepleted:
+          type: integer
+        bySubtype:
+          type: object
+          additionalProperties:
+            type: integer
+        byBiome:
+          type: object
+          additionalProperties:
+            type: integer
+
+    SpawnActionRequest:
+      type: object
+      required: [worldId]
+      properties:
+        worldId:
+          type: integer
+
+    SpawnGenerateResponse:
+      type: object
+      required: [generated, markedExpired, deleted]
+      properties:
+        generated:
+          type: integer
+        markedExpired:
+          type: integer
+        deleted:
+          type: integer
+
+    SpawnResetResponse:
+      type: object
+      required: [deleted, generated]
+      properties:
+        deleted:
+          type: integer
+        generated:
+          type: integer
+
+    SpawnCleanupResponse:
+      type: object
+      required: [removed]
+      properties:
+        removed:
+          type: integer
+
+    TroopLoad:
+      type: object
+      properties:
+        militia:
+          type: integer
+          minimum: 0
+        spearman:
+          type: integer
+          minimum: 0
+        archer:
+          type: integer
+          minimum: 0
+        scout:
+          type: integer
+          minimum: 0
+        knight:
+          type: integer
+          minimum: 0
+        catapult:
+          type: integer
+          minimum: 0
+        dragon_rider:
+          type: integer
+          minimum: 0
+
+    ResourceGathered:
+      type: object
+      properties:
+        food:
+          type: number
+        wood:
+          type: number
+        stone:
+          type: number
+        iron:
+          type: number
+        gold:
+          type: number
+        crystal:
+          type: number
+
+    MarchDto:
+      type: object
+      required: [id, worldId, kingdomId, marchType, status, originX, originY, destX, destY, troops, speedTpm, distanceTiles, startedAt, arrivesAt, returnsAt]
+      properties:
+        id:
+          type: integer
+        worldId:
+          type: integer
+        kingdomId:
+          type: integer
+        marchType:
+          type: string
+          enum: [gather, attack, reinforce, scout, rally]
+        status:
+          type: string
+          enum: [outbound, gathering, returning, completed, cancelled]
+        originX:
+          type: integer
+        originY:
+          type: integer
+        destX:
+          type: integer
+        destY:
+          type: integer
+        spawnId:
+          type: ["integer", "null"]
+        targetKingdomId:
+          type: ["integer", "null"]
+        troops:
+          $ref: "#/components/schemas/TroopLoad"
+        speedTpm:
+          type: number
+        distanceTiles:
+          type: number
+        startedAt:
+          type: string
+          format: date-time
+        arrivesAt:
+          type: string
+          format: date-time
+        gatherEndsAt:
+          type: ["string", "null"]
+          format: date-time
+        returnsAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: ["string", "null"]
+          format: date-time
+        resourcesGathered:
+          $ref: "#/components/schemas/ResourceGathered"
+        carryCapacity:
+          type: integer
+        estimatedYield:
+          type: integer
+
+    MarchCreateBody:
+      type: object
+      required: [kingdomId, worldId, spawnId, troops]
+      properties:
+        kingdomId:
+          type: integer
+        worldId:
+          type: integer
+        spawnId:
+          type: integer
+        troops:
+          $ref: "#/components/schemas/TroopLoad"
+
+    MarchCreateResult:
+      type: object
+      required: [march]
+      properties:
+        march:
+          $ref: "#/components/schemas/MarchDto"
+
+    MarchListResult:
+      type: object
+      required: [marches]
+      properties:
+        marches:
+          type: array
+          items:
+            $ref: "#/components/schemas/MarchDto"
+
+    ResourceNodeDto:
+      type: object
+      required: [id, worldId, spawnType, spawnSubtype, level, tileX, tileY, posX, posY, biome, status, spawnedAt, expiresAt]
+      properties:
+        id:
+          type: integer
+        worldId:
+          type: integer
+        spawnType:
+          type: string
+        spawnSubtype:
+          type: string
+        level:
+          type: integer
+        tileX:
+          type: integer
+        tileY:
+          type: integer
+        posX:
+          type: integer
+        posY:
+          type: integer
+        biome:
+          type: string
+        status:
+          type: string
+        spawnedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+
+    ResourceNodesResponse:
+      type: object
+      required: [worldId, nodes]
+      properties:
+        worldId:
+          type: integer
+        nodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/ResourceNodeDto"
+
+    MonsterNodeDto:
+      type: object
+      required: [id, worldId, spawnType, spawnSubtype, level, tileX, tileY, posX, posY, biome, status, spawnedAt, expiresAt]
+      properties:
+        id:
+          type: integer
+        worldId:
+          type: integer
+        spawnType:
+          type: string
+        spawnSubtype:
+          type: string
+        level:
+          type: integer
+        tileX:
+          type: integer
+        tileY:
+          type: integer
+        posX:
+          type: integer
+        posY:
+          type: integer
+        biome:
+          type: string
+        status:
+          type: string
+        spawnedAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+
+    MonsterNodesResponse:
+      type: object
+      required: [worldId, monsters]
+      properties:
+        worldId:
+          type: integer
+        monsters:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonsterNodeDto"
+
+    # ── Phase 4 Schemas ────────────────────────────────────────────────────────
+
+    HeroStats:
+      type: object
+      required: [command, attack, defense, speed, gathering]
+      properties:
+        command:
+          type: integer
+        attack:
+          type: integer
+        defense:
+          type: integer
+        speed:
+          type: integer
+        gathering:
+          type: integer
+
+    HeroSkill:
+      type: object
+      required: [skillId, name, description, effectType, effectValue]
+      properties:
+        skillId:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        triggerRound:
+          type: integer
+        effectType:
+          type: string
+        effectValue:
+          type: number
+
+    HeroDto:
+      type: object
+      required: [id, kingdomId, assetId, name, rarity, level, experience, experienceToNext, leadershipCapacity, stats, skills, isLeading, createdAt, updatedAt]
+      properties:
+        id:
+          type: integer
+        kingdomId:
+          type: integer
+        assetId:
+          type: string
+        name:
+          type: string
+        rarity:
+          type: string
+          enum: [common, uncommon, rare, epic, legendary]
+        level:
+          type: integer
+        experience:
+          type: integer
+        experienceToNext:
+          type: integer
+        leadershipCapacity:
+          type: integer
+        troopAffinity:
+          type: string
+        stats:              { $ref: "#/components/schemas/HeroStats" }
+        skills:
+          type: array
+          items: { $ref: "#/components/schemas/HeroSkill" }
+        isLeading:
+          type: boolean
+        nftContractAddress:
+          type: string
+        nftTokenId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    HeroListResponse:
+      type: object
+      required: [heroes]
+      properties:
+        heroes:
+          type: array
+          items: { $ref: "#/components/schemas/HeroDto" }
+
+    HeroResponse:
+      type: object
+      required: [hero]
+      properties:
+        hero: { $ref: "#/components/schemas/HeroDto" }
+
+    TroopDefinitionDto:
+      type: object
+      required: [key, class, tier, name, baseAttack, baseDefense, baseHp, baseSpeed, loadCapacity, trainingTimeSec, trainingCost]
+      properties:
+        key:
+          type: string
+        class:
+          type: string
+          enum: [infantry, cavalry, archer, siege]
+        tier:
+          type: integer
+        name:
+          type: string
+        baseAttack:
+          type: integer
+        baseDefense:
+          type: integer
+        baseHp:
+          type: integer
+        baseSpeed:
+          type: number
+        loadCapacity:
+          type: integer
+        trainingTimeSec:
+          type: integer
+        trainingCost:
+          type: object
+          properties:
+            food:
+              type: integer
+            wood:
+              type: integer
+            stone:
+              type: integer
+            iron:
+              type: integer
+            gold:
+              type: integer
+
+    TroopDefinitionsResponse:
+      type: object
+      required: [definitions]
+      properties:
+        definitions:
+          type: array
+          items: { $ref: "#/components/schemas/TroopDefinitionDto" }
+
+    TroopInventoryResponse:
+      type: object
+      required: [troops, kingdomId]
+      properties:
+        kingdomId:
+          type: integer
+        troops:
+          type: object
+          additionalProperties:
+            type: integer
+
+    HospitalStateDto:
+      type: object
+      required: [kingdomId, woundedTroops, totalWounded, capacity, healRatePerMinute, lastHealAt]
+      properties:
+        kingdomId:
+          type: integer
+        woundedTroops:
+          type: object
+          additionalProperties:
+            type: integer
+        totalWounded:
+          type: integer
+        capacity:
+          type: integer
+        healRatePerMinute:
+          type: number
+        lastHealAt:
+          type: string
+          format: date-time
+
+    HospitalResponse:
+      type: object
+      required: [hospital]
+      properties:
+        hospital: { $ref: "#/components/schemas/HospitalStateDto" }
+
+    CombatRoundDto:
+      type: object
+      required: [round, attackerDamageDealt, defenderDamageDealt, attackerHpAfter, defenderHpAfter, attackerTroopsLostThisRound]
+      properties:
+        round:
+          type: integer
+        attackerDamageDealt:
+          type: number
+        defenderDamageDealt:
+          type: number
+        attackerHpAfter:
+          type: number
+        defenderHpAfter:
+          type: number
+        attackerTroopsLostThisRound:
+          type: object
+          additionalProperties:
+            type: integer
+
+    RewardsDto:
+      type: object
+      properties:
+        food:
+          type: integer
+        wood:
+          type: integer
+        stone:
+          type: integer
+        iron:
+          type: integer
+        gold:
+          type: integer
+        crystal:
+          type: integer
+        heroXp:
+          type: integer
+        items:
+          type: object
+          additionalProperties:
+            type: integer
+
+    BattleReportDto:
+      type: object
+      required: [id, attackerKingdomId, monsterName, monsterTier, attackerWon, roundsFought, rounds, attackerTroopsSent, attackerTroopsKilled, attackerTroopsWounded, attackerTroopsSurvived, rewardsGranted, createdAt]
+      properties:
+        id:
+          type: integer
+        attackerKingdomId:
+          type: integer
+        defenderMonsterSpawnId:
+          type: integer
+        monsterName:
+          type: string
+        monsterTier:
+          type: string
+        attackerWon:
+          type: boolean
+        roundsFought:
+          type: integer
+        rounds:
+          type: array
+          items: { $ref: "#/components/schemas/CombatRoundDto" }
+        attackerTroopsSent:
+          type: object
+          additionalProperties:
+            type: integer
+        attackerTroopsKilled:
+          type: object
+          additionalProperties:
+            type: integer
+        attackerTroopsWounded:
+          type: object
+          additionalProperties:
+            type: integer
+        attackerTroopsSurvived:
+          type: object
+          additionalProperties:
+            type: integer
+        rewardsGranted:         { $ref: "#/components/schemas/RewardsDto" }
+        heroId:
+          type: integer
+        marchId:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    BattleReportListResponse:
+      type: object
+      required: [reports, total, limit, offset]
+      properties:
+        reports:
+          type: array
+          items: { $ref: "#/components/schemas/BattleReportDto" }
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+
+    BattleReportResponse:
+      type: object
+      required: [report]
+      properties:
+        report: { $ref: "#/components/schemas/BattleReportDto" }
+
+    MonsterSpawnInfoDto:
+      type: object
+      required: [id, monsterId, worldId, x, y, currentHp]
+      properties:
+        id:
+          type: integer
+        monsterId:
+          type: integer
+        worldId:
+          type: integer
+        x:
+          type: integer
+        y:
+          type: integer
+        currentHp:
+          type: integer
+        respawnAt:
+          type: string
+          format: date-time
+        defeatedByKingdomId:
+          type: integer
+
+    MonsterInfoDto:
+      type: object
+      required: [id, name, tier, power, hp, attack, defense, assetId]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        tier:
+          type: string
+        power:
+          type: integer
+        hp:
+          type: integer
+        attack:
+          type: integer
+        defense:
+          type: integer
+        assetId:
+          type: string
+
+    MonsterSpawnDetailResponse:
+      type: object
+      required: [spawn, monster, apCost]
+      properties:
+        spawn:   { $ref: "#/components/schemas/MonsterSpawnInfoDto" }
+        monster: { $ref: "#/components/schemas/MonsterInfoDto" }
+        apCost:
+          type: integer
+
+    AttackMarchRequest:
+      type: object
+      required: [kingdomId, troops]
+      properties:
+        kingdomId:
+          type: integer
+        heroId:
+          type: integer
+        troops:
+          type: object
+          additionalProperties:
+            type: integer
+
+    AttackMarchResponse:
+      type: object
+      required: [march]
+      properties:
+        march:
+          type: object
+          required: [id, worldId, kingdomId, marchType, status, spawnId, troops, speedTpm, distanceTiles, startedAt, arrivesAt, returnsAt, apCost, monsterName, monsterTier]
+          properties:
+            id:
+              type: integer
+            worldId:
+              type: integer
+            kingdomId:
+              type: integer
+            marchType:
+              type: string
+            status:
+              type: string
+            spawnId:
+              type: integer
+            troops:
+              type: object
+              additionalProperties:
+                type: integer
+            heroId:
+              type: integer
+            speedTpm:
+              type: number
+            distanceTiles:
+              type: number
+            startedAt:
+              type: string
+              format: date-time
+            arrivesAt:
+              type: string
+              format: date-time
+            returnsAt:
+              type: string
+              format: date-time
+            apCost:
+              type: integer
+            monsterName:
+              type: string
+            monsterTier:
+              type: string
+
+    ActionPointResponse:
+      type: object
+      required: [currentAP, maxAP]
+      properties:
+        currentAP:
+          type: number
+        maxAP:
+          type: number

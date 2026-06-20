@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#0a0f0a" rx="4"/>
+  <!-- Ground -->
+  <rect x="10" y="150" width="180" height="40" fill="#1a2e0a" stroke="#84cc16" stroke-width="1"/>
+  <!-- Mill building -->
+  <rect x="50" y="100" width="80" height="60" fill="#5c3d11" stroke="#d97706" stroke-width="2"/>
+  <polygon points="50,100 130,100 90,65" fill="#78350f" stroke="#d97706" stroke-width="2"/>
+  <!-- Waterwheel -->
+  <circle cx="155" cy="140" r="30" fill="none" stroke="#a16207" stroke-width="3"/>
+  <line x1="155" y1="110" x2="155" y2="170" stroke="#a16207" stroke-width="2"/>
+  <line x1="125" y1="140" x2="185" y2="140" stroke="#a16207" stroke-width="2"/>
+  <line x1="134" y1="119" x2="176" y2="161" stroke="#a16207" stroke-width="2"/>
+  <line x1="176" y1="119" x2="134" y2="161" stroke="#a16207" stroke-width="2"/>
+  <!-- Log stacks -->
+  <ellipse cx="25" cy="148" rx="12" ry="5" fill="#92400e"/>
+  <ellipse cx="25" cy="143" rx="12" ry="5" fill="#a16207"/>
+  <ellipse cx="25" cy="138" rx="12" ry="5" fill="#92400e"/>
+  <!-- Saw -->
+  <line x1="70" y1="120" x2="110" y2="120" stroke="#9ca3af" stroke-width="3"/>
+  <!-- Label -->
+  <text x="100" y="195" font-family="serif" font-size="9" fill="#d97706" text-anchor="middle">LUMBER MILL</text>
+</svg>

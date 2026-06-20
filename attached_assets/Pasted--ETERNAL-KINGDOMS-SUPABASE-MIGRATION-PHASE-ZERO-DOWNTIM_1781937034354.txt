@@ -1,0 +1,396 @@
+# ETERNAL KINGDOMS — SUPABASE MIGRATION PHASE
+
+# ZERO-DOWNTIME MIGRATION (POSTGRES → SUPABASE)
+
+IMPORTANT
+
+BEFORE DOING ANYTHING:
+
+READ THESE FILES COMPLETELY:
+
+1. PROJECT_MASTER.md
+2. ROADMAP.md
+3. ARCHITECTURE_STATE.md
+4. SUPABASE_MIGRATION_PLAN.md
+5. GAME_DESIGN_BIBLE.md
+6. WORLD_ARCHITECTURE_BIBLE.md
+7. BLOCKCHAIN_ARCHITECTURE_BIBLE.md
+8. COMBAT_ENGINE_BIBLE.md
+9. ALLIANCE_AND_SOVEREIGNTY_BIBLE.md
+10. MONETIZATION_BIBLE.md
+
+After completion UPDATE:
+
+* PROJECT_MASTER.md
+* ROADMAP.md
+* ARCHITECTURE_STATE.md
+
+====================================================================
+OBJECTIVE
+=========
+
+Migrate Eternal Kingdoms backend from current PostgreSQL setup to Supabase PostgreSQL.
+
+THIS MUST BE A ZERO-BREAKING-CHANGE MIGRATION.
+
+NO API CONTRACTS MAY CHANGE.
+
+NO ROUTE PATHS MAY CHANGE.
+
+NO GAME LOGIC MAY CHANGE.
+
+NO REPOSITORY PUBLIC INTERFACES MAY CHANGE.
+
+Frontend and future Unity client must continue functioning without modification.
+
+====================================================================
+CRITICAL ARCHITECTURAL RULES
+============================
+
+1. KEEP repository abstraction.
+
+Application layer MUST NEVER know whether database is:
+
+* Local PostgreSQL
+* Supabase PostgreSQL
+* Future managed database
+
+2. Repository public interfaces MUST remain identical.
+
+3. No raw Drizzle queries outside repositories.
+
+4. Existing API responses MUST remain unchanged.
+
+====================================================================
+PHASE 1 — ENVIRONMENT CONFIGURATION
+===================================
+
+Create environment support for:
+
+DATABASE_URL
+
+SUPABASE_URL
+
+SUPABASE_ANON_KEY
+
+SUPABASE_SERVICE_ROLE_KEY
+
+SUPABASE_JWT_SECRET
+
+APP_ENV
+
+Supported environments:
+
+development
+staging
+production
+
+Create:
+
+lib/config/database.ts
+
+This file decides database provider.
+
+====================================================================
+PHASE 2 — INSTALL SUPABASE SDK
+==============================
+
+Install and configure:
+
+@supabase/supabase-js
+
+Create:
+
+lib/db/src/supabase/
+
+Files:
+
+client.ts
+adminClient.ts
+types.ts
+
+Requirements:
+
+client.ts
+
+Uses ANON KEY.
+
+adminClient.ts
+
+Uses SERVICE ROLE KEY.
+
+Must support future:
+
+* Realtime
+* Storage
+* Edge Functions
+* Auth
+* RPC
+
+====================================================================
+PHASE 3 — DATABASE CONNECTION ABSTRACTION
+=========================================
+
+Create:
+
+lib/db/src/providers/
+
+Structure:
+
+DatabaseProvider.ts
+
+DrizzleProvider.ts
+
+SupabaseProvider.ts
+
+Interface:
+
+connect()
+disconnect()
+transaction()
+healthCheck()
+
+Repositories must consume provider layer.
+
+Application code MUST NOT know implementation.
+
+====================================================================
+PHASE 4 — SCHEMA VALIDATION
+===========================
+
+Audit ALL existing tables.
+
+Verify Supabase compatibility.
+
+Current entities include:
+
+users
+worlds
+kingdoms
+resources
+buildings
+troops
+research
+map_tiles
+monsters
+monster_spawns
+crystal_nodes
+alliances
+asset_registry
+upgrade_queue
+construction_queue
+
+Verify:
+
+indexes
+constraints
+foreign keys
+timestamps
+UUID support
+
+Generate migration scripts if required.
+
+NO DATA LOSS.
+
+====================================================================
+PHASE 5 — MIGRATION EXECUTION
+=============================
+
+Create scripts:
+
+pnpm db:export
+pnpm db:migrate:supabase
+pnpm db:verify
+pnpm db:rollback
+
+Migration process:
+
+1 Export local DB.
+2 Backup snapshot.
+3 Import into Supabase.
+4 Validate row counts.
+5 Validate FK constraints.
+6 Validate indexes.
+7 Validate sequences.
+8 Validate application startup.
+
+Create verification report.
+
+====================================================================
+PHASE 6 — HEALTH CHECKS
+=======================
+
+Create endpoint:
+
+GET /health/database
+
+Response:
+
+{
+provider,
+status,
+latencyMs,
+activeConnections,
+environment
+}
+
+Must work for both providers.
+
+====================================================================
+PHASE 7 — REALTIME FOUNDATION
+=============================
+
+Prepare infrastructure ONLY.
+
+DO NOT IMPLEMENT FEATURES YET.
+
+Create:
+
+RealtimeService.ts
+
+Support future subscriptions:
+
+resource_updates
+construction_updates
+march_updates
+alliance_chat
+world_events
+
+No gameplay changes.
+
+Infrastructure only.
+
+====================================================================
+PHASE 8 — STORAGE FOUNDATION
+============================
+
+Create Supabase storage buckets.
+
+Define architecture:
+
+avatars
+kingdom-assets
+building-icons
+monster-assets
+unity-assets
+battle-reports
+alliance-assets
+future-nft-assets
+
+Document upload rules.
+
+No frontend changes yet.
+
+====================================================================
+PHASE 9 — ROW LEVEL SECURITY PLAN
+=================================
+
+Create:
+
+SUPABASE_RLS_PLAN.md
+
+Design policies for:
+
+users
+kingdoms
+alliances
+battle_reports
+messages
+
+Use backend-first approach.
+
+Most game writes continue through Fastify backend.
+
+Document future migration path.
+
+DO NOT ENABLE RLS YET.
+
+Documentation only.
+
+====================================================================
+PHASE 10 — BACKUP STRATEGY
+==========================
+
+Create:
+
+BACKUP_AND_RECOVERY.md
+
+Include:
+
+daily backups
+weekly snapshots
+restore procedures
+rollback procedures
+disaster recovery
+
+====================================================================
+PHASE 11 — DEPLOYMENT READINESS
+===============================
+
+Verify deployment compatibility for:
+
+Render
+Railway
+Fly.io
+DigitalOcean
+AWS ECS
+
+Single server architecture must continue working.
+
+Application must continue using ONE PORT ONLY.
+
+Use:
+
+PORT
+
+with fallback:
+
+3000
+
+====================================================================
+PHASE 12 — TESTING
+==================
+
+Run and verify:
+
+Authentication
+
+Kingdom APIs
+
+Construction
+
+Upgrade Queue
+
+Resource Tick
+
+World APIs
+
+World Seeder
+
+Dev Account Login
+
+[dev@eternalkingdoms.com](mailto:dev@eternalkingdoms.com)
+Password: Rcbk123@#
+
+All tests must pass.
+
+====================================================================
+DELIVERABLES
+============
+
+Provide:
+
+1. Migration report.
+2. Supabase connection report.
+3. Validation report.
+4. Realtime readiness report.
+5. Storage architecture report.
+6. Rollback strategy.
+
+Update:
+
+PROJECT_MASTER.md
+ROADMAP.md
+ARCHITECTURE_STATE.md
+
+STOP AFTER COMPLETION.

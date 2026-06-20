@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160" width="120" height="160">
+  <rect width="120" height="160" fill="#0a0a0a" rx="4"/>
+  <!-- Body armor -->
+  <rect x="38" y="68" width="44" height="55" fill="#292524" stroke="#78716c" stroke-width="2" rx="2"/>
+  <!-- Shoulder pads -->
+  <ellipse cx="38" cy="72" rx="10" ry="7" fill="#44403c" stroke="#78716c" stroke-width="1.5"/>
+  <ellipse cx="82" cy="72" rx="10" ry="7" fill="#44403c" stroke="#78716c" stroke-width="1.5"/>
+  <!-- Head -->
+  <circle cx="60" cy="52" r="17" fill="#d4a574" stroke="#78716c" stroke-width="1.5"/>
+  <!-- Helmet cone -->
+  <polygon points="60,25 43,50 77,50" fill="#44403c" stroke="#78716c" stroke-width="2"/>
+  <!-- Visor line -->
+  <line x1="44" y1="50" x2="76" y2="50" stroke="#78716c" stroke-width="2"/>
+  <!-- Arms -->
+  <rect x="15" y="70" width="23" height="9" fill="#292524" stroke="#78716c" stroke-width="1" rx="3"/>
+  <rect x="82" y="70" width="23" height="9" fill="#292524" stroke="#78716c" stroke-width="1" rx="3"/>
+  <!-- Spear -->
+  <line x1="12" y1="15" x2="12" y2="90" stroke="#92400e" stroke-width="3"/>
+  <polygon points="12,10 7,25 17,25" fill="#9ca3af" stroke="#6b7280" stroke-width="1"/>
+  <!-- Shield -->
+  <ellipse cx="95" cy="85" rx="15" ry="18" fill="#292524" stroke="#d97706" stroke-width="2"/>
+  <line x1="95" y1="70" x2="95" y2="100" stroke="#d97706" stroke-width="1.5"/>
+  <line x1="80" y1="85" x2="110" y2="85" stroke="#d97706" stroke-width="1.5"/>
+  <!-- Legs -->
+  <rect x="42" y="120" width="14" height="28" fill="#1c1917" stroke="#292524" stroke-width="1" rx="2"/>
+  <rect x="64" y="120" width="14" height="28" fill="#1c1917" stroke="#292524" stroke-width="1" rx="2"/>
+  <!-- Label -->
+  <text x="60" y="157" font-family="serif" font-size="8" fill="#78716c" text-anchor="middle">SPEARMAN</text>
+</svg>

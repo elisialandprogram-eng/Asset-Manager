@@ -1,0 +1,22 @@
+{
+  "name": "@workspace/scripts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "hello": "tsx ./src/hello.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "db:export": "tsx ./migration/db-export.ts",
+    "db:migrate:supabase": "tsx ./migration/db-migrate-supabase.ts",
+    "db:verify": "tsx ./migration/db-verify.ts",
+    "db:rollback": "tsx ./migration/db-rollback.ts"
+  },
+  "dependencies": {
+    "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/pg": "^8.20.0",
+    "tsx": "catalog:"
+  }
+}

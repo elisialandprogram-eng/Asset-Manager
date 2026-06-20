@@ -1,0 +1,211 @@
+Continue development of Eternal Kingdoms.
+
+You are now executing **PHASE 2 — WORLD MAP FOUNDATION**.
+
+---
+
+⚠️ GLOBAL MANDATORY RULE
+
+Before doing anything:
+
+1. Read:
+
+   * PROJECT_MASTER.md
+   * ROADMAP.md
+   * ARCHITECTURE_STATE.md
+
+2. Treat them as SINGLE SOURCE OF TRUTH
+
+3. After completion:
+
+   * Update ROADMAP.md (mark Phase 2 complete)
+   * Update ARCHITECTURE_STATE.md (new world system added)
+   * Update PROJECT_MASTER.md ONLY if architecture changes
+
+---
+
+CURRENT SYSTEM STATUS
+
+Already completed:
+
+* Phase 1.1: Economy engine
+* Phase 1.2: Live UI system
+* Phase 1.3–1.5: Kingdom expansion + construction system
+
+DO NOT modify existing systems.
+
+---
+
+PHASE 2 GOAL
+
+Introduce a **REALISTIC WORLD MAP SYSTEM** that turns Eternal Kingdoms into a living MMO world.
+
+This is NOT combat.
+This is NOT troop system.
+This is NOT alliances.
+
+This is WORLD FOUNDATION ONLY.
+
+---
+
+1. WORLD MAP CORE SYSTEM
+
+Create a persistent world system with:
+
+* world_id
+* world_name
+* procedural seed
+* large continuous coordinate space (NOT grid-based gameplay tiles)
+
+Each kingdom must have:
+
+* world_id
+* x_coordinate
+* y_coordinate
+
+Rules:
+
+* Kingdom positions must persist
+* No overlap spawning
+* Coordinates define spatial relationships
+
+---
+
+2. REALISTIC TERRAIN SYSTEM (IMPORTANT)
+
+The world map MUST feel like realistic terrain.
+
+DO NOT use tile-based or grid-based visuals.
+
+Implement:
+
+* Continuous terrain (not squares)
+* Elevation system (mountains, valleys, plains)
+* Biome blending system (not hard borders)
+
+Biomes:
+
+* plains
+* forest
+* mountains
+* snow
+* crystal zones (rare)
+
+Terrain must be generated using procedural logic (seed-based).
+
+Frontend must visually represent:
+
+* smooth terrain gradients
+* natural biome transitions
+* non-grid world appearance
+
+---
+
+3. WORLD ENTITIES (DATA ONLY)
+
+Add world objects:
+
+A) Monster Spawns (NO combat yet)
+
+* bandits
+* wolves
+* ogres
+* ancient guardians
+* dragons (rare)
+
+Each spawn:
+
+* x, y position
+* radius
+* difficulty level
+* respawn metadata (future use only)
+
+B) Crystal Nodes (future resource system)
+
+* location
+* rarity
+* spawn probability
+
+---
+
+4. WORLD API LAYER
+
+Add APIs:
+
+* GET /world/:id/map
+* GET /world/:id/kingdoms
+* GET /world/:id/spawns
+* POST /world/:id/place-kingdom (DEV ONLY)
+
+APIs must be read-safe and stable.
+
+---
+
+5. FRONTEND WORLD MAP VIEW (MINIMAL BUT VISUAL)
+
+Create a WORLD MAP SCREEN:
+
+Must include:
+
+* Visual map canvas (2D rendering only)
+* Kingdom markers placed on coordinates
+* Smooth terrain visualization (NO grid)
+* Biome color blending
+* Monster spawn markers (simple icons)
+
+NO 3D (no Three.js yet)
+
+NO combat system
+
+NO movement system
+
+---
+
+6. DEVELOPMENT LOGIN (FOR TESTING ONLY)
+
+Create a DEV login account automatically seeded in backend if not exists:
+
+Email:
+[dev@eternalkingdoms.com](mailto:dev@eternalkingdoms.com)
+
+Password:
+securely stored in backend seed system (DO NOT expose in frontend or logs)
+
+This account must:
+
+* bypass tutorial flow
+* have access to all kingdoms
+* be used only for development testing
+
+---
+
+STRICT CONSTRAINTS
+
+DO NOT:
+
+* Add combat system
+* Add troop system
+* Add alliances
+* Add NFT or blockchain logic
+* Modify economy engine
+* Modify construction system
+* Introduce tile-based maps
+* Introduce 3D rendering
+
+ONLY build world foundation layer.
+
+---
+
+OUTPUT REQUIREMENTS
+
+After completion:
+
+* Confirm dev login seed system is active
+* Show world map system implementation
+* Show kingdom placement system
+* Show terrain generation logic
+* Show API endpoints added
+* Confirm no impact on Phase 1 systems
+* Update ROADMAP.md and ARCHITECTURE_STATE.md
+
+STOP after completing Phase 2.

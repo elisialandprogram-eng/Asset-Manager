@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#111111" rx="4"/>
+  <!-- Wall base -->
+  <rect x="10" y="110" width="180" height="70" fill="#292524" stroke="#78716c" stroke-width="2"/>
+  <!-- Stone brickwork pattern -->
+  <line x1="10" y1="130" x2="190" y2="130" stroke="#44403c" stroke-width="1"/>
+  <line x1="10" y1="150" x2="190" y2="150" stroke="#44403c" stroke-width="1"/>
+  <line x1="10" y1="170" x2="190" y2="170" stroke="#44403c" stroke-width="1"/>
+  <line x1="50" y1="110" x2="50" y2="130" stroke="#44403c" stroke-width="1"/>
+  <line x1="100" y1="110" x2="100" y2="130" stroke="#44403c" stroke-width="1"/>
+  <line x1="150" y1="110" x2="150" y2="130" stroke="#44403c" stroke-width="1"/>
+  <line x1="25" y1="130" x2="25" y2="150" stroke="#44403c" stroke-width="1"/>
+  <line x1="75" y1="130" x2="75" y2="150" stroke="#44403c" stroke-width="1"/>
+  <line x1="125" y1="130" x2="125" y2="150" stroke="#44403c" stroke-width="1"/>
+  <line x1="175" y1="130" x2="175" y2="150" stroke="#44403c" stroke-width="1"/>
+  <line x1="50" y1="150" x2="50" y2="170" stroke="#44403c" stroke-width="1"/>
+  <line x1="110" y1="150" x2="110" y2="170" stroke="#44403c" stroke-width="1"/>
+  <line x1="160" y1="150" x2="160" y2="170" stroke="#44403c" stroke-width="1"/>
+  <!-- Battlements -->
+  <rect x="10" y="90" width="25" height="22" fill="#292524" stroke="#78716c" stroke-width="1.5"/>
+  <rect x="45" y="90" width="25" height="22" fill="#292524" stroke="#78716c" stroke-width="1.5"/>
+  <rect x="80" y="90" width="25" height="22" fill="#292524" stroke="#78716c" stroke-width="1.5"/>
+  <rect x="115" y="90" width="25" height="22" fill="#292524" stroke="#78716c" stroke-width="1.5"/>
+  <rect x="150" y="90" width="25" height="22" fill="#292524" stroke="#78716c" stroke-width="1.5"/>
+  <!-- Torch flame -->
+  <line x1="180" y1="110" x2="180" y2="90" stroke="#78716c" stroke-width="2"/>
+  <ellipse cx="180" cy="87" rx="5" ry="8" fill="#f97316" opacity="0.9"/>
+  <!-- Label -->
+  <text x="100" y="195" font-family="serif" font-size="9" fill="#78716c" text-anchor="middle">WALL</text>
+</svg>

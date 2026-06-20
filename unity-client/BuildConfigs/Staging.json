@@ -1,0 +1,16 @@
+{
+  "configName": "Staging",
+  "environmentName": "staging",
+  "apiBaseUrl": "https://staging-api.eternalkingdoms.com",
+  "webSocketUrl": "wss://staging-api.eternalkingdoms.com",
+  "buildDefines": ["UNITY_ENV_STAGING"],
+  "compressionFormat": "Gzip",
+  "exceptionSupport": "ExplicitlyThrownExceptionsOnly",
+  "il2cppOptimization": "Speed",
+  "webglMemorySize": 512,
+  "stripEngineCode": false,
+  "allowDebugging": false,
+  "developmentBuild": false,
+  "targets": ["WebGL", "Android"],
+  "notes": "Staging environment. Gzip compression. Real backend. QA testing only."
+}

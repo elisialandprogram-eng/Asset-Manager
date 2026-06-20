@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 160" width="120" height="160">
+  <rect width="120" height="160" fill="#0a0a0a" rx="4"/>
+  <!-- Body ragged -->
+  <rect x="38" y="68" width="44" height="55" fill="#1c1917" stroke="#dc2626" stroke-width="1.5" rx="2"/>
+  <!-- Torn cloak effect -->
+  <polygon points="38,90 25,125 38,120" fill="#111111" stroke="#dc2626" stroke-width="1"/>
+  <polygon points="82,90 95,125 82,115" fill="#111111" stroke="#dc2626" stroke-width="1"/>
+  <!-- Head -->
+  <circle cx="60" cy="52" r="18" fill="#c4a882" stroke="#dc2626" stroke-width="1.5"/>
+  <!-- Mask -->
+  <rect x="42" y="47" width="36" height="14" fill="#111111" rx="3"/>
+  <!-- Mean eyes -->
+  <ellipse cx="52" cy="52" rx="5" ry="4" fill="#dc2626"/>
+  <ellipse cx="68" cy="52" rx="5" ry="4" fill="#dc2626"/>
+  <!-- Scowl scar -->
+  <path d="M 48 63 Q 60 68 72 63" fill="none" stroke="#dc2626" stroke-width="2"/>
+  <!-- Arms -->
+  <rect x="14" y="70" width="24" height="9" fill="#1c1917" stroke="#dc2626" stroke-width="1" rx="3"/>
+  <rect x="82" y="70" width="24" height="9" fill="#1c1917" stroke="#dc2626" stroke-width="1" rx="3"/>
+  <!-- Sword -->
+  <line x1="13" y1="45" x2="13" y2="85" stroke="#6b7280" stroke-width="3"/>
+  <polygon points="13,40 9,52 17,52" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+  <line x1="5" y1="70" x2="21" y2="70" stroke="#92400e" stroke-width="3"/>
+  <!-- Legs -->
+  <rect x="42" y="120" width="14" height="28" fill="#111111" stroke="#1c1917" stroke-width="1" rx="2"/>
+  <rect x="64" y="120" width="14" height="28" fill="#111111" stroke="#1c1917" stroke-width="1" rx="2"/>
+  <!-- Label -->
+  <text x="60" y="157" font-family="serif" font-size="8" fill="#dc2626" text-anchor="middle">BANDIT</text>
+</svg>

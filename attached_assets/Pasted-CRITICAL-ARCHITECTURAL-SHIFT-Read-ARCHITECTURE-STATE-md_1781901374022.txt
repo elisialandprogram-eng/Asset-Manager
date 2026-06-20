@@ -1,0 +1,33 @@
+CRITICAL ARCHITECTURAL SHIFT: Read "ARCHITECTURE_STATE.md", "PROJECT_MASTER.md", and "ROADMAP.md" before writing code.
+
+OBJECTIVE: Stop all programmatic line and block drawing primitives (`ctx.fillRect`, `ctx.lineTo`, manual 3D block projections) for buildings and map objects. Real strategy games like League of Kingdoms (LOK) use pre-rendered 2D 2.5D image sprites. You must immediately refactor both canvas renderers to load and draw high-quality 2D image/vector sprite assets.
+
+1. IMPLEMENT SPRITE ASSET DICTIONARY
+   - Create or utilize an asset manager utility inside the project frontend. Define clear, beautiful, stylized open-source or vector CDN image URLs (such as stylized game icons, strategy assets, or Kenney-style isometric sprites) for each entity:
+     * `palace`: A beautiful multi-tiered medieval stone castle keep.
+     * `barracks`: A military training encampment with tents.
+     * `academy`: A mystical, illuminated tower spire.
+     * `storage`: A robust wooden warehouse/depot layout.
+     * `monster`: A ferocious barbarian/monster camp post.
+     * `crystal`: A glittering, high-saturation blue/cyan crystal cluster node.
+     * `emptyPlot`: A clean, low-opacity circular wooden or stone foundation ring.
+
+2. REFACTOR THE KINGDOM RENDERER (KingdomScene3D.tsx)
+   - Instantly strip out the gray multi-layer rectangle codes and primitive box projection logic loops.
+   - Pre-load the image elements using standard HTML Image instances (`const img = new Image(); img.src = ...`).
+   - Inside the main canvas rendering loop, replace the geometry drawing with:
+```javascript
+     // Draw the pre-loaded asset sprite directly centered over the isometric coordinate tile base
+     ctx.drawImage(buildingImg, screenX - assetWidth / 2, screenY - assetHeight, assetWidth, assetHeight);
+     ```
+   - Ensure you keep the crisp canvas drop shadows enabled so these gorgeous new image layers beautifully lift up off the grass terrain tiles.
+
+3. REFACTOR THE WORLD MAP RENDERER (World3DCanvas.tsx)
+   - Completely purge the primitive circle dots, small line spikes, and uniform diamonds.
+   - Scale up the destination target sizes so the asset sprites are clean, large, and highly legible.
+   - For every element on the matrix (Your Castle, Enemy Castles, Monster Camps, and Resource Nodes), load its respective image sprite asset and render it perfectly at the base center intersection of its coordinate cell via `ctx.drawImage`.
+   - Your personal home kingdom should be adorned with a gold radial ring or crown effect overlay drawn directly behind or above its sprite image asset.
+
+4. SAFETY & COMPILATION
+   - Make sure image assets load asynchronously without crashing or blinking the `requestAnimationFrame` render ticker.
+   - Do not modify any backend state managers, Express route endpoints, or interaction controllers—clicking on these new image sprite cells must still run the inverse math raycast to trigger the active modals.

@@ -1,0 +1,468 @@
+# ETERNAL KINGDOMS — UNITY IMPLEMENTATION PHASE 2
+
+# WORLD FOUNDATION + STREAMING SYSTEM
+
+IMPORTANT
+
+BEFORE DOING ANYTHING READ COMPLETELY:
+
+1. PROJECT_MASTER.md
+2. ROADMAP.md
+3. ARCHITECTURE_STATE.md
+4. UNITY_PROGRESS.md
+5. GAME_DESIGN_BIBLE.md
+6. WORLD_ARCHITECTURE_BIBLE.md
+7. COMBAT_ENGINE_BIBLE.md
+8. BLOCKCHAIN_ARCHITECTURE_BIBLE.md
+9. ALL DOCUMENTS UNDER unity-client/
+10. ALL UNITY PHASE 1 IMPLEMENTATION FILES
+
+AFTER COMPLETION UPDATE:
+
+* PROJECT_MASTER.md
+* ROADMAP.md
+* ARCHITECTURE_STATE.md
+* UNITY_PROGRESS.md
+
+====================================================================
+OBJECTIVE
+=========
+
+Build the complete WORLD FOUNDATION for Eternal Kingdoms.
+
+Player flow:
+
+Kingdom Scene
+↓
+Open World Map
+↓
+Enter persistent world
+↓
+Navigate across world
+↓
+See kingdoms, monsters, resource nodes
+↓
+Click entities
+↓
+Open information panels
+↓
+Navigate to coordinates
+
+NO GAMEPLAY YET.
+
+NO COMBAT.
+
+NO GATHERING.
+
+NO MARCHES.
+
+WORLD FOUNDATION ONLY.
+
+====================================================================
+PHASE U2.1 — WORLD SCENE
+========================
+
+Create:
+
+WorldScene
+
+Requirements:
+
+* Persistent isometric world.
+* Same visual quality target as LOK/ROK.
+* Camera independent from Kingdom Scene.
+
+Create:
+
+WorldSceneController
+
+Responsibilities:
+
+* bootstrap world
+* load chunks
+* manage entity visibility
+* manage streaming
+* coordinate selection
+
+====================================================================
+PHASE U2.2 — WORLD GRID SYSTEM
+==============================
+
+Implement complete coordinate architecture.
+
+World size:
+
+2048 x 2048
+
+Chunk size:
+
+64 x 64
+
+Total chunks:
+
+32 x 32
+
+Create:
+
+WorldGrid
+WorldCoordinate
+ChunkCoordinate
+Chunk
+ChunkManager
+SpatialIndex
+OccupancyManager
+
+Features:
+
+* coordinate validation
+* occupancy lookup
+* chunk lookup
+* fast spatial queries
+
+Must support:
+
+kingdoms
+monsters
+resource nodes
+alliance structures
+shrines
+future marches
+
+====================================================================
+PHASE U2.3 — WORLD STREAMING SYSTEM
+===================================
+
+Implement dynamic chunk streaming.
+
+Create:
+
+WorldStreamingManager
+
+Requirements:
+
+Only load chunks near camera.
+
+Streaming radius:
+
+3 chunks visible.
+
+1 chunk preload buffer.
+
+Unload distant chunks automatically.
+
+Architecture must support:
+
+2048x2048 world without performance degradation.
+
+Use object pooling.
+
+No Instantiate/Destroy spam.
+
+====================================================================
+PHASE U2.4 — PROCEDURAL TERRAIN GENERATION
+==========================================
+
+Generate terrain using backend world seed.
+
+Read:
+
+GET /api/worlds
+
+Use:
+
+world.seed
+
+Terrain generation:
+
+fBm noise.
+
+Biomes:
+
+Grasslands
+Forest
+Snow
+Desert
+Highlands
+Swamp
+Volcanic
+
+Create:
+
+TerrainGenerator
+BiomeGenerator
+
+Requirements:
+
+Deterministic.
+
+Same seed always produces same terrain.
+
+Visual target:
+
+Realistic stylized fantasy.
+
+NOT:
+
+* cubes
+* blocks
+* voxels
+
+Use URP terrain materials.
+
+====================================================================
+PHASE U2.5 — WORLD CAMERA
+=========================
+
+Create:
+
+WorldCameraController
+
+Camera:
+
+Fixed Isometric.
+
+X = 60°
+
+Y = -45°
+
+Features:
+
+drag pan
+edge scroll
+mouse wheel zoom
+pinch zoom
+inertia
+smooth damping
+
+Player must be able to travel to ANY coordinate.
+
+No minimap teleport yet.
+
+Movement must feel like exploring a living world.
+
+====================================================================
+PHASE U2.6 — ENTITY VISUALIZATION
+=================================
+
+Fetch real backend data:
+
+GET /api/worlds/:id/kingdoms
+GET /api/worlds/:id/spawns
+GET /api/worlds/:id/map
+
+Render:
+
+Player Kingdoms
+Monster Spawns
+Crystal Nodes
+
+Create:
+
+WorldEntitySpawner
+
+Entity types:
+
+KingdomEntity
+MonsterEntity
+CrystalEntity
+
+Requirements:
+
+Realistic temporary assets.
+
+NOT placeholders.
+
+Each entity:
+
+selection circle
+hover effect
+click effect
+LOD support
+
+====================================================================
+PHASE U2.7 — WORLD INTERACTION
+==============================
+
+Player can:
+
+hover entity
+select entity
+click entity
+
+Create:
+
+WorldSelectionManager
+
+Display:
+
+WorldInfoPanel
+
+Information:
+
+Kingdom:
+
+* owner
+* power
+* palace level
+* coordinates
+
+Monster:
+
+* type
+* level
+* HP
+* rewards preview
+
+Crystal:
+
+* type
+* level
+* amount remaining
+
+====================================================================
+PHASE U2.8 — COORDINATE NAVIGATION
+==================================
+
+Create:
+
+CoordinateNavigator
+
+Features:
+
+Go To Coordinate.
+
+Input:
+
+X
+Y
+
+Camera smoothly flies to location.
+
+Validate coordinates.
+
+Support:
+
+future bookmarks.
+
+====================================================================
+PHASE U2.9 — WORLD UI
+=====================
+
+Create:
+
+WorldHUD
+
+Display:
+
+Current Coordinates
+Current Chunk
+Biome Name
+Zoom Level
+
+Create:
+
+WorldTopBar
+
+Buttons:
+
+Kingdom
+Search
+Bookmarks
+Center On Kingdom
+
+Create:
+
+WorldBottomBar
+
+Future placeholders:
+
+Marches
+Alliance
+Events
+
+====================================================================
+PHASE U2.10 — FOG OF WAR FOUNDATION
+===================================
+
+Infrastructure only.
+
+Create:
+
+FogOfWarManager
+
+Features:
+
+visibility grid
+discovery grid
+chunk visibility
+
+No gameplay restrictions yet.
+
+Foundation only.
+
+====================================================================
+PHASE U2.11 — PERFORMANCE TARGETS
+=================================
+
+Targets:
+
+WebGL:
+
+60 FPS desktop.
+
+Mobile:
+
+30 FPS minimum.
+
+Visible entities:
+
+500+
+
+Streaming:
+
+No frame spikes above 20ms.
+
+Use:
+
+pooling
+LOD
+frustum culling
+chunk culling
+
+====================================================================
+PHASE U2.12 — NAVIGATION FLOW
+=============================
+
+Player flow:
+
+Login
+→ Kingdom Scene
+→ World Scene
+→ Explore World
+→ Select Entity
+→ Return To Kingdom
+
+Kingdom ↔ World transitions must be seamless.
+
+====================================================================
+DELIVERABLES
+============
+
+Provide:
+
+1. World architecture report.
+2. Streaming architecture report.
+3. Terrain generation report.
+4. Entity rendering report.
+5. Camera report.
+6. Performance report.
+7. Scene transition report.
+
+Update:
+
+PROJECT_MASTER.md
+ROADMAP.md
+ARCHITECTURE_STATE.md
+UNITY_PROGRESS.md
+
+STOP AFTER COMPLETION.

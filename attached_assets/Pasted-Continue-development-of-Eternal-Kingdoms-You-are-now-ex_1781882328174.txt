@@ -1,0 +1,230 @@
+Continue development of Eternal Kingdoms.
+
+You are now executing a **FULL ARCHITECTURE + DEPLOYMENT + DATABASE MIGRATION READINESS REFACTOR**.
+
+Goal:
+Convert the project into a **single-server MMO application** that:
+
+* runs on ONE PORT
+* is deployable on ANY Node platform
+* is fully compatible with Supabase
+* is ready for production scaling after Phase 3
+
+---
+
+⚠️ GLOBAL MANDATORY RULE
+
+Before doing anything:
+
+1. Read:
+
+   * PROJECT_MASTER.md
+   * ROADMAP.md
+   * ARCHITECTURE_STATE.md
+
+2. Treat them as SINGLE SOURCE OF TRUTH
+
+3. DO NOT modify:
+
+   * economy logic
+   * construction system
+   * world generation
+   * UI/game mechanics
+
+4. ONLY modify:
+
+   * architecture
+   * deployment structure
+   * database access layer
+   * configuration system
+
+---
+
+FINAL TARGET ARCHITECTURE
+
+The system must run as:
+
+ONE SERVER (single Node process):
+
+* Backend API (Express)
+* Frontend (React build served statically)
+* Game engine tick loop
+* World simulation system
+* Database layer
+
+ONE PORT ONLY:
+
+* process.env.PORT or fallback 3000
+
+---
+
+1. SERVER CONSOLIDATION
+
+Create a single entry file:
+
+server.ts
+
+Must include:
+
+* Express app initialization
+* API routing under /api/*
+* static frontend serving from /dist
+* game tick system startup
+* DB initialization
+* shared engine initialization
+
+NO secondary servers allowed.
+
+---
+
+2. FRONTEND INTEGRATION
+
+Frontend must be:
+
+* built via npm run build
+* served via express.static("/dist")
+
+Routes:
+
+* / → frontend app
+* /world → handled by frontend router
+* /kingdom → handled by frontend router
+
+Fallback:
+
+* all unknown routes → index.html
+
+---
+
+3. API STRUCTURE RULE
+
+All APIs must be:
+
+/api/* only
+
+Frontend must NEVER:
+
+* access DB directly
+* bypass API layer
+* compute game logic
+
+---
+
+4. GAME ENGINE RULE
+
+* Game engine runs ONLY in backend
+* Tick system runs inside same server process
+* No duplicated logic in frontend
+
+---
+
+5. SUPABASE MIGRATION READINESS (CRITICAL)
+
+Prepare system for migration to Supabase:
+
+### REQUIREMENTS
+
+A) Create DB abstraction layer:
+
+* dbClient.ts
+* repository pattern for:
+
+  * kingdoms
+  * resources
+  * buildings
+  * world
+  * construction_queue
+
+B) DO NOT hardcode SQL in services
+
+C) Make DB layer swappable:
+
+* local Postgres now
+* Supabase later without code rewrite
+
+---
+
+6. SUPABASE COMPATIBILITY RULES
+
+Ensure compatibility with:
+
+* Supabase PostgreSQL database
+* Supabase REST layer (future optional)
+* Supabase real-time subscriptions (future Phase 4+)
+
+DO NOT implement realtime now — only prepare structure.
+
+---
+
+7. ENVIRONMENT VARIABLES
+
+Must support:
+
+NODE_ENV=production
+PORT=3000
+DATABASE_URL=postgres connection string
+SUPABASE_URL (optional future)
+SUPABASE_ANON_KEY (optional future)
+
+---
+
+8. STATIC FILE RULE
+
+Serve:
+
+* /dist (frontend build)
+* /assets (game assets)
+* /public (if exists)
+
+---
+
+9. CORS RULE
+
+Since single-server:
+
+* DO NOT use CORS middleware
+
+---
+
+10. SAFETY RULE
+
+DO NOT:
+
+* break existing APIs
+* modify game logic
+* rewrite economy or world systems
+* split services into microservices
+* introduce separate frontend backend deployments
+
+ONLY refactor architecture + database abstraction.
+
+---
+
+11. DEPLOYMENT COMPATIBILITY
+
+Must work on:
+
+* Render
+* Railway
+* VPS (Ubuntu Node)
+* Docker container
+* any Node.js hosting provider
+
+NO platform-specific logic allowed.
+
+---
+
+OUTPUT REQUIREMENTS
+
+After completion:
+
+* Confirm single-server architecture implemented
+* Confirm ONE PORT deployment ready
+* Confirm frontend served from backend
+* Confirm /api routing stable
+* Confirm game tick system integrated properly
+* Confirm DB abstraction layer created
+* Confirm Supabase migration readiness complete
+* Update ROADMAP.md and ARCHITECTURE_STATE.md
+
+STOP after completion.

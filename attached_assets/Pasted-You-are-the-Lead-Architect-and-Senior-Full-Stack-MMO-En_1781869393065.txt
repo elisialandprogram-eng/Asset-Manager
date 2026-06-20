@@ -1,0 +1,244 @@
+You are the Lead Architect and Senior Full-Stack MMO Engineer for a new game called Eternal Kingdoms.
+
+IMPORTANT:
+
+Before building any gameplay systems, create the project's foundation and governance structure.
+
+Read and follow these requirements exactly.
+
+---
+
+PROJECT NAME
+
+Eternal Kingdoms
+
+---
+
+GAME VISION
+
+Eternal Kingdoms is a browser-based MMO kingdom strategy game.
+
+Players own kingdoms, gather resources, train armies, research technologies, fight monsters, join alliances, explore massive worlds, and eventually participate in large-scale PvP warfare.
+
+The game must have a semi-realistic medieval fantasy style.
+
+DO NOT create:
+
+* Cartoon visuals
+* Card-based gameplay
+* Clash of Clans style gameplay
+* Idle game mechanics
+* Chibi art
+* Tile-based card systems
+
+The world should feel immersive, realistic, and alive.
+
+---
+
+LONG-TERM REQUIREMENTS
+
+The architecture MUST support future expansion without redesign.
+
+Future features include:
+
+* 20 persistent worlds
+* Dedicated battle world
+* Dragons
+* Dragon skins
+* Palace skins
+* Kingdom skins
+* NFT assets
+* Marketplace
+* Polygon integration
+* Token economy
+* Seasonal events
+* World migration
+* Alliance warfare
+* Cross-world systems
+
+These features are NOT implemented now.
+
+However all architecture must be prepared for them.
+
+---
+
+TECH STACK
+
+Frontend:
+
+* React
+* TypeScript
+* Tailwind
+* Three.js
+
+Backend:
+
+* Node.js
+* Express
+
+Database:
+
+* PostgreSQL
+
+Realtime:
+
+* Socket.IO
+
+Authentication:
+
+* JWT
+
+---
+
+STEP 1
+
+Create the following governance files:
+
+PROJECT_MASTER.md
+ROADMAP.md
+ARCHITECTURE_STATE.md
+
+These files are the project's single source of truth.
+
+Every future task must update them.
+
+---
+
+STEP 2
+
+Create complete project folder structure.
+
+Include folders for:
+
+frontend
+backend
+shared
+database
+assets
+
+Within assets create:
+
+buildings
+troops
+monsters
+dragons
+skins
+terrain
+ui
+
+---
+
+STEP 3
+
+Create future-ready database architecture.
+
+Prepare schemas for:
+
+Users
+Kingdoms
+Buildings
+Resources
+Troops
+Research
+Worlds
+Maps
+Monsters
+Monster Spawns
+Crystal Nodes
+Alliances
+Asset Registry
+
+DO NOT implement gameplay.
+
+Only design schemas and architecture.
+
+---
+
+STEP 4
+
+Create an Asset Registry System.
+
+Every visual object must support unique IDs.
+
+Examples:
+
+building_farm_001
+troop_militia_001
+monster_wolf_001
+dragon_fire_001
+skin_palace_001
+
+Future NFTs will connect through this registry.
+
+---
+
+STEP 5
+
+Create placeholder UI shell only.
+
+Pages:
+
+Login
+Register
+Dashboard
+
+No gameplay.
+
+Only navigation structure.
+
+---
+
+STEP 6
+
+Create initial placeholder graphics.
+
+Generate simple placeholder assets for:
+
+Palace
+Farm
+Lumber Mill
+Quarry
+Iron Mine
+Gold Mine
+Barracks
+Wall
+Watch Tower
+
+Militia
+Spearman
+Archer
+Scout
+
+Bandit
+Wolf
+Ogre
+Ancient Guardian
+Dragon
+
+Use placeholders only.
+
+Assets must be replaceable later.
+
+---
+
+STEP 7
+
+Update all governance files with completion status.
+
+---
+
+IMPORTANT
+
+DO NOT BUILD:
+
+Combat
+PvP
+Research
+Resource Production
+Troop Training
+World Map
+Alliance System
+
+Create only the foundation, architecture, governance files, database schemas, asset registry, project structure, and UI shell.
+
+When complete, stop and provide a full implementation report and update all governance files.

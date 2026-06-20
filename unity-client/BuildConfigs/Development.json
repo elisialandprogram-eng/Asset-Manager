@@ -1,0 +1,16 @@
+{
+  "configName": "Development",
+  "environmentName": "development",
+  "apiBaseUrl": "http://localhost:3000",
+  "webSocketUrl": "ws://localhost:3000",
+  "buildDefines": ["UNITY_ENV_DEV"],
+  "compressionFormat": "Disabled",
+  "exceptionSupport": "FullWithStackTrace",
+  "il2cppOptimization": "Debug",
+  "webglMemorySize": 256,
+  "stripEngineCode": false,
+  "allowDebugging": true,
+  "developmentBuild": true,
+  "targets": ["WebGL"],
+  "notes": "Local development. No compression. Full stack traces. Points to localhost:3000."
+}

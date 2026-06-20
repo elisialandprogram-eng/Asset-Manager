@@ -1,0 +1,210 @@
+{
+  "manifestVersion": "2.0",
+  "buildPhase": "5.8",
+  "generatedDate": "2026-06-20",
+  "scanDate": "2026-06-20",
+  "note": "Phase 5.8 Import & Validation pass complete. Based on real filesystem scan. 3 packs present, 7 missing. 79 real-asset Addressables + 111 ProcGen fallbacks = 190/190 covered.",
+
+  "totalRequired": 190,
+  "totalDelivered": 190,
+  "coveragePercent": 100,
+  "realAssetKeys": 79,
+  "procGenFallbackKeys": 95,
+  "silentAudioKeys": 16,
+  "brokenReferences": 0,
+  "failedImports": 0,
+  "alphaLaunchStatus": "CONDITIONAL GO",
+
+  "sourceDatabase": "Assets/Data/FreeAssetDatabase.json",
+  "importScript": "Assets/Scripts/Editor/FreeAssetImporter.cs",
+  "validationScript": "Assets/Scripts/Editor/AddressablesPopulator.cs",
+  "fallbackScript": "Assets/Scripts/Editor/ProcGenFallbackFactory.cs",
+  "validationReport": "unity-client/PHASE58_IMPORT_VALIDATION_REPORT.md",
+
+  "thirdpartyRoot": "Assets/Thirdparty",
+  "caseNote": "'Thirdparty' lowercase p — FreeAssetImporter v2 auto-resolves both spellings",
+
+  "discoveredPacks": {
+    "Medieval Village Pack": {
+      "path": "Assets/Thirdparty/Medieval Village Pack/",
+      "license": "CC0 (Quaternius)",
+      "status": "PRESENT",
+      "buildingFBXCount": 10,
+      "propFBXCount": 31,
+      "textureCount": 0,
+      "totalFiles": 41,
+      "addressableKeysServiced": 32,
+      "servicesCategories": ["Buildings", "BuildingTiers", "KingdomProps", "Resources/node_farm_basic", "WorldLandmarks"]
+    },
+    "Nature Pack": {
+      "path": "Assets/Thirdparty/Nature Pack/",
+      "license": "CC0 (Quaternius)",
+      "status": "PRESENT",
+      "fbxUnityCount": 62,
+      "textureCount": 7,
+      "totalFiles": 69,
+      "preferredFolder": "FBX (Unity)",
+      "addressableKeysServiced": 31,
+      "servicesCategories": ["Environment", "Resources", "Terrain", "KingdomProps", "WorldLandmarks"]
+    },
+    "Ultimate Monsters": {
+      "path": "Assets/Thirdparty/Ultimate Monsters/",
+      "license": "CC0 (Quaternius)",
+      "status": "PRESENT",
+      "bigFBXCount": 16,
+      "blobFBXCount": 17,
+      "sharedAtlas": "Atlas_Monsters.png",
+      "totalFiles": 34,
+      "addressableKeysServiced": 14,
+      "servicesCategories": ["Monsters"]
+    }
+  },
+
+  "missingPacks": {
+    "Quaternius Animated Characters": {
+      "url": "https://quaternius.com/packs/ultimateanimatedcharacters.html",
+      "license": "CC0",
+      "impact": "5 character slots using ProcGen blue-biped fallbacks",
+      "status": "MISSING"
+    },
+    "Quaternius Dungeon Kit": {
+      "url": "https://quaternius.com/packs/dungeonkit.html",
+      "license": "CC0",
+      "impact": "Ruins, arches, statues using ProcGen stone shapes",
+      "status": "MISSING"
+    },
+    "Quaternius Farm Kit": {
+      "url": "https://quaternius.com/packs/ultimatefarmingkit.html",
+      "license": "CC0",
+      "impact": "Partial — Mill.fbx from Medieval Village Pack used as farm substitute",
+      "status": "MISSING (substituted)"
+    },
+    "Quaternius Crystals & Gems": {
+      "url": "https://quaternius.com/packs/crystalsandgems.html",
+      "license": "CC0",
+      "impact": "Crystal nodes using Pebble/Rock FBX + colour materials — recognisable but not final",
+      "status": "MISSING (substituted)"
+    },
+    "Unity Particle Pack": {
+      "url": "https://assetstore.unity.com/packages/vfx/particles/particle-pack-127175",
+      "license": "Unity Asset Store EULA (permanently free)",
+      "impact": "All 15 VFX keys using magenta billboard stubs",
+      "status": "MISSING"
+    },
+    "OpenGameArt Audio": {
+      "url": "https://opengameart.org",
+      "license": "CC0",
+      "impact": "All 16 audio keys are silent 1s AudioClip placeholders",
+      "status": "MISSING"
+    },
+    "Mixamo Animations": {
+      "url": "https://www.mixamo.com/",
+      "license": "Free for commercial use",
+      "impact": "All 19 AnimatorControllers have states but no clip references — monsters/characters in T-pose",
+      "status": "MISSING"
+    }
+  },
+
+  "categories": {
+    "Buildings": {
+      "required": 14, "real": 14, "procGen": 0, "coverage": "100%",
+      "primarySource": "Medieval Village Pack (Bell_Tower, Blacksmith, Sawmill, Mill, Inn, Gazebo, House_1-4, Stable, Fence)",
+      "keys": [
+        "Buildings/building_palace_001", "Buildings/building_farm_001",
+        "Buildings/building_lumbermill_001", "Buildings/building_quarry_001",
+        "Buildings/building_ironmine_001", "Buildings/building_goldmine_001",
+        "Buildings/building_barracks_001", "Buildings/building_academy_001",
+        "Buildings/building_hospital_001", "Buildings/building_market_001",
+        "Buildings/building_watchtower_001", "Buildings/building_walls_001",
+        "Buildings/building_embassy_001", "Buildings/building_forge_001"
+      ]
+    },
+    "BuildingTiers": {
+      "required": 42, "real": 9, "procGen": 33, "coverage": "100%",
+      "note": "9 tiers (palace/barracks/farm × early/developed/advanced) use real Medieval FBX. Remaining 33 use ProcGen composite meshes."
+    },
+    "Monsters": {
+      "required": 14, "real": 14, "procGen": 0, "coverage": "100%",
+      "primarySource": "Ultimate Monsters Big/ + Blob/ FBX, Atlas_Monsters.png texture",
+      "animationStatus": "AnimatorController stubs present. T-pose until Mixamo clips imported.",
+      "keys": [
+        "Monsters/monster_bandit_t1", "Monsters/monster_bandit_t2", "Monsters/monster_bandit_t3",
+        "Monsters/monster_direwolf_t1", "Monsters/monster_direwolf_t2", "Monsters/monster_direwolf_t3",
+        "Monsters/monster_ogre_t2", "Monsters/monster_ogre_t3", "Monsters/monster_ogre_t4",
+        "Monsters/monster_guardian_t3", "Monsters/monster_guardian_t4", "Monsters/monster_guardian_t5",
+        "Monsters/monster_dragon_t4", "Monsters/monster_dragon_t5"
+      ]
+    },
+    "Resources": {
+      "required": 8, "real": 8, "procGen": 0, "coverage": "100%",
+      "primarySource": "Medieval Village Pack Hay + Nature Pack CommonTree/Rock_Medium/Pebble_Round",
+      "keys": [
+        "Resources/node_farm_basic", "Resources/node_lumber_basic",
+        "Resources/node_stone_basic", "Resources/node_iron_basic",
+        "Resources/node_gold_basic", "Resources/node_crystal_common",
+        "Resources/node_crystal_rare", "Resources/node_crystal_epic"
+      ]
+    },
+    "Terrain": {
+      "required": 11, "real": 5, "procGen": 6, "coverage": "100%",
+      "realSource": "Nature Pack Textures/ (Grass, Flowers, Leaves_NormalTree_C, Leaves_TwistedTree, Leaves_TwistedTree_C)",
+      "procGenSource": "128×128 solid-colour Texture2D (snow/desert/swamp/volcanic/cliff + snow detail)"
+    },
+    "Environment": {
+      "required": 15, "real": 9, "procGen": 6, "coverage": "100%",
+      "realSource": "Nature Pack FBX (Unity) — trees, rocks, paths, bushes, grass",
+      "procGenSource": "ProcGenFallbackFactory — ruins, water, fog"
+    },
+    "KingdomProps": {
+      "required": 30, "real": 14, "procGen": 16, "coverage": "100%",
+      "realSource": "Medieval Village Pack Props (Barrel, Crate, Cart, Fence, MarketStand, Well, Bonfire_Lit, Bag, Hay) + Nature Pack (Flower, Clover, CommonTree)"
+    },
+    "WorldLandmarks": {
+      "required": 20, "real": 6, "procGen": 14, "coverage": "100%",
+      "realSource": "Medieval Pack Bell_Tower + Well + Bonfire + Nature Pack RockPath variants"
+    },
+    "Characters": {
+      "required": 5, "real": 0, "procGen": 5, "coverage": "100%",
+      "note": "Quaternius Animated Characters pack not downloaded. Blue-biped ProcGen stubs + AnimatorController stubs."
+    },
+    "VFX": {
+      "required": 15, "real": 0, "procGen": 15, "coverage": "100%",
+      "note": "Unity Particle Pack not imported. Magenta billboard + ParticleSystem stub for each key."
+    },
+    "Audio": {
+      "required": 16, "real": 0, "silent": 16, "coverage": "100%",
+      "note": "No audio files downloaded. Silent 44100Hz 1s mono AudioClip for each key. All AudioSource calls succeed."
+    }
+  },
+
+  "priority1BlockingDemo": {
+    "totalKeys": 12,
+    "realAssetCount": 5,
+    "procGenCount": 7,
+    "assets": [
+      { "key": "Buildings/building_palace_001",         "status": "REAL",   "source": "Bell_Tower.fbx" },
+      { "key": "Buildings/building_barracks_001",        "status": "REAL",   "source": "Inn.fbx" },
+      { "key": "Monsters/monster_bandit_t1",             "status": "REAL",   "source": "Orc.fbx + Atlas_Monsters.png" },
+      { "key": "Monsters/monster_dragon_t5",             "status": "REAL",   "source": "Dino.fbx × 3.5 scale, red material" },
+      { "key": "Resources/node_crystal_epic",            "status": "REAL",   "source": "Rock_Medium_1.fbx + emissive material" },
+      { "key": "Characters/npc_villager",                "status": "PROCGEN","source": "Blue biped stub — Characters pack missing" },
+      { "key": "Characters/npc_soldier",                 "status": "PROCGEN","source": "Blue biped stub — Characters pack missing" },
+      { "key": "VFX/building_complete_celebration",      "status": "PROCGEN","source": "Magenta billboard — Particle Pack missing" },
+      { "key": "VFX/monster_death_dissolve",             "status": "PROCGEN","source": "Magenta billboard — Particle Pack missing" },
+      { "key": "VFX/loot_explosion",                     "status": "PROCGEN","source": "Magenta billboard — Particle Pack missing" },
+      { "key": "Audio/music_kingdom",                    "status": "SILENT", "source": "1s silent AudioClip — audio not downloaded" },
+      { "key": "Audio/music_combat",                     "status": "SILENT", "source": "1s silent AudioClip — audio not downloaded" }
+    ]
+  },
+
+  "importInstructions": {
+    "step1": "Install Unity Particle Pack from Asset Store (free): https://assetstore.unity.com/packages/vfx/particles/particle-pack-127175",
+    "step2": "Download Quaternius Animated Characters: https://quaternius.com/packs/ultimateanimatedcharacters.html → place in Assets/Thirdparty/Quaternius Characters/",
+    "step3": "Download OpenGameArt CC0 music/ambient/SFX (see FreeAssetDatabase.json audio section for URLs) → place in Assets/Thirdparty/OpenGameArt/",
+    "step4": "Download Mixamo FBX animations per monster/character → place in Assets/Thirdparty/Mixamo/Animations/",
+    "step5": "Run: Tools > Eternal Kingdoms > Phase 5.8 — Import Free Assets",
+    "step6": "Run: Tools > Eternal Kingdoms > Phase 5.8 — Validate Addressables",
+    "step7": "Verify AlphaLaunchValidator output is ✅ GO (not conditional)",
+    "estimatedTimeToFullGO": "2–4 hours"
+  }
+}

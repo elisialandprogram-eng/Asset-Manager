@@ -1,0 +1,92 @@
+{
+  "_readme": "ETERNAL KINGDOMS — World Spawn Configuration. Edit this file to balance spawn rates WITHOUT code changes. All times are in hours. Restart the server after editing.",
+
+  "scheduler_interval_minutes": 5,
+  "daily_reset_hour_utc": 0,
+
+  "resource_spawns": {
+    "farm": {
+      "enabled": true,
+      "respawn_hours": 6,
+      "expiry_hours": 12,
+      "max_world_spawns": 200,
+      "min_level": 1,
+      "max_level": 5
+    },
+    "lumber": {
+      "enabled": true,
+      "respawn_hours": 6,
+      "expiry_hours": 12,
+      "max_world_spawns": 200,
+      "min_level": 1,
+      "max_level": 5
+    },
+    "iron": {
+      "enabled": true,
+      "respawn_hours": 8,
+      "expiry_hours": 16,
+      "max_world_spawns": 150,
+      "min_level": 1,
+      "max_level": 8
+    },
+    "gold": {
+      "enabled": true,
+      "respawn_hours": 12,
+      "expiry_hours": 18,
+      "max_world_spawns": 120,
+      "min_level": 2,
+      "max_level": 10
+    },
+    "crystal": {
+      "enabled": true,
+      "respawn_hours": 24,
+      "expiry_hours": 24,
+      "max_world_spawns": 75,
+      "min_level": 3,
+      "max_level": 12
+    }
+  },
+
+  "monster_spawns": {
+    "bandit": {
+      "enabled": true,
+      "respawn_hours": 6,
+      "expiry_hours": 12,
+      "max_world_spawns": 150,
+      "min_level": 1,
+      "max_level": 5
+    },
+    "dire_wolf": {
+      "enabled": true,
+      "respawn_hours": 6,
+      "expiry_hours": 12,
+      "max_world_spawns": 120,
+      "min_level": 2,
+      "max_level": 6
+    },
+    "ogre": {
+      "enabled": true,
+      "respawn_hours": 12,
+      "expiry_hours": 18,
+      "max_world_spawns": 75,
+      "min_level": 4,
+      "max_level": 10
+    },
+    "guardian": {
+      "enabled": true,
+      "respawn_hours": 24,
+      "expiry_hours": 24,
+      "max_world_spawns": 50,
+      "min_level": 8,
+      "max_level": 15
+    },
+    "dragon": {
+      "enabled": true,
+      "respawn_hours": 24,
+      "expiry_hours": 48,
+      "max_world_spawns": 10,
+      "min_level": 15,
+      "max_level": 20
+    }
+  }
+}
