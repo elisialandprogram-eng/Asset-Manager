@@ -1,73 +1,84 @@
 name: Unity License Activation
 
-# Generates a Unity_lic.ulf license file by logging into Unity inside Docker.
-# This avoids the Unity portal entirely (no .alf upload needed).
+# Generates a .alf hardware-fingerprint file from the Unity Docker image.
+# You then exchange it at Unity's portal for a .ulf license file.
 #
-# Prerequisites — add these two secrets first:
-#   UNITY_EMAIL     your Unity account email
-#   UNITY_PASSWORD  your Unity account password
+# IMPORTANT — before uploading the .alf to Unity's portal:
+#   • Make sure you are signed in at https://id.unity.com
+#   • Open https://license.unity3d.com in the SAME browser session
+#   • If you get "Invalid refresh token", sign out, clear cookies, sign back in
 #
-# Steps:
-#   1. Add UNITY_EMAIL and UNITY_PASSWORD secrets to your repo
-#      (Settings -> Secrets -> Actions -> New repository secret)
-#   2. Actions tab -> Unity License Activation -> Run workflow
-#   3. Download the "unity-license" artifact — it contains Unity_lic.ulf
-#   4. Open the .ulf file in a text editor, copy the ENTIRE contents
-#   5. Add a new secret:
+# Full steps:
+#   1. Actions tab -> Unity License Activation -> Run workflow
+#   2. Download the "alf-file" artifact (Unity_v*.alf)
+#   3. Go to https://license.unity3d.com (must be signed in)
+#      -> Manual activation -> Upload the .alf file
+#   4. Download the .ulf file Unity returns
+#   5. Repo Settings -> Secrets -> Actions -> New repository secret
 #        Name:  UNITY_LICENSE
-#        Value: paste the full .ulf file contents
+#        Value: paste the ENTIRE contents of the .ulf file
 #
-# After that the unity-build.yml workflow will work.
+# If the portal keeps rejecting with "Invalid refresh token":
+#   Try the LOCAL method instead — see bottom of this file.
 
 on:
   workflow_dispatch:
 
 jobs:
-  activate:
-    name: Activate Unity and export license
+  generate-alf:
+    name: Generate .alf activation request
     runs-on: ubuntu-latest
 
     steps:
-      - name: Activate Unity with credentials
-        env:
-          UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      - name: Generate Unity activation file (.alf)
         run: |
-          mkdir -p /tmp/unity-license
+          mkdir -p /tmp/alf
 
           docker run --rm \
-            -e UNITY_EMAIL="$UNITY_EMAIL" \
-            -e UNITY_PASSWORD="$UNITY_PASSWORD" \
-            -v /tmp/unity-license:/license \
+            -v /tmp/alf:/output \
             unityci/editor:ubuntu-6000.0.23f1-webgl-3 \
             bash -c "
-              set -e
-              echo 'Activating Unity personal license...'
               unity-editor \
                 -batchmode \
                 -nographics \
+                -createManualActivationFile \
                 -logfile /dev/stdout \
-                -username \"\$UNITY_EMAIL\" \
-                -password \"\$UNITY_PASSWORD\" \
                 -quit || true
 
-              echo 'Searching for license file...'
-              find / -name 'Unity_lic.ulf' 2>/dev/null | head -5
+              ALF=\$(find /root -name 'Unity_v*.alf' 2>/dev/null | head -1)
+              if [ -z \"\$ALF\" ]; then
+                ALF=\$(find / -name 'Unity_v*.alf' 2>/dev/null | head -1)
+              fi
 
-              LIC=\$(find / -name 'Unity_lic.ulf' 2>/dev/null | head -1)
-              if [ -n \"\$LIC\" ]; then
-                cp \"\$LIC\" /license/Unity_lic.ulf
-                echo 'License file exported successfully.'
+              if [ -n \"\$ALF\" ]; then
+                echo \"Found: \$ALF\"
+                cp \"\$ALF\" /output/
               else
-                echo 'ERROR: Unity_lic.ulf not found.'
-                echo 'Unity may require interactive login or 2FA.'
+                echo 'ERROR: .alf file not found'
                 exit 1
               fi
             "
 
-      - name: Upload license file
+          echo "Generated activation file:"
+          ls -la /tmp/alf/
+
+      - name: Upload .alf file
         uses: actions/upload-artifact@v4
         with:
-          name: unity-license
-          path: /tmp/unity-license/Unity_lic.ulf
+          name: alf-file
+          path: /tmp/alf/Unity_v*.alf
           retention-days: 1
+
+# ──────────────────────────────────────────────────────────────
+# LOCAL METHOD (if the portal keeps rejecting the .alf):
+#
+# 1. Install Unity Hub + Unity 6000.0.23f1 on your own machine
+# 2. Open Unity, sign in with your account
+# 3. Help -> Manage License -> Activate New License -> Unity Personal
+# 4. Once activated, find the license file:
+#      Windows: C:\ProgramData\Unity\Unity_lic.ulf
+#      macOS:   /Library/Application Support/Unity/Unity_lic.ulf
+#      Linux:   /home/<user>/.local/share/unity3d/Unity/Unity_lic.ulf
+# 5. Open it in a text editor, copy everything
+# 6. Add GitHub secret UNITY_LICENSE = paste contents
+# ──────────────────────────────────────────────────────────────
