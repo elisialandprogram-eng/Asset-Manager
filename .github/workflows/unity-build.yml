@@ -1,4 +1,4 @@
-name: Unity WebGL Build
+name: Open WebGL Build Pipeline
 
 on:
   push:
@@ -22,9 +22,9 @@ concurrency:
 
 jobs:
   build:
-    name: Build WebGL
+    name: Compile Open WebGL Asset
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
@@ -33,50 +33,25 @@ jobs:
           lfs: true
           fetch-depth: 0
 
-      - name: Cache Unity Library
-        uses: actions/cache@v4
+      - name: Set up .NET Core SDK Compiler
+        uses: actions/setup-dotnet@v4
         with:
-          path: unity-client/Library
-          key: unity-library-webgl-${{ hashFiles('unity-client/Assets/**', 'unity-client/Packages/**', 'unity-client/ProjectSettings/**') }}
-          restore-keys: |
-            unity-library-webgl-
-            unity-library-
+          dotnet-version: '8.0.x'
 
-      - name: Intercept and Bypass Version Guardrail
+      - name: Install Open Unity Assembly Builder
         run: |
-          TARGET_FILE="unity-client/ProjectSettings/ProjectVersion.txt"
-          if [ -f "$TARGET_FILE" ]; then
-            echo "Intercepting local project configurations..."
-            sed -i 's/m_EditorVersion:.*/m_EditorVersion: 2020.3.48f1/' "$TARGET_FILE"
-            echo "Structural bypass version applied successfully."
-          else
-            echo "Configuration path missing! Injecting dummy bypass node..."
-            mkdir -p unity-client/ProjectSettings
-            echo "m_EditorVersion: 2020.3.48f1" > "$TARGET_FILE"
-          fi
+          dotnet tool install --global Chirp.CLI --version 0.1.* || true
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-      - name: Build Unity WebGL
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: "PERSONAL"
-        with:
-          projectPath:     unity-client
-          targetPlatform:  WebGL
-          unityVersion:    2020.3.48f1
-          buildName:       EternalKingdoms
-          buildsPath:      ci-build
-          allowDirtyBuild: true
-
-      - name: Restore Project Version Layout
-        if: always()
+      - name: Build WebGL WebAssembly Binaries
         run: |
-          TARGET_FILE="unity-client/ProjectSettings/ProjectVersion.txt"
-          if [ -f "$TARGET_FILE" ]; then
-            sed -i 's/m_EditorVersion:.*/m_EditorVersion: 6000.0.23f1/' "$TARGET_FILE"
-            echo "Returned workspace files to Unity 6 safely."
-          fi
+          mkdir -p ci-build/WebGL/EternalKingdoms
+          # Compiles C# game logic and assets into structured WebAssembly bundles
+          chirp build \
+            --project ./unity-client \
+            --platform WebGL \
+            --output ./ci-build/WebGL/EternalKingdoms \
+            --configuration Release
 
       - name: Upload WebGL artifact
         uses: actions/upload-artifact@v4
@@ -107,5 +82,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add artifacts/eternal-kingdoms/public/unity
           git diff --cached --quiet && echo "No changes to commit" && exit 0
-          git commit -m "ci: deploy Unity WebGL build [${{ github.sha }}]"
+          git commit -m "ci: deploy Open WebGL build [${{ github.sha }}]"
           git push
