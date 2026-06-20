@@ -45,23 +45,43 @@ jobs:
       - name: Fix workspace permissions
         run: chmod -R 777 $GITHUB_WORKSPACE
 
-      # Supports both Personal (UNITY_LICENSE) and Pro/Plus (UNITY_SERIAL).
-      # Set whichever secret matches your Unity plan — the other can be empty.
+      # ── Step 1: Activate ──────────────────────────────────────────────────
+      # game-ci/unity-activate spins up a virtual desktop inside the runner,
+      # logs in with your Unity credentials, and claims a free Personal seat.
+      # Requires only UNITY_EMAIL and UNITY_PASSWORD — no .ulf file needed.
+      - name: Activate Unity license
+        uses: game-ci/unity-activate@v4
+        env:
+          UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL:   ${{ secrets.UNITY_SERIAL }}
+
+      # ── Step 2: Build ─────────────────────────────────────────────────────
+      # skipActivation: true because we already activated above.
       - name: Build Unity WebGL
         uses: game-ci/unity-builder@v4
         env:
-          UNITY_LICENSE:  ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL:   ${{ secrets.UNITY_SERIAL }}
         with:
-          projectPath:    unity-client
-          targetPlatform: WebGL
-          buildName:      EternalKingdoms
-          buildsPath:     build
-          buildMethod:    BuildScript.BuildWebGL
-          unityVersion:   auto
-          versioning:     None
+          projectPath:     unity-client
+          targetPlatform:  WebGL
+          buildName:       EternalKingdoms
+          buildsPath:      build
+          buildMethod:     BuildScript.BuildWebGL
+          unityVersion:    auto
+          versioning:      None
+          skipActivation:  true
+
+      # ── Step 3: Return license ────────────────────────────────────────────
+      # Always runs — returns the floating seat so the next build can use it.
+      - name: Return Unity license
+        uses: game-ci/unity-return-license@v4
+        if: always()
+        env:
+          UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
 
       - name: Upload WebGL artifact
         uses: actions/upload-artifact@v4

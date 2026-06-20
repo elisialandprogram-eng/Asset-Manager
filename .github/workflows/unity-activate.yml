@@ -1,46 +1,26 @@
-name: Unity License Setup (read me)
+name: Unity License Activation (info only)
 
 # ══════════════════════════════════════════════════════════════════
-# Unity's portal (license.unity3d.com) ONLY supports Pro/Plus
-# serial numbers. It cannot activate a Personal (free) license.
+# This workflow is now FOR REFERENCE ONLY.
 #
-# Choose the path that matches your Unity plan:
-# ══════════════════════════════════════════════════════════════════
+# unity-build.yml handles activation automatically using
+# game-ci/unity-activate@v4, which spins up a virtual desktop
+# inside the GitHub runner, logs in with your Unity credentials,
+# and claims a floating Personal seat — no .ulf file or portal needed.
 #
-# ── PATH A · Personal (free) license ─────────────────────────────
+# ── Secrets required in your repo ────────────────────────────────
 #
-#  There is no CI-only way to get a Personal license file.
-#  You must activate Unity once on your own machine, then copy
-#  the resulting license file into a GitHub secret.
+#   UNITY_EMAIL     your Unity account email
+#   UNITY_PASSWORD  your Unity account password
 #
-#  1. Install Unity Hub from https://unity.com/download
-#  2. Install Unity 6 (version 6000.0.23f1) via Unity Hub
-#  3. Open Unity Hub → Licenses (top-right) → Add → Get a free
-#     personal license → Agree and get personal edition
-#  4. Find the generated license file on disk:
-#       Windows : C:\ProgramData\Unity\Unity_lic.ulf
-#       macOS   : /Library/Application Support/Unity/Unity_lic.ulf
-#       Linux   : ~/.local/share/unity3d/Unity/Unity_lic.ulf
-#  5. Open the file in any text editor, copy every character
-#  6. In your GitHub repo go to:
-#       Settings → Secrets → Actions → New repository secret
-#         Name:  UNITY_LICENSE
-#         Value: paste the full .ulf file contents
-#  7. Also add:
-#         UNITY_EMAIL    your Unity account email
-#         UNITY_PASSWORD your Unity account password
+#   UNITY_SERIAL    (Pro/Plus only) your serial number
+#                   Leave unset if you have a Personal plan
 #
-# ── PATH B · Pro or Plus license ─────────────────────────────────
+# Add them at: Settings → Secrets → Actions → New repository secret
 #
-#  You have a serial number (starts with "PB-" or "UB-").
-#
-#  1. In your GitHub repo go to:
-#       Settings → Secrets → Actions → New repository secret
-#         Name:  UNITY_SERIAL
-#         Value: your serial number (e.g. PB-XXXX-XXXX-XXXX-XXXX)
-#  2. Also add UNITY_EMAIL and UNITY_PASSWORD secrets
-#  3. In unity-build.yml add UNITY_SERIAL to the env block:
-#         UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+# Once those two secrets are set, push any change to unity-client/
+# and the build workflow will activate, build, and return the
+# license automatically.
 #
 # ══════════════════════════════════════════════════════════════════
 
@@ -48,26 +28,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  instructions:
-    name: License setup instructions
+  info:
+    name: Activation is handled automatically
     runs-on: ubuntu-latest
     steps:
-      - name: Print license setup guide
+      - name: Print info
         run: |
-          echo "======================================================"
-          echo " Unity License Setup"
-          echo "======================================================"
+          echo "Activation is now handled inside unity-build.yml"
+          echo "via game-ci/unity-activate@v4."
           echo ""
-          echo " Personal (free) license:"
-          echo "   Activate Unity locally, then copy the .ulf file"
-          echo "   contents into the UNITY_LICENSE GitHub secret."
-          echo "   File location:"
-          echo "     Windows : C:\ProgramData\Unity\Unity_lic.ulf"
-          echo "     macOS   : /Library/Application Support/Unity/Unity_lic.ulf"
-          echo "     Linux   : ~/.local/share/unity3d/Unity/Unity_lic.ulf"
-          echo ""
-          echo " Pro / Plus license:"
-          echo "   Add UNITY_SERIAL secret with your serial number."
-          echo ""
-          echo " See workflow comments for full step-by-step instructions."
-          echo "======================================================"
+          echo "Required secrets:"
+          echo "  UNITY_EMAIL    — your Unity account email"
+          echo "  UNITY_PASSWORD — your Unity account password"
+          echo "  UNITY_SERIAL   — Pro/Plus serial (leave unset for Personal)"
