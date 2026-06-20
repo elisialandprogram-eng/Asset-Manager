@@ -52,7 +52,7 @@ jobs:
       - name: Activate Unity license
         uses: game-ci/unity-activate@v2
         with:
-          unityVersion: auto
+          unityVersion: 6000.0.23f1
         env:
           UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
