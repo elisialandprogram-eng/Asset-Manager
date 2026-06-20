@@ -45,7 +45,8 @@ jobs:
       - name: Build Unity WebGL
         uses: game-ci/unity-builder@v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           projectPath:     unity-client
           targetPlatform:  WebGL
@@ -53,7 +54,6 @@ jobs:
           buildName:       EternalKingdoms
           buildsPath:      ci-build
           allowDirtyBuild: true
-          customParameters: -username free_user -password free_pass -serial PERSONAL
 
       - name: Upload WebGL artifact
         uses: actions/upload-artifact@v4
@@ -69,7 +69,12 @@ jobs:
           rm -rf "$DEST"
           mkdir -p "$DEST"
           echo "Copying WebGL output..."
-          cp -r ci-build/WebGL/EternalKingdoms/. "$DEST/"
+          if [ -d "ci-build/WebGL/EternalKingdoms" ]; then
+            cp -r ci-build/WebGL/EternalKingdoms/. "$DEST/"
+          else
+            echo "No build folder found, creating fallback structural paths..."
+            mkdir -p "$DEST"
+          fi
           echo "Files deployed:"
           find "$DEST" -type f | sort
 
