@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'unity-client/**'
+
   workflow_dispatch:
     inputs:
       environment:
@@ -45,59 +46,50 @@ jobs:
       - name: Fix Workspace Permissions
         run: chmod -R 777 $GITHUB_WORKSPACE
 
-      - name: Run Standalone Unity Compiler Container
+      - name: Unity WebGL Build
+        uses: game-ci/unity-builder@v4
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-        run: |
-          docker run --rm \
-            -v $GITHUB_WORKSPACE:/project \
-            -e UNITY_EMAIL="$UNITY_EMAIL" \
-            -e UNITY_PASSWORD="$UNITY_PASSWORD" \
-            unityci/editor:ubuntu-6000.0.23f1-webgl-3.1.0 \
-            bash -c "
-              unity-editor \
-                -batchmode \
-                -nographics \
-                -username \"\$UNITY_EMAIL\" \
-                -password \"\$UNITY_PASSWORD\" \
-                -projectPath /project/unity-client \
-                -buildTarget WebGL \
-                -customBuildName EternalKingdoms \
-                -customBuildPath /project/ci-build/WebGL/EternalKingdoms \
-                -executeMethod UnityEditor.BuildPipeline.BuildPlayer \
-                -quit \
-                -logFile /dev/stdout
-            "
+        with:
+          projectPath: unity-client
+          targetPlatform: WebGL
+          buildName: EternalKingdoms
 
       - name: Upload WebGL artifact
         uses: actions/upload-artifact@v4
         with:
           name: unity-webgl-${{ github.sha }}
-          path: ci-build/WebGL/EternalKingdoms
+          path: build/WebGL
           retention-days: 30
 
       - name: Deploy build to public/unity
         run: |
           DEST="artifacts/eternal-kingdoms/public/unity"
+
           echo "Clearing $DEST..."
           rm -rf "$DEST"
           mkdir -p "$DEST"
+
           echo "Copying WebGL output..."
-          if [ -d "ci-build/WebGL/EternalKingdoms" ]; then
-            cp -r ci-build/WebGL/EternalKingdoms/. "$DEST/"
+          if [ -d "build/WebGL" ]; then
+            cp -r build/WebGL/. "$DEST/"
           else
-            echo "No build folder found, creating fallback structural paths..."
+            echo "No build folder found, creating fallback structure..."
             mkdir -p "$DEST"
           fi
+
           echo "Files deployed:"
           find "$DEST" -type f | sort
 
       - name: Commit built WebGL to repository
         run: |
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
           git add artifacts/eternal-kingdoms/public/unity
+
           git diff --cached --quiet && echo "No changes to commit" && exit 0
+
           git commit -m "ci: deploy Unity WebGL build [${{ github.sha }}]"
           git push
