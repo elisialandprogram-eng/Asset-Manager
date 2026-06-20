@@ -1,1 +1,85 @@
+name: Unity WebGL Build
 
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'unity-client/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Build environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+concurrency:
+  group: unity-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build WebGL
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: unity-client/Library
+          key: unity-library-webgl-${{ hashFiles('unity-client/Assets/**', 'unity-client/Packages/**', 'unity-client/ProjectSettings/**') }}
+          restore-keys: |
+            unity-library-webgl-
+            unity-library-
+
+      - name: Build Unity WebGL
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE:  ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath:     unity-client
+          targetPlatform:  WebGL
+          unityVersion:    6000.0.23f1
+          buildName:       EternalKingdoms
+          buildsPath:      ci-build
+          buildMethod:     BuildScript.BuildWebGL
+          allowDirtyBuild: false
+
+      - name: Upload WebGL artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-webgl-${{ github.sha }}
+          path: ci-build/WebGL/EternalKingdoms
+          retention-days: 30
+
+      - name: Deploy build to public/unity
+        run: |
+          DEST="artifacts/eternal-kingdoms/public/unity"
+          echo "Clearing $DEST..."
+          rm -rf "$DEST"
+          mkdir -p "$DEST"
+          echo "Copying WebGL output..."
+          cp -r ci-build/WebGL/EternalKingdoms/. "$DEST/"
+          echo "Files deployed:"
+          find "$DEST" -type f | sort
+
+      - name: Commit built WebGL to repository
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add artifacts/eternal-kingdoms/public/unity
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "ci: deploy Unity WebGL build [${{ github.sha }}]"
+          git push
