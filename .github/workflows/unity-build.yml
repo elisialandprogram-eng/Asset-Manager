@@ -43,7 +43,10 @@ jobs:
             unity-library-
 
       - name: Fix workspace permissions
-        run: chmod -R 777 $GITHUB_WORKSPACE
+        run: |
+          chmod -R 777 $GITHUB_WORKSPACE
+          sudo mkdir -p /home/packer
+          sudo chmod -R 777 /home/packer
 
       # Spins up a virtual framebuffer inside the runner, logs in with your
       # Unity credentials, and claims a free Personal seat — no .ulf needed.
