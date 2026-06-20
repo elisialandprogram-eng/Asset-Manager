@@ -1,84 +1,73 @@
-name: Unity License Activation
+name: Unity License Setup (read me)
 
-# Generates a .alf hardware-fingerprint file from the Unity Docker image.
-# You then exchange it at Unity's portal for a .ulf license file.
+# ══════════════════════════════════════════════════════════════════
+# Unity's portal (license.unity3d.com) ONLY supports Pro/Plus
+# serial numbers. It cannot activate a Personal (free) license.
 #
-# IMPORTANT — before uploading the .alf to Unity's portal:
-#   • Make sure you are signed in at https://id.unity.com
-#   • Open https://license.unity3d.com in the SAME browser session
-#   • If you get "Invalid refresh token", sign out, clear cookies, sign back in
+# Choose the path that matches your Unity plan:
+# ══════════════════════════════════════════════════════════════════
 #
-# Full steps:
-#   1. Actions tab -> Unity License Activation -> Run workflow
-#   2. Download the "alf-file" artifact (Unity_v*.alf)
-#   3. Go to https://license.unity3d.com (must be signed in)
-#      -> Manual activation -> Upload the .alf file
-#   4. Download the .ulf file Unity returns
-#   5. Repo Settings -> Secrets -> Actions -> New repository secret
-#        Name:  UNITY_LICENSE
-#        Value: paste the ENTIRE contents of the .ulf file
+# ── PATH A · Personal (free) license ─────────────────────────────
 #
-# If the portal keeps rejecting with "Invalid refresh token":
-#   Try the LOCAL method instead — see bottom of this file.
+#  There is no CI-only way to get a Personal license file.
+#  You must activate Unity once on your own machine, then copy
+#  the resulting license file into a GitHub secret.
+#
+#  1. Install Unity Hub from https://unity.com/download
+#  2. Install Unity 6 (version 6000.0.23f1) via Unity Hub
+#  3. Open Unity Hub → Licenses (top-right) → Add → Get a free
+#     personal license → Agree and get personal edition
+#  4. Find the generated license file on disk:
+#       Windows : C:\ProgramData\Unity\Unity_lic.ulf
+#       macOS   : /Library/Application Support/Unity/Unity_lic.ulf
+#       Linux   : ~/.local/share/unity3d/Unity/Unity_lic.ulf
+#  5. Open the file in any text editor, copy every character
+#  6. In your GitHub repo go to:
+#       Settings → Secrets → Actions → New repository secret
+#         Name:  UNITY_LICENSE
+#         Value: paste the full .ulf file contents
+#  7. Also add:
+#         UNITY_EMAIL    your Unity account email
+#         UNITY_PASSWORD your Unity account password
+#
+# ── PATH B · Pro or Plus license ─────────────────────────────────
+#
+#  You have a serial number (starts with "PB-" or "UB-").
+#
+#  1. In your GitHub repo go to:
+#       Settings → Secrets → Actions → New repository secret
+#         Name:  UNITY_SERIAL
+#         Value: your serial number (e.g. PB-XXXX-XXXX-XXXX-XXXX)
+#  2. Also add UNITY_EMAIL and UNITY_PASSWORD secrets
+#  3. In unity-build.yml add UNITY_SERIAL to the env block:
+#         UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+#
+# ══════════════════════════════════════════════════════════════════
 
 on:
   workflow_dispatch:
 
 jobs:
-  generate-alf:
-    name: Generate .alf activation request
+  instructions:
+    name: License setup instructions
     runs-on: ubuntu-latest
-
     steps:
-      - name: Generate Unity activation file (.alf)
+      - name: Print license setup guide
         run: |
-          mkdir -p /tmp/alf
-
-          docker run --rm \
-            -v /tmp/alf:/output \
-            unityci/editor:ubuntu-6000.0.23f1-webgl-3 \
-            bash -c "
-              unity-editor \
-                -batchmode \
-                -nographics \
-                -createManualActivationFile \
-                -logfile /dev/stdout \
-                -quit || true
-
-              ALF=\$(find /root -name 'Unity_v*.alf' 2>/dev/null | head -1)
-              if [ -z \"\$ALF\" ]; then
-                ALF=\$(find / -name 'Unity_v*.alf' 2>/dev/null | head -1)
-              fi
-
-              if [ -n \"\$ALF\" ]; then
-                echo \"Found: \$ALF\"
-                cp \"\$ALF\" /output/
-              else
-                echo 'ERROR: .alf file not found'
-                exit 1
-              fi
-            "
-
-          echo "Generated activation file:"
-          ls -la /tmp/alf/
-
-      - name: Upload .alf file
-        uses: actions/upload-artifact@v4
-        with:
-          name: alf-file
-          path: /tmp/alf/Unity_v*.alf
-          retention-days: 1
-
-# ──────────────────────────────────────────────────────────────
-# LOCAL METHOD (if the portal keeps rejecting the .alf):
-#
-# 1. Install Unity Hub + Unity 6000.0.23f1 on your own machine
-# 2. Open Unity, sign in with your account
-# 3. Help -> Manage License -> Activate New License -> Unity Personal
-# 4. Once activated, find the license file:
-#      Windows: C:\ProgramData\Unity\Unity_lic.ulf
-#      macOS:   /Library/Application Support/Unity/Unity_lic.ulf
-#      Linux:   /home/<user>/.local/share/unity3d/Unity/Unity_lic.ulf
-# 5. Open it in a text editor, copy everything
-# 6. Add GitHub secret UNITY_LICENSE = paste contents
-# ──────────────────────────────────────────────────────────────
+          echo "======================================================"
+          echo " Unity License Setup"
+          echo "======================================================"
+          echo ""
+          echo " Personal (free) license:"
+          echo "   Activate Unity locally, then copy the .ulf file"
+          echo "   contents into the UNITY_LICENSE GitHub secret."
+          echo "   File location:"
+          echo "     Windows : C:\ProgramData\Unity\Unity_lic.ulf"
+          echo "     macOS   : /Library/Application Support/Unity/Unity_lic.ulf"
+          echo "     Linux   : ~/.local/share/unity3d/Unity/Unity_lic.ulf"
+          echo ""
+          echo " Pro / Plus license:"
+          echo "   Add UNITY_SERIAL secret with your serial number."
+          echo ""
+          echo " See workflow comments for full step-by-step instructions."
+          echo "======================================================"
