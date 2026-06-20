@@ -49,17 +49,17 @@ jobs:
       - name: Build Unity WebGL
         uses: game-ci/unity-builder@v4
         env:
+          UNITY_LICENSE:  ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          projectPath:     unity-client
-          targetPlatform:  WebGL
-          buildName:       EternalKingdoms
-          buildsPath:      build
-          buildMethod:     BuildScript.BuildWebGL
-          unityVersion:    auto
-          versioning:      None
-          activateLicense: true
+          projectPath:  unity-client
+          targetPlatform: WebGL
+          buildName:    EternalKingdoms
+          buildsPath:   build
+          buildMethod:  BuildScript.BuildWebGL
+          unityVersion: auto
+          versioning:   None
 
       - name: Upload WebGL artifact
         uses: actions/upload-artifact@v4
