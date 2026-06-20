@@ -1,30 +1,15 @@
 name: Unity License Setup (info only)
 
-# game-ci/unity-activate does not support Unity 6 (6000.x).
-# The only working path for a Personal license is one-time local activation.
+# Activation is now handled automatically inside unity-build.yml
+# using RageAgainstThePixel/activate-unity-license@v1, which spins
+# up a virtual framebuffer inside the GitHub runner and claims a
+# free Personal seat directly — no .ulf file or portal needed.
 #
-# ── How to get your UNITY_LICENSE secret (do this once) ──────────
-#
-#  1. Download Unity Hub: https://unity.com/download
-#  2. Install Unity 6000.0.23f1 via Unity Hub
-#  3. Unity Hub → Licenses (top-right icon) → Add →
-#     "Get a free personal license" → Agree and get personal edition
-#  4. Find the license file Unity created:
-#       Windows : C:\ProgramData\Unity\Unity_lic.ulf
-#       macOS   : /Library/Application Support/Unity/Unity_lic.ulf
-#       Linux   : ~/.local/share/unity3d/Unity/Unity_lic.ulf
-#  5. Open it in any text editor, select all, copy
-#  6. GitHub repo → Settings → Secrets → Actions →
-#     New repository secret
-#       Name:  UNITY_LICENSE
-#       Value: paste the full file contents
-#
-# ── Also add these two secrets ───────────────────────────────────
+# ── Secrets required (Settings → Secrets → Actions) ──────────────
 #
 #   UNITY_EMAIL     your Unity account email
 #   UNITY_PASSWORD  your Unity account password
 #
-# Once all three secrets are set, unity-build.yml will work.
 # ─────────────────────────────────────────────────────────────────
 
 on:
@@ -32,23 +17,14 @@ on:
 
 jobs:
   info:
-    name: License setup is manual (see workflow comments)
+    name: Activation handled automatically in unity-build.yml
     runs-on: ubuntu-latest
     steps:
-      - name: Print instructions
+      - name: Print info
         run: |
-          echo "================================================================"
-          echo " game-ci/unity-activate does not support Unity 6 (6000.x)."
-          echo " A Personal license must be activated once via Unity Hub locally."
+          echo "Activation is handled automatically by unity-build.yml"
+          echo "using RageAgainstThePixel/activate-unity-license@v1."
           echo ""
-          echo " Steps:"
-          echo "  1. Install Unity Hub + Unity 6000.0.23f1"
-          echo "  2. Activate a free Personal license in Unity Hub"
-          echo "  3. Copy Unity_lic.ulf contents into UNITY_LICENSE secret"
-          echo "  4. Add UNITY_EMAIL and UNITY_PASSWORD secrets"
-          echo ""
-          echo " License file locations:"
-          echo "   Windows : C:\ProgramData\Unity\Unity_lic.ulf"
-          echo "   macOS   : /Library/Application Support/Unity/Unity_lic.ulf"
-          echo "   Linux   : ~/.local/share/unity3d/Unity/Unity_lic.ulf"
-          echo "================================================================"
+          echo "Required secrets:"
+          echo "  UNITY_EMAIL    — your Unity account email"
+          echo "  UNITY_PASSWORD — your Unity account password"
