@@ -61,7 +61,6 @@ jobs:
                 -nographics \
                 -username \"\$UNITY_EMAIL\" \
                 -password \"\$UNITY_PASSWORD\" \
-                -serial PERSONAL \
                 -projectPath /project/unity-client \
                 -buildTarget WebGL \
                 -customBuildName EternalKingdoms \
