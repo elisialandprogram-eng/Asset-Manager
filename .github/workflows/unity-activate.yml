@@ -1,43 +1,54 @@
-name: Unity License Activation (info only)
+name: Unity License Setup (info only)
 
-# ══════════════════════════════════════════════════════════════════
-# This workflow is now FOR REFERENCE ONLY.
+# game-ci/unity-activate does not support Unity 6 (6000.x).
+# The only working path for a Personal license is one-time local activation.
 #
-# unity-build.yml handles activation automatically using
-# game-ci/unity-activate@v4, which spins up a virtual desktop
-# inside the GitHub runner, logs in with your Unity credentials,
-# and claims a floating Personal seat — no .ulf file or portal needed.
+# ── How to get your UNITY_LICENSE secret (do this once) ──────────
 #
-# ── Secrets required in your repo ────────────────────────────────
+#  1. Download Unity Hub: https://unity.com/download
+#  2. Install Unity 6000.0.23f1 via Unity Hub
+#  3. Unity Hub → Licenses (top-right icon) → Add →
+#     "Get a free personal license" → Agree and get personal edition
+#  4. Find the license file Unity created:
+#       Windows : C:\ProgramData\Unity\Unity_lic.ulf
+#       macOS   : /Library/Application Support/Unity/Unity_lic.ulf
+#       Linux   : ~/.local/share/unity3d/Unity/Unity_lic.ulf
+#  5. Open it in any text editor, select all, copy
+#  6. GitHub repo → Settings → Secrets → Actions →
+#     New repository secret
+#       Name:  UNITY_LICENSE
+#       Value: paste the full file contents
+#
+# ── Also add these two secrets ───────────────────────────────────
 #
 #   UNITY_EMAIL     your Unity account email
 #   UNITY_PASSWORD  your Unity account password
 #
-#   UNITY_SERIAL    (Pro/Plus only) your serial number
-#                   Leave unset if you have a Personal plan
-#
-# Add them at: Settings → Secrets → Actions → New repository secret
-#
-# Once those two secrets are set, push any change to unity-client/
-# and the build workflow will activate, build, and return the
-# license automatically.
-#
-# ══════════════════════════════════════════════════════════════════
+# Once all three secrets are set, unity-build.yml will work.
+# ─────────────────────────────────────────────────────────────────
 
 on:
   workflow_dispatch:
 
 jobs:
   info:
-    name: Activation is handled automatically
+    name: License setup is manual (see workflow comments)
     runs-on: ubuntu-latest
     steps:
-      - name: Print info
+      - name: Print instructions
         run: |
-          echo "Activation is now handled inside unity-build.yml"
-          echo "via game-ci/unity-activate@v4."
+          echo "================================================================"
+          echo " game-ci/unity-activate does not support Unity 6 (6000.x)."
+          echo " A Personal license must be activated once via Unity Hub locally."
           echo ""
-          echo "Required secrets:"
-          echo "  UNITY_EMAIL    — your Unity account email"
-          echo "  UNITY_PASSWORD — your Unity account password"
-          echo "  UNITY_SERIAL   — Pro/Plus serial (leave unset for Personal)"
+          echo " Steps:"
+          echo "  1. Install Unity Hub + Unity 6000.0.23f1"
+          echo "  2. Activate a free Personal license in Unity Hub"
+          echo "  3. Copy Unity_lic.ulf contents into UNITY_LICENSE secret"
+          echo "  4. Add UNITY_EMAIL and UNITY_PASSWORD secrets"
+          echo ""
+          echo " License file locations:"
+          echo "   Windows : C:\ProgramData\Unity\Unity_lic.ulf"
+          echo "   macOS   : /Library/Application Support/Unity/Unity_lic.ulf"
+          echo "   Linux   : ~/.local/share/unity3d/Unity/Unity_lic.ulf"
+          echo "================================================================"
