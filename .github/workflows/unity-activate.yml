@@ -1,32 +1,21 @@
-name: Unity License Activation
-
-# Run this workflow ONCE to get your UNITY_LICENSE secret.
-# Follow: https://game.ci/docs/github/activation
-#
-# Steps:
-#   1. Run this workflow manually (Actions tab -> Unity License Activation -> Run workflow)
-#   2. Download the artifact "Unity_v6000.0.23f1.alf"
-#   3. Go to https://license.unity3d.com and upload the .alf file
-#   4. Download the returned .ulf file
-#   5. Copy its full contents into a GitHub secret named UNITY_LICENSE
-#   6. Delete the uploaded .alf artifact (it is a one-time request file)
+name: Unity License Activation Generator
 
 on:
   workflow_dispatch:
 
 jobs:
-  activation:
-    name: Request Unity activation file
+  get-alf:
+    name: Generate Authentic ALF Signature 🔑
     runs-on: ubuntu-latest
     steps:
       - name: Request manual activation file
-        uses: game-ci/unity-request-activation-file@v2
+        id: view
+        uses: game-ci/unity-request-activation-file@v4
         with:
           unityVersion: 6000.0.23f1
 
-      - name: Upload activation file
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Unity_v6000.0.23f1.alf
-          path: Unity_v6000.0.23f1.alf
-          retention-days: 1
+          name: Unity-Activation-File
+          path: ${{ steps.view.outputs.filePath }}
