@@ -43,22 +43,24 @@ jobs:
             unity-library-
 
       - name: Fix workspace permissions
-        run: |
-          chmod -R 777 $GITHUB_WORKSPACE
-          sudo mkdir -p /home/packer
-          sudo chmod -R 777 /home/packer
+        run: chmod -R 777 $GITHUB_WORKSPACE
 
-      # Spins up a virtual framebuffer inside the runner, logs in with your
-      # Unity credentials, and claims a free Personal seat — no .ulf needed.
-      - name: Activate Unity Personal license
-        uses: RageAgainstThePixel/activate-unity-license@v1
-        with:
-          license:   'Personal'
-          username:  ${{ secrets.UNITY_EMAIL }}
-          password:  ${{ secrets.UNITY_PASSWORD }}
-
+      # ── License ───────────────────────────────────────────────────────────
+      # Personal (free): set UNITY_LICENSE secret to contents of Unity_lic.ulf
+      #   Activate once locally via Unity Hub, then find the file at:
+      #     Windows : C:\ProgramData\Unity\Unity_lic.ulf
+      #     macOS   : /Library/Application Support/Unity/Unity_lic.ulf
+      #     Linux   : ~/.local/share/unity3d/Unity/Unity_lic.ulf
+      #
+      # Pro / Plus: set UNITY_SERIAL secret to your serial number instead.
+      # ─────────────────────────────────────────────────────────────────────
       - name: Build Unity WebGL
         uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE:  ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL:   ${{ secrets.UNITY_SERIAL }}
         with:
           projectPath:    unity-client
           targetPlatform: WebGL
