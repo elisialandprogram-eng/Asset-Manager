@@ -51,10 +51,11 @@ jobs:
       # Requires only UNITY_EMAIL and UNITY_PASSWORD — no .ulf file needed.
       - name: Activate Unity license
         uses: game-ci/unity-activate@v2
+        with:
+          unityVersion: auto
         env:
           UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL:   ${{ secrets.UNITY_SERIAL }}
 
       # ── Step 2: Build ─────────────────────────────────────────────────────
       # skipActivation: true because we already activated above.
