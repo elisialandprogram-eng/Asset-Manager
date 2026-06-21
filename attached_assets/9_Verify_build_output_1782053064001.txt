@@ -1,0 +1,27 @@
+﻿2026-06-21T13:56:50.4313861Z ##[group]Run if [ -d "ci-build/WebGL/EternalKingdoms" ]; then
+2026-06-21T13:56:50.4314883Z [36;1mif [ -d "ci-build/WebGL/EternalKingdoms" ]; then[0m
+2026-06-21T13:56:50.4315536Z [36;1m  export SRC_DIR="ci-build/WebGL/EternalKingdoms"[0m
+2026-06-21T13:56:50.4316102Z [36;1melif [ -d "build/WebGL/WebGL" ]; then[0m
+2026-06-21T13:56:50.4316642Z [36;1m  export SRC_DIR="build/WebGL/WebGL"[0m
+2026-06-21T13:56:50.4317172Z [36;1melif [ -d "build/WebGL" ]; then[0m
+2026-06-21T13:56:50.4317668Z [36;1m  export SRC_DIR="build/WebGL"[0m
+2026-06-21T13:56:50.4318259Z [36;1melse[0m
+2026-06-21T13:56:50.4318823Z [36;1m  echo "ERROR: Build folders not found. Printing directory fallback maps:"[0m
+2026-06-21T13:56:50.4319570Z [36;1m  ls -R build || ls -R ci-build || echo "No folders exist at all"[0m
+2026-06-21T13:56:50.4320146Z [36;1m  exit 1[0m
+2026-06-21T13:56:50.4320543Z [36;1mfi[0m
+2026-06-21T13:56:50.4321016Z [36;1m[0m
+2026-06-21T13:56:50.4321445Z [36;1mecho "SRC_DIR=$SRC_DIR" >> $GITHUB_ENV[0m
+2026-06-21T13:56:50.4322031Z [36;1mecho "Build output found at: $SRC_DIR"[0m
+2026-06-21T13:56:50.4322547Z [36;1mfind "$SRC_DIR" -type f | sort[0m
+2026-06-21T13:56:50.4323053Z [36;1mTOTAL=$(du -sh "$SRC_DIR" | cut -f1)[0m
+2026-06-21T13:56:50.4323555Z [36;1mecho "Total size: $TOTAL"[0m
+2026-06-21T13:56:50.4373310Z shell: /usr/bin/bash -e {0}
+2026-06-21T13:56:50.4373778Z ##[endgroup]
+2026-06-21T13:56:50.4426709Z ERROR: Build folders not found. Printing directory fallback maps:
+2026-06-21T13:56:50.4438888Z ls: cannot access 'build': No such file or directory
+2026-06-21T13:56:50.4451427Z ci-build:
+2026-06-21T13:56:50.4452107Z WebGL
+2026-06-21T13:56:50.4452517Z 
+2026-06-21T13:56:50.4452825Z ci-build/WebGL:
+2026-06-21T13:56:50.4458949Z ##[error]Process completed with exit code 1.

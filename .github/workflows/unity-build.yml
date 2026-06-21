@@ -106,6 +106,27 @@ jobs:
           versioning:      None
           allowDirtyBuild: true
 
+      # ── Post-build directory dump (always runs, even on failure) ─────────────
+      # Prints every path game-ci / Unity touched so the NEXT failure has a
+      # precise directory tree to diagnose — not just "ci-build/WebGL:" empty.
+      - name: Dump post-build directory tree
+        if: always()
+        run: |
+          echo "=== GITHUB_WORKSPACE ==="
+          echo "$GITHUB_WORKSPACE"
+          echo ""
+          echo "=== workspace root (ls -la) ==="
+          ls -la "$GITHUB_WORKSPACE"
+          echo ""
+          echo "=== ci-build tree (ls -laR) ==="
+          ls -laR "$GITHUB_WORKSPACE/ci-build" 2>/dev/null || echo "(ci-build does not exist)"
+          echo ""
+          echo "=== unity-client/ci-build tree (project subdir, if Unity used CWD) ==="
+          ls -laR "$GITHUB_WORKSPACE/unity-client/ci-build" 2>/dev/null || echo "(unity-client/ci-build does not exist)"
+          echo ""
+          echo "=== [BuildScript] log lines from Unity output ==="
+          grep -a "\[BuildScript\]" "$GITHUB_WORKSPACE/unity-client/Logs/"*.log 2>/dev/null || echo "(no Logs/*.log found)"
+
       # ── Upload build log on failure (debugging) ────────────────────────────
       - name: Upload Unity build log (on failure)
         if: failure()
