@@ -35,10 +35,8 @@ export default function UnityLauncher() {
   const [unityReady, setUnityReady] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
   const [showDebug, setShowDebug] = useState(false);
-  // True when WebGL API is absent entirely (very restrictive sandbox).
-  // Unity may also report a WebGL error even when the API is present (no GPU),
-  // so we also catch that case via loadError message check below.
   const [webGLAbsent] = useState(() => !checkWebGL());
   const [debug, setDebug] = useState<DebugState>({
     iframeLoaded: false,
@@ -69,15 +67,18 @@ export default function UnityLauncher() {
     }
   }, []);
 
-  // Listen for UNITY_READY / UNITY_LOAD_ERROR
+  // Listen for messages from Unity iframe
   useEffect(() => {
     if (webGLAbsent) return;
     function handleMessage(event: MessageEvent) {
       if (event.data?.type === "UNITY_READY") {
         unityReadyRef.current = true;
         setUnityReady(true);
+        setProgress(1);
         setDebug((d) => ({ ...d, readyReceived: true }));
         sendAuth();
+      } else if (event.data?.type === "UNITY_PROGRESS") {
+        setProgress(event.data.value ?? 0);
       } else if (event.data?.type === "UNITY_LOAD_ERROR") {
         const msg = String(event.data.message ?? "Unknown error");
         console.error("[UnityLauncher] Unity reported a load error:", msg);
@@ -120,19 +121,33 @@ export default function UnityLauncher() {
     }, READY_TIMEOUT_MS);
   }
 
+  // Auth loading
   if (isLoadingUser || !user) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="text-amber-400/60 text-sm animate-pulse font-serif">
-          Entering the realm…
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ background: "radial-gradient(ellipse at center, #1a1200 0%, #0a0a0a 100%)" }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <div className="text-amber-400 font-serif text-4xl font-bold tracking-wide">
+            Eternal Kingdoms
+          </div>
+          <div className="flex items-center gap-3">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
+              className="w-4 h-4 border-2 border-amber-600/40 border-t-amber-400 rounded-full"
+            />
+            <span className="text-amber-200/70 text-sm font-serif">
+              Authenticating…
+            </span>
+          </div>
         </div>
       </div>
     );
   }
 
-  // Show "open in new tab" when:
-  //  a) WebGL API is entirely absent (webGLAbsent), OR
-  //  b) Unity itself reports no WebGL support (sandboxed iframe with software GL)
+  // WebGL not available (no GPU in sandbox or browser)
   const noGPU =
     webGLAbsent ||
     (loadError !== null && /webgl/i.test(loadError));
@@ -140,119 +155,160 @@ export default function UnityLauncher() {
   if (noGPU) {
     const fullUrl = window.location.href;
     return (
-      <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-6 p-6">
-        <div className="w-16 h-16 rounded-2xl bg-amber-900/20 border border-amber-700/30 flex items-center justify-center">
-          <span className="text-3xl">🏰</span>
+      <div
+        className="min-h-screen flex flex-col items-center justify-center gap-8 p-8"
+        style={{ background: "radial-gradient(ellipse at center, #1a1200 0%, #0a0a0a 100%)" }}
+      >
+        <div className="text-amber-400 font-serif text-4xl font-bold">Eternal Kingdoms</div>
+        <div className="max-w-md w-full bg-zinc-900/80 border border-amber-800/40 rounded-2xl p-8 flex flex-col items-center gap-6 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-amber-900/30 border border-amber-700/40 flex items-center justify-center text-3xl">
+            🏰
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-white font-semibold text-xl">Open in a Full Browser Tab</h2>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              The game requires hardware WebGL which isn't available inside
+              Replit's embedded preview. Open the link below in Chrome, Firefox,
+              or Safari to play.
+            </p>
+          </div>
+          <a
+            href={fullUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold text-sm rounded-xl transition-colors flex items-center justify-center gap-2"
+          >
+            Open Game in Browser ↗
+          </a>
+          <div className="w-full bg-zinc-800 rounded-lg px-4 py-3 text-left">
+            <div className="text-zinc-500 text-xs mb-1">Game URL</div>
+            <div className="text-zinc-200 text-xs font-mono break-all">{fullUrl}</div>
+          </div>
         </div>
-        <div className="text-center space-y-2 max-w-sm">
-          <h2 className="font-serif text-2xl text-amber-400">
-            Open in Your Browser
-          </h2>
-          <p className="text-sm text-zinc-400 leading-relaxed">
-            The Eternal Kingdoms client requires WebGL, which isn't available
-            inside Replit's preview pane. Open the game in a full browser tab
-            to play.
-          </p>
-        </div>
-        <a
-          href={fullUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-black font-semibold text-sm rounded-lg transition-colors"
-        >
-          Open Game in New Tab ↗
-        </a>
         <button
           onClick={() => setLocation("/")}
           className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors"
         >
-          Back to login
+          ← Back to login
         </button>
       </div>
     );
   }
 
-  const showError = loadError !== null || timedOut;
+  const showError = (loadError !== null && !noGPU) || timedOut;
+  const pct = Math.round(progress * 100);
 
   return (
-    <div className="fixed inset-0 bg-black overflow-hidden">
-      {/* Loading spinner */}
+    <div className="fixed inset-0 overflow-hidden" style={{ background: "#0a0a0a" }}>
+
+      {/* Loading overlay — shown until Unity signals READY */}
       <AnimatePresence>
         {!unityReady && !showError && (
           <motion.div
             key="loading"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 }}
-            className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black gap-6 pointer-events-none"
+            transition={{ duration: 0.8 }}
+            className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-10"
+            style={{ background: "radial-gradient(ellipse at 50% 40%, #1f1000 0%, #0a0802 60%, #000 100%)" }}
           >
-            <motion.div
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              className="font-serif text-3xl text-amber-400"
-            >
-              Eternal Kingdoms
-            </motion.div>
-            <div className="flex items-center gap-2">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                className="w-5 h-5 border-2 border-amber-400/30 border-t-amber-400 rounded-full"
-              />
-              <span className="text-sm text-amber-400/60 font-serif">
-                Loading world…
-              </span>
+            {/* Title */}
+            <div className="flex flex-col items-center gap-2">
+              <motion.h1
+                animate={{ opacity: [0.7, 1, 0.7] }}
+                transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                className="font-serif text-5xl font-bold text-amber-400 tracking-widest"
+              >
+                ETERNAL KINGDOMS
+              </motion.h1>
+              <p className="text-amber-200/50 text-sm tracking-widest uppercase font-serif">
+                Preparing your realm
+              </p>
+            </div>
+
+            {/* Progress bar */}
+            <div className="w-80 flex flex-col items-center gap-3">
+              <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full"
+                  style={{ width: `${pct}%` }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                />
+              </div>
+              <div className="flex items-center gap-3">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 1.4, ease: "linear" }}
+                  className="w-3.5 h-3.5 border-2 border-amber-800 border-t-amber-400 rounded-full flex-shrink-0"
+                />
+                <span className="text-amber-300/70 text-xs font-mono tabular-nums">
+                  {pct === 0
+                    ? "Connecting…"
+                    : pct < 90
+                    ? `Downloading game client… ${pct}%`
+                    : pct < 100
+                    ? `Compiling shaders… ${pct}%`
+                    : "Entering world…"}
+                </span>
+              </div>
+              {pct < 10 && (
+                <p className="text-zinc-600 text-xs text-center leading-relaxed max-w-xs">
+                  First load downloads ~14 MB of game data.<br />
+                  This takes 10–30 seconds depending on your connection.
+                </p>
+              )}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Error state */}
+      {/* Error state (non-WebGL errors) */}
       {showError && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black gap-5 p-6">
-          <div className="w-16 h-16 rounded-2xl bg-amber-900/20 border border-amber-700/30 flex items-center justify-center">
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-6 p-8"
+          style={{ background: "radial-gradient(ellipse at center, #1a0800 0%, #0a0a0a 100%)" }}>
+          <div className="text-amber-400 font-serif text-4xl font-bold">Eternal Kingdoms</div>
+          <div className="max-w-sm w-full bg-zinc-900/80 border border-zinc-700 rounded-2xl p-6 flex flex-col items-center gap-4 text-center">
             <span className="text-3xl">⚔️</span>
-          </div>
-          <div className="text-center space-y-2">
-            <h2 className="font-serif text-xl text-amber-400">
+            <h2 className="text-white font-semibold text-lg">
               {timedOut ? "Connection Timeout" : "Failed to Load"}
             </h2>
-            <p className="text-sm text-zinc-400 max-w-sm leading-relaxed">
+            <p className="text-zinc-400 text-sm leading-relaxed">
               {timedOut
-                ? "Unity loaded but did not send a ready signal in time."
+                ? "Unity loaded but didn't signal ready in time."
                 : loadError ?? "An unknown error occurred."}
             </p>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={() => {
-                setTimedOut(false);
-                setLoadError(null);
-                setUnityReady(false);
-                unityReadyRef.current = false;
-                setDebug({ iframeLoaded: false, readyReceived: false, tokenSent: false, retryFired: false, timedOut: false });
-                if (iframeRef.current) iframeRef.current.src = UNITY_BUILD_URL;
-              }}
-              className="px-4 py-2 border border-amber-700/50 text-amber-400 text-sm rounded hover:bg-amber-900/30 transition-colors"
-            >
-              Retry
-            </button>
-            <button
-              onClick={() => setLocation("/")}
-              className="px-4 py-2 border border-zinc-700 text-zinc-400 text-sm rounded hover:bg-zinc-800 transition-colors"
-            >
-              Sign out
-            </button>
+            <div className="flex gap-3 w-full">
+              <button
+                onClick={() => {
+                  setTimedOut(false);
+                  setLoadError(null);
+                  setProgress(0);
+                  setUnityReady(false);
+                  unityReadyRef.current = false;
+                  setDebug({ iframeLoaded: false, readyReceived: false, tokenSent: false, retryFired: false, timedOut: false });
+                  if (iframeRef.current) iframeRef.current.src = UNITY_BUILD_URL;
+                }}
+                className="flex-1 py-2 border border-amber-700/50 text-amber-400 text-sm rounded-lg hover:bg-amber-900/20 transition-colors"
+              >
+                Retry
+              </button>
+              <button
+                onClick={() => setLocation("/")}
+                className="flex-1 py-2 border border-zinc-700 text-zinc-400 text-sm rounded-lg hover:bg-zinc-800 transition-colors"
+              >
+                Sign out
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Unity iframe */}
+      {/* Unity iframe — always mounted so download starts immediately */}
       <iframe
         ref={iframeRef}
         src={UNITY_BUILD_URL}
         title="Eternal Kingdoms"
-        className="w-full h-full border-0"
+        className="absolute inset-0 w-full h-full border-0"
         allow="fullscreen; autoplay; clipboard-write"
         onLoad={handleIframeLoad}
         onError={() => setLoadError("The Unity build could not be loaded.")}
@@ -260,7 +316,7 @@ export default function UnityLauncher() {
 
       {/* Debug overlay — toggle with ` */}
       {showDebug && (
-        <div className="absolute bottom-4 left-4 z-50 bg-black/85 border border-zinc-700 rounded-lg p-3 text-xs font-mono text-zinc-300 space-y-1 pointer-events-none">
+        <div className="absolute bottom-4 left-4 z-50 bg-black/90 border border-zinc-700 rounded-lg p-3 text-xs font-mono text-zinc-300 space-y-1 pointer-events-none">
           <div className="text-amber-400 font-semibold mb-1">
             Unity Debug <span className="text-zinc-500">(` to toggle)</span>
           </div>
@@ -271,6 +327,9 @@ export default function UnityLauncher() {
           <DebugRow label="3s retry fired" value={debug.retryFired} />
           <DebugRow label="timeout hit" value={debug.timedOut} warn />
           <div className="text-zinc-500 pt-1 border-t border-zinc-700">
+            progress: {pct}%
+          </div>
+          <div className="text-zinc-500">
             url: {UNITY_BUILD_URL}
           </div>
         </div>
@@ -279,20 +338,8 @@ export default function UnityLauncher() {
   );
 }
 
-function DebugRow({
-  label,
-  value,
-  warn = false,
-}: {
-  label: string;
-  value: boolean;
-  warn?: boolean;
-}) {
-  const color = value
-    ? warn
-      ? "text-amber-400"
-      : "text-emerald-400"
-    : "text-zinc-600";
+function DebugRow({ label, value, warn = false }: { label: string; value: boolean; warn?: boolean }) {
+  const color = value ? (warn ? "text-amber-400" : "text-emerald-400") : "text-zinc-600";
   return (
     <div className="flex items-center gap-2">
       <span className={color}>{value ? "✓" : "✗"}</span>

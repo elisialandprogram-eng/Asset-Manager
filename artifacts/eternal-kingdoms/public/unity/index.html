@@ -109,6 +109,8 @@
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+          // Relay progress to the React parent so it can show a progress bar
+          try { window.parent.postMessage({ type: "UNITY_PROGRESS", value: progress }, "*"); } catch(e) {}
               }).then((unityInstance) => {
                 document.querySelector("#unity-loading-bar").style.display = "none";
                 document.querySelector("#unity-fullscreen-button").onclick = () => {
