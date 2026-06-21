@@ -1,4 +1,4 @@
-name: Open WebGL Build Pipeline
+name: Unity WebGL Build
 
 on:
   push:
@@ -22,9 +22,9 @@ concurrency:
 
 jobs:
   build:
-    name: Compile Open WebGL Asset
+    name: Build WebGL
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
 
     steps:
       - name: Checkout repository
@@ -33,25 +33,33 @@ jobs:
           lfs: true
           fetch-depth: 0
 
-      - name: Set up .NET Core SDK Compiler
-        uses: actions/setup-dotnet@v4
+      - name: Cache Unity Library
+        uses: actions/cache@v4
         with:
-          dotnet-version: '8.0.x'
+          path: unity-client/Library
+          key: unity-library-webgl-${{ hashFiles('unity-client/Assets/**', 'unity-client/Packages/**', 'unity-client/ProjectSettings/**') }}
+          restore-keys: |
+            unity-library-webgl-
+            unity-library-
 
-      - name: Install Open Unity Assembly Builder
-        run: |
-          dotnet tool install --global Chirp.CLI --version 0.1.* || true
-          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+      - name: Fix workspace permissions
+        run: chmod -R 777 $GITHUB_WORKSPACE
 
-      - name: Build WebGL WebAssembly Binaries
-        run: |
-          mkdir -p ci-build/WebGL/EternalKingdoms
-          # Compiles C# game logic and assets into structured WebAssembly bundles
-          chirp build \
-            --project ./unity-client \
-            --platform WebGL \
-            --output ./ci-build/WebGL/EternalKingdoms \
-            --configuration Release
+      - name: Build Unity WebGL
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE:  ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath:     unity-client
+          targetPlatform:  WebGL
+          unityVersion:    6000.0.23f1
+          buildName:       EternalKingdoms
+          buildsPath:      ci-build
+          buildMethod:     BuildScript.BuildWebGL
+          versioning:      None
+          allowDirtyBuild: true
 
       - name: Upload WebGL artifact
         uses: actions/upload-artifact@v4
@@ -70,8 +78,8 @@ jobs:
           if [ -d "ci-build/WebGL/EternalKingdoms" ]; then
             cp -r ci-build/WebGL/EternalKingdoms/. "$DEST/"
           else
-            echo "No build folder found, creating fallback structural paths..."
-            mkdir -p "$DEST"
+            echo "ERROR: No WebGL build output found at ci-build/WebGL/EternalKingdoms"
+            exit 1
           fi
           echo "Files deployed:"
           find "$DEST" -type f | sort
@@ -82,5 +90,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add artifacts/eternal-kingdoms/public/unity
           git diff --cached --quiet && echo "No changes to commit" && exit 0
-          git commit -m "ci: deploy Open WebGL build [${{ github.sha }}]"
+          git commit -m "ci: deploy Unity WebGL build [${{ github.sha }}]"
           git push
