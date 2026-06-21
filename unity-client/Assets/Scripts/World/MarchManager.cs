@@ -83,7 +83,7 @@ namespace EternalKingdoms.World
         public void Initialize(int kingdomId)
         {
             _currentKingdomId = kingdomId;
-            _marchService = FindObjectOfType<MarchService>();
+            _marchService = FindFirstObjectByType<MarchService>();
             if (_marchService == null)
             {
                 var go = new GameObject("MarchService");

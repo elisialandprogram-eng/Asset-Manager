@@ -1,0 +1,16 @@
+﻿2026-06-21T11:09:03.2975594Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-21T11:09:03.2977916Z ##[group]Run actions/cache@v4
+2026-06-21T11:09:03.2978375Z with:
+2026-06-21T11:09:03.2978828Z   path: unity-client/Library
+2026-06-21T11:09:03.2979681Z   key: unity-library-webgl-fa51d1b1db398d8961ec70d049823b0f9ae303848fb2b06e6a2653be7629430a
+2026-06-21T11:09:03.2980449Z   restore-keys: unity-library-webgl-
+unity-library-
+
+2026-06-21T11:09:03.2981016Z   enableCrossOsArchive: false
+2026-06-21T11:09:03.2981529Z   fail-on-cache-miss: false
+2026-06-21T11:09:03.2982025Z   lookup-only: false
+2026-06-21T11:09:03.2982449Z   save-always: false
+2026-06-21T11:09:03.2982875Z ##[endgroup]
+2026-06-21T11:09:03.4000243Z (node:2451) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-06-21T11:09:03.4001472Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-06-21T11:09:03.6378312Z Cache not found for input keys: unity-library-webgl-fa51d1b1db398d8961ec70d049823b0f9ae303848fb2b06e6a2653be7629430a, unity-library-webgl-, unity-library-

@@ -51,5 +51,14 @@ namespace EternalKingdoms.Kingdom
         {
             SceneController.Instance.GoToWorld();
         }
+
+        /// <summary>
+        /// Re-fetches kingdom state from the server.
+        /// Called by PlaytestManager after instant-complete or timer-skip actions.
+        /// </summary>
+        public void RefreshKingdomState()
+        {
+            KingdomStateManager.Instance?.ForceRefresh();
+        }
     }
 }

@@ -132,12 +132,12 @@ namespace EternalKingdoms.Demo
 
         private void SetKingdomIdentity()
         {
-            var kvc = FindObjectOfType<EternalKingdoms.Kingdom.KingdomVisualController>();
+            var kvc = FindFirstObjectByType<EternalKingdoms.Kingdom.KingdomVisualController>();
             if (kvc == null) return;
             kvc.SetKingdomIdentity(demoKingdomColor, null);
             kvc.UpdateWalls(demoPalaceLevel);
 
-            var cm = FindObjectOfType<EternalKingdoms.Population.CitizenManager>();
+            var cm = FindFirstObjectByType<EternalKingdoms.Population.CitizenManager>();
             if (cm != null) cm.SetPalaceLevel(demoPalaceLevel);
         }
 

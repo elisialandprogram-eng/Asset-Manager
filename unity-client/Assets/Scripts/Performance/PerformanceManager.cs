@@ -121,7 +121,7 @@ namespace EternalKingdoms.Performance
             QualitySettings.shadowDistance = _baselineShadowDist * shadowDistScaleLow;
 
             // Reduce particle systems max particles
-            foreach (var ps in FindObjectsOfType<ParticleSystem>())
+            foreach (var ps in FindObjectsByType<ParticleSystem>(FindObjectsSortMode.None))
             {
                 var m = ps.main;
                 if (m.maxParticles > 50) m.maxParticles = Mathf.Max(50, m.maxParticles / 2);
@@ -140,7 +140,7 @@ namespace EternalKingdoms.Performance
         private static int GetActiveEntityCount()
         {
             // Rough proxy: active renderers in the scene
-            return FindObjectsOfType<Renderer>().Length;
+            return FindObjectsByType<Renderer>(FindObjectsSortMode.None).Length;
         }
 
         private static bool IsMobilePlatform()
