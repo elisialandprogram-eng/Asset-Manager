@@ -70,7 +70,7 @@ namespace EternalKingdoms.Managers
                     IsLoaded = true;
                     OnHeroesUpdated?.Invoke();
                 },
-                err => Debug.LogWarning($"[HeroManager] Refresh failed: {err.message}")
+                err => Debug.LogWarning($"[HeroManager] Refresh failed: {err.Message}")
             ));
         }
 

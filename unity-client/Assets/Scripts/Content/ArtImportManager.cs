@@ -194,7 +194,7 @@ namespace EternalKingdoms.Content
             if (kvc != null) AutoAssignBuildings(kvc);
 
             // Wire monster prefabs into MonsterSpawnManager if present
-            var msm = FindAnyObjectByType<Monsters.MonsterSpawnManager>();
+            var msm = FindAnyObjectByType<World.MonsterSpawnManager>();
             if (msm != null) AutoAssignMonsters(msm);
 
             _report.autoAssignedCount = _report.autoAssignedKeys.Count;

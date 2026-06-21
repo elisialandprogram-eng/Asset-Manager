@@ -75,24 +75,24 @@ namespace EternalKingdoms.Environment
             if (biome == null) yield break;
 
             var placed   = _chunkDecorations[chunkCoord];
-            int frame    = 0;
             var rng      = new System.Random(HashCoord(chunkCoord));
 
-            yield return PlaceCategory(biome.treePrefabs,   biome.treeDensity,   bounds, occupied, placed, rng, ref frame);
-            yield return PlaceCategory(biome.shrubPrefabs,  biome.shrubDensity,  bounds, occupied, placed, rng, ref frame);
-            yield return PlaceCategory(biome.grassPrefabs,  biome.grassDensity,  bounds, occupied, placed, rng, ref frame);
-            yield return PlaceCategory(biome.rockPrefabs,   biome.rockDensity,   bounds, occupied, placed, rng, ref frame);
-            yield return PlaceCategory(biome.flowerPrefabs, biome.rockDensity/2, bounds, occupied, placed, rng, ref frame);
-            yield return PlaceCategory(biome.ruinPrefabs,   biome.ruinDensity,   bounds, occupied, placed, rng, ref frame);
-            yield return PlaceCategory(biome.statuePrefabs, Mathf.Max(0, biome.ruinDensity - 1), bounds, occupied, placed, rng, ref frame);
+            yield return PlaceCategory(biome.treePrefabs,   biome.treeDensity,   bounds, occupied, placed, rng);
+            yield return PlaceCategory(biome.shrubPrefabs,  biome.shrubDensity,  bounds, occupied, placed, rng);
+            yield return PlaceCategory(biome.grassPrefabs,  biome.grassDensity,  bounds, occupied, placed, rng);
+            yield return PlaceCategory(biome.rockPrefabs,   biome.rockDensity,   bounds, occupied, placed, rng);
+            yield return PlaceCategory(biome.flowerPrefabs, biome.rockDensity/2, bounds, occupied, placed, rng);
+            yield return PlaceCategory(biome.ruinPrefabs,   biome.ruinDensity,   bounds, occupied, placed, rng);
+            yield return PlaceCategory(biome.statuePrefabs, Mathf.Max(0, biome.ruinDensity - 1), bounds, occupied, placed, rng);
         }
 
         private IEnumerator PlaceCategory(GameObject[] prefabs, int count, Bounds bounds,
                                            List<Vector3> occupied, List<GameObject> placed,
-                                           System.Random rng, ref int frame)
+                                           System.Random rng)
         {
             if (prefabs == null || prefabs.Length == 0 || count <= 0) yield break;
 
+            int frame = 0;
             for (int i = 0; i < count; i++)
             {
                 var prefab = prefabs[rng.Next(prefabs.Length)];

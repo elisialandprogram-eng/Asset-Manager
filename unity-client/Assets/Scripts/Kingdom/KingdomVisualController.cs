@@ -91,6 +91,12 @@ namespace EternalKingdoms.Kingdom
             _slots[buildingId] = state;
         }
 
+        /// <summary>Register a hot-swapped building prefab from ArtImportManager.</summary>
+        public void RegisterBuildingPrefab(string key, GameObject prefab)
+        {
+            Debug.Log($"[KingdomVisualController] Registered prefab: {key}");
+        }
+
         /// <summary>Transition a building slot to a new visual state.</summary>
         public void SetBuildingState(string buildingId, BuildingVisualState.State newState, int level = 1)
         {

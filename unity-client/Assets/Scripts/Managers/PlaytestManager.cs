@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using EternalKingdoms.Networking;
 using EternalKingdoms.VFX;
+using EternalKingdoms.World;
 
 namespace EternalKingdoms.Managers
 {
@@ -67,7 +68,7 @@ namespace EternalKingdoms.Managers
 
         private void Start()
         {
-            _api = FindAnyObjectByType<ApiClient>();
+            _api = NetworkManager.Instance?.Api;
             if (playtestPanel != null) playtestPanel.SetActive(false);
         }
 
@@ -117,17 +118,15 @@ namespace EternalKingdoms.Managers
                 iron    = spawnIron,
                 crystal = spawnCrystal
             };
-            yield return _api.PostAsync("/api/playtest/resources", body, onSuccess: (r) =>
-            {
-                AlphaVFXController.Instance?.PlayLootExplosion(Camera.main?.transform.position ?? Vector3.zero);
-            });
+            yield return _api.Post<object>("/api/playtest/resources", body,
+                onSuccess: (_) => AlphaVFXController.Instance?.PlayLootExplosion(Camera.main?.transform.position ?? Vector3.zero));
         }
 
         /// <summary>Spawn a random monster at the camera's position for testing combat.</summary>
         public void SpawnMonster()
         {
             if (!IsAllowed()) return;
-            var spawnMgr = FindAnyObjectByType<Monsters.MonsterSpawnManager>();
+            var spawnMgr = FindAnyObjectByType<MonsterSpawnManager>();
             if (spawnMgr == null) { Debug.LogWarning("[PlaytestManager] MonsterSpawnManager not found."); return; }
 
             Vector3 pos = (Camera.main?.transform.position ?? Vector3.zero) + Camera.main.transform.forward * 20f;
@@ -146,18 +145,16 @@ namespace EternalKingdoms.Managers
         private IEnumerator InstantUpgradeCoroutine()
         {
             if (_api == null) yield break;
-            yield return _api.PostAsync("/api/playtest/instant-complete", null, onSuccess: (_) =>
-            {
-                var ksc = FindAnyObjectByType<Kingdom.KingdomSceneController>();
-                ksc?.RefreshKingdomState();
-            });
+            yield return _api.Post<object>("/api/playtest/instant-complete", null,
+                onSuccess: (_) => { var ksc = FindAnyObjectByType<Kingdom.KingdomSceneController>(); ksc?.RefreshKingdomState(); });
         }
 
         /// <summary>Skip all active timers (construction, upgrades, marches).</summary>
         public void SkipAllTimers()
         {
             if (!IsAllowed()) return;
-            StartCoroutine(_api?.PostAsync("/api/playtest/skip-timers", null,
+            if (_api == null) return;
+            StartCoroutine(_api.Post<object>("/api/playtest/skip-timers", null,
                 onSuccess: (_) => Debug.Log("[PlaytestManager] ⏩ Timers skipped.")));
         }
 
@@ -186,7 +183,8 @@ namespace EternalKingdoms.Managers
         public void GrantInfiniteAP()
         {
             if (!IsAllowed()) return;
-            StartCoroutine(_api?.PostAsync("/api/playtest/grant-ap", new { amount = 9999 },
+            if (_api == null) return;
+            StartCoroutine(_api.Post<object>("/api/playtest/grant-ap", new { amount = 9999 },
                 onSuccess: (_) => Debug.Log("[PlaytestManager] ⚡ Infinite AP granted.")));
         }
 

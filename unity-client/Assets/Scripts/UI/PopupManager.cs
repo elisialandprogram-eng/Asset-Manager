@@ -80,7 +80,7 @@ namespace EternalKingdoms.UI
         private GameObject LoadPrefab(string key)
         {
             if (_prefabCache.TryGetValue(key, out var cached)) return cached;
-            var prefab = Resources.Load<GameObject>(POPUP_PREFAB_PATH + key);
+            var prefab = UnityEngine.Resources.Load<GameObject>(POPUP_PREFAB_PATH + key);
             if (prefab != null) _prefabCache[key] = prefab;
             return prefab;
         }

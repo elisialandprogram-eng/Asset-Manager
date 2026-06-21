@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using EternalKingdoms.Networking;
+using EternalKingdoms.Managers;
 
 namespace EternalKingdoms.UI
 {

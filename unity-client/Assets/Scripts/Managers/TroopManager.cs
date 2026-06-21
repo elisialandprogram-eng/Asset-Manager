@@ -55,7 +55,7 @@ namespace EternalKingdoms.Managers
 
             StartCoroutine(_combatService.GetTroopDefinitions(
                 defs => { TroopDefinitions = defs; },
-                err => Debug.LogWarning($"[TroopManager] Failed to load definitions: {err.message}")
+                err => Debug.LogWarning($"[TroopManager] Failed to load definitions: {err.Message}")
             ));
         }
 
@@ -78,7 +78,7 @@ namespace EternalKingdoms.Managers
                     IsLoaded = true;
                     OnTroopsUpdated?.Invoke();
                 },
-                err => Debug.LogWarning($"[TroopManager] Refresh failed: {err.message}")
+                err => Debug.LogWarning($"[TroopManager] Refresh failed: {err.Message}")
             ));
         }
 

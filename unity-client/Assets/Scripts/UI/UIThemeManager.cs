@@ -54,6 +54,13 @@ namespace EternalKingdoms.UI
                 if (canvas != null) ApplyThemeToCanvas(canvas.transform);
         }
 
+        /// <summary>Apply a specific UIThemeData to all registered canvases.</summary>
+        public void ApplyTheme(UIThemeData data)
+        {
+            themeData = data;
+            ApplyThemeToAll();
+        }
+
         public void ApplyThemeToCanvas(Transform root)
         {
             if (themeData == null) return;

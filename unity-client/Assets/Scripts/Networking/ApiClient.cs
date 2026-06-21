@@ -63,6 +63,41 @@ namespace EternalKingdoms.Networking
             yield return SendRequest<T>(UnityWebRequest.kHttpVerbPOST, path, json, onSuccess, onError, requireAuth);
         }
 
+        // ── DELETE ────────────────────────────────────────────────────────────
+
+        public IEnumerator Delete(
+            string path,
+            Action<string> onSuccess = null,
+            Action<ApiError> onError = null,
+            bool requireAuth = false)
+        {
+            string url = _baseUrl + path;
+            using var request = new UnityEngine.Networking.UnityWebRequest(url, "DELETE")
+            {
+                downloadHandler = new UnityEngine.Networking.DownloadHandlerBuffer()
+            };
+            if (!string.IsNullOrEmpty(_bearerToken))
+                request.SetRequestHeader("Authorization", "Bearer " + _bearerToken);
+            request.SetRequestHeader("Accept", "application/json");
+            request.timeout = (int)_timeoutSeconds;
+
+            LogRequest("DELETE", url, 1);
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.ConnectionError ||
+                request.result == UnityWebRequest.Result.DataProcessingError)
+            {
+                onError?.Invoke(new ApiError(0, "Network error: " + request.error));
+                yield break;
+            }
+            if (request.responseCode >= 400)
+            {
+                onError?.Invoke(ParseError(request.downloadHandler?.text ?? "", (int)request.responseCode));
+                yield break;
+            }
+            onSuccess?.Invoke(request.downloadHandler?.text ?? "");
+        }
+
         // ── PUT ───────────────────────────────────────────────────────────────
 
         public IEnumerator Put<T>(

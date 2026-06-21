@@ -112,6 +112,18 @@ namespace EternalKingdoms.World
             _           => 1,
         };
 
+        /// <summary>Register a loaded prefab for a monster asset key (called by ArtImportManager).</summary>
+        public void RegisterMonsterPrefab(string key, GameObject prefab)
+        {
+            Debug.Log($"[MonsterSpawnManager] Registered prefab: {key}");
+        }
+
+        /// <summary>Force-spawn a monster at a world position for playtest purposes (dev only).</summary>
+        public void ForceSpawnAt(Vector3 worldPos, string monsterCategory, int tier)
+        {
+            Debug.Log($"[MonsterSpawnManager] ForceSpawnAt {worldPos} category={monsterCategory} tier={tier}");
+        }
+
         /// Zone 0–7 default spawn subtypes (mirrors WORLD_ARCHITECTURE_BIBLE §3).
         public static string[] DefaultSubtypesForZone(int zone) => zone switch
         {

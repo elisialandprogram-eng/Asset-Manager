@@ -22,7 +22,7 @@ namespace EternalKingdoms.World
 
         private void Awake()
         {
-            _api = FindObjectOfType<ApiClient>();
+            _api = NetworkManager.Instance?.Api;
         }
 
         // -------------------------------------------------------------------------
@@ -39,7 +39,7 @@ namespace EternalKingdoms.World
                 "/api/marches",
                 body,
                 onSuccess,
-                onError);
+                err => onError?.Invoke(err.Message));
         }
 
         // -------------------------------------------------------------------------
@@ -54,7 +54,7 @@ namespace EternalKingdoms.World
             yield return _api.Get<ListMarchesResponse>(
                 $"/api/marches?kingdomId={kingdomId}",
                 onSuccess,
-                onError);
+                err => onError?.Invoke(err.Message));
         }
 
         // -------------------------------------------------------------------------
@@ -69,7 +69,7 @@ namespace EternalKingdoms.World
             yield return _api.Delete(
                 $"/api/marches/{marchId}",
                 _ => onSuccess?.Invoke(),
-                onError);
+                err => onError?.Invoke(err.Message));
         }
 
         // -------------------------------------------------------------------------
@@ -84,7 +84,7 @@ namespace EternalKingdoms.World
             yield return _api.Get<ResourceNodesResponse>(
                 $"/api/worlds/{worldId}/resource-nodes",
                 onSuccess,
-                onError);
+                err => onError?.Invoke(err.Message));
         }
     }
 }

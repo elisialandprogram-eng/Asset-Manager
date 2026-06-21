@@ -132,7 +132,7 @@ namespace EternalKingdoms.Monsters
             {
                 case MonsterAIState.Idle:
                     if (_stateTimer > idleDuration)
-                        EnterState(Random.value < 0.4f ? MonsterAIState.Sleep : MonsterAIState.Patrol);
+                        EnterState(UnityEngine.Random.value < 0.4f ? MonsterAIState.Sleep : MonsterAIState.Patrol);
                     break;
 
                 case MonsterAIState.Sleep:
@@ -146,7 +146,7 @@ namespace EternalKingdoms.Monsters
                         if (_stateTimer > patrolWaitTime)
                         {
                             // Loop patrol or return to idle
-                            EnterState(Random.value < 0.5f ? MonsterAIState.Idle : MonsterAIState.Patrol);
+                            EnterState(UnityEngine.Random.value < 0.5f ? MonsterAIState.Idle : MonsterAIState.Patrol);
                         }
                     }
                     break;

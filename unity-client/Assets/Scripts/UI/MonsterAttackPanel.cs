@@ -100,7 +100,7 @@ namespace EternalKingdoms.UI
                 },
                 err =>
                 {
-                    errorText.text = $"Failed to load monster: {err.message}";
+                    errorText.text = $"Failed to load monster: {err.Message}";
                     attackButton.interactable = false;
                 }
             ));
@@ -235,7 +235,7 @@ namespace EternalKingdoms.UI
                 },
                 err =>
                 {
-                    errorText.text            = $"Error: {err.message}";
+                    errorText.text            = $"Error: {err.Message}";
                     attackButton.interactable = true;
                     attackButtonText.text     = "Attack!";
                 }

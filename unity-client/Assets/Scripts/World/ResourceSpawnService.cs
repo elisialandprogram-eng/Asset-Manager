@@ -46,7 +46,7 @@ namespace EternalKingdoms.World
         public void Initialize(int worldId)
         {
             _worldId = worldId;
-            _api = FindObjectOfType<ApiClient>();
+            _api = EternalKingdoms.Networking.NetworkManager.Instance?.Api;
             _running = true;
             StartCoroutine(ResourcePollLoop());
             StartCoroutine(MonsterPollLoop());

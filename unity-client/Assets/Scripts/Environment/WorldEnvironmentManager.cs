@@ -270,7 +270,7 @@ namespace EternalKingdoms.Environment
         {
             // Notify AmbientAudioController of phase change for music crossfade
             var aac = FindAnyObjectByType<Audio.AmbientAudioController>();
-            aac?.OnTimePhaseChanged(_timeOfDay.ToString());
+            aac?.TransitionTo(_timeOfDay.ToString());
         }
 
         // ─────────────────────────────────────────────────────────────────────

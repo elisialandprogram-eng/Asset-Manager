@@ -42,11 +42,11 @@ namespace EternalKingdoms.Core
 
             // Load configs from Resources if not assigned in Inspector
             if (developmentConfig == null)
-                developmentConfig = Resources.Load<EnvironmentConfig>("Environments/Development");
+                developmentConfig = UnityEngine.Resources.Load<EnvironmentConfig>("Environments/Development");
             if (stagingConfig == null)
-                stagingConfig = Resources.Load<EnvironmentConfig>("Environments/Staging");
+                stagingConfig = UnityEngine.Resources.Load<EnvironmentConfig>("Environments/Staging");
             if (productionConfig == null)
-                productionConfig = Resources.Load<EnvironmentConfig>("Environments/Production");
+                productionConfig = UnityEngine.Resources.Load<EnvironmentConfig>("Environments/Production");
 
             _activeConfig = SelectEnvironment();
 

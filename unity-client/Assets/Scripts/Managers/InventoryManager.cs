@@ -67,7 +67,7 @@ namespace EternalKingdoms.Managers
                     IsLoaded = true;
                     OnInventoryUpdated?.Invoke();
                 },
-                err => Debug.LogWarning($"[InventoryManager] Refresh failed: {err.message}")
+                err => Debug.LogWarning($"[InventoryManager] Refresh failed: {err.Message}")
             ));
         }
 

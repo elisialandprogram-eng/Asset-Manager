@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using EternalKingdoms.CameraDemo;
 using EternalKingdoms.Environment;
 using EternalKingdoms.VFX;
+using EternalKingdoms.World;
 
 namespace EternalKingdoms.Demo
 {
@@ -267,7 +268,7 @@ namespace EternalKingdoms.Demo
             var monster = FindAnyObjectByType<Monsters.MonsterSpawnController>();
             if (monster != null) nearestMonster = monster.transform;
 
-            var node = FindAnyObjectByType<Resources.ResourceNodeVisual>();
+            var node = FindAnyObjectByType<ResourceNodeVisual>();
             if (node != null) nearestResourceNode = node.transform;
         }
 

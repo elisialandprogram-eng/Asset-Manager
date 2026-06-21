@@ -154,7 +154,7 @@ namespace EternalKingdoms.Networking
             Action<AttackMarchResponseDto> onSuccess,
             Action<ApiError> onError)
         {
-            yield return _api.Post<AttackMarchRequestDto, AttackMarchResponseDto>(
+            yield return _api.Post<AttackMarchResponseDto>(
                 $"/api/monsters/{spawnId}/attack",
                 request,
                 onSuccess,

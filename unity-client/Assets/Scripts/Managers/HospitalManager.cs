@@ -68,7 +68,7 @@ namespace EternalKingdoms.Managers
                     IsLoaded = true;
                     OnHospitalUpdated?.Invoke();
                 },
-                err => Debug.LogWarning($"[HospitalManager] Refresh failed: {err.message}")
+                err => Debug.LogWarning($"[HospitalManager] Refresh failed: {err.Message}")
             ));
         }
 

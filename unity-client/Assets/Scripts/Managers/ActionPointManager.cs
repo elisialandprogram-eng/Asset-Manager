@@ -93,7 +93,7 @@ namespace EternalKingdoms.Managers
                     IsLoaded    = true;
                     OnAPUpdated?.Invoke();
                 },
-                err => Debug.LogWarning($"[ActionPointManager] Refresh failed: {err.message}")
+                err => Debug.LogWarning($"[ActionPointManager] Refresh failed: {err.Message}")
             ));
         }
 

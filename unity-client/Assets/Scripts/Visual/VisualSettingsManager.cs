@@ -150,12 +150,8 @@ namespace EternalKingdoms.Visual
                     bloom.active = settings.bloomIntensity > 0f;
                 }
 
-                // Drive Ambient Occlusion
-                if (globalVolume.profile.TryGet<ScreenSpaceAmbientOcclusion>(out var ao))
-                {
-                    ao.intensity.Override(settings.aoIntensity);
-                    ao.active = settings.aoIntensity > 0f;
-                }
+                // Ambient Occlusion is a ScriptableRendererFeature in URP 14+ (Unity 6)
+                // and cannot be driven through the VolumeProfile API — managed via URP asset instead.
             }
 
             // Unity quality level (shadow cascade / distance driven by URP asset)
