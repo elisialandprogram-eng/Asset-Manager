@@ -285,7 +285,7 @@ namespace EternalKingdoms.Editor
             var g = s.FindGroup(name);
             if (g != null) return g;
             return s.CreateGroup(name, false, false, false,
-                typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
+                null, typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
         }
     }
 }

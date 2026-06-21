@@ -1,0 +1,86 @@
+﻿2026-06-21T11:20:36.7236387Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-06-21T11:20:36.7249999Z ##[group]Run actions/checkout@v4
+2026-06-21T11:20:36.7251999Z with:
+2026-06-21T11:20:36.7253595Z   lfs: true
+2026-06-21T11:20:36.7255222Z   fetch-depth: 0
+2026-06-21T11:20:36.7257224Z   repository: elisialandprogram-eng/Asset-Manager
+2026-06-21T11:20:36.7268219Z   token: ***
+2026-06-21T11:20:36.7269896Z   ssh-strict: true
+2026-06-21T11:20:36.7271538Z   ssh-user: git
+2026-06-21T11:20:36.7273245Z   persist-credentials: true
+2026-06-21T11:20:36.7275015Z   clean: true
+2026-06-21T11:20:36.7276909Z   sparse-checkout-cone-mode: true
+2026-06-21T11:20:36.7278769Z   fetch-tags: false
+2026-06-21T11:20:36.7280497Z   show-progress: true
+2026-06-21T11:20:36.7282220Z   submodules: false
+2026-06-21T11:20:36.7284009Z   set-safe-directory: true
+2026-06-21T11:20:36.7285992Z ##[endgroup]
+2026-06-21T11:20:36.8406047Z Syncing repository: elisialandprogram-eng/Asset-Manager
+2026-06-21T11:20:36.8410665Z ##[group]Getting Git version info
+2026-06-21T11:20:36.8412992Z Working directory is '/home/runner/work/Asset-Manager/Asset-Manager'
+2026-06-21T11:20:36.8416412Z [command]/usr/bin/git version
+2026-06-21T11:20:36.8444140Z git version 2.54.0
+2026-06-21T11:20:36.8511485Z [command]/usr/bin/git lfs version
+2026-06-21T11:20:37.3845633Z git-lfs/3.7.1 (GitHub; linux amd64; go 1.24.4)
+2026-06-21T11:20:37.3861593Z ##[endgroup]
+2026-06-21T11:20:37.3880866Z Temporarily overriding HOME='/home/runner/work/_temp/bd165ab4-c694-4a7e-ad43-36d4ef72168c' before making global git config changes
+2026-06-21T11:20:37.3883224Z Adding repository directory to the temporary git global config as a safe directory
+2026-06-21T11:20:37.3887758Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Asset-Manager/Asset-Manager
+2026-06-21T11:20:37.3941862Z Deleting the contents of '/home/runner/work/Asset-Manager/Asset-Manager'
+2026-06-21T11:20:37.3945808Z ##[group]Initializing the repository
+2026-06-21T11:20:37.3950414Z [command]/usr/bin/git init /home/runner/work/Asset-Manager/Asset-Manager
+2026-06-21T11:20:37.4051480Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-06-21T11:20:37.4053630Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-06-21T11:20:37.4055643Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-06-21T11:20:37.4057512Z hint: call:
+2026-06-21T11:20:37.4058798Z hint:
+2026-06-21T11:20:37.4060141Z hint: 	git config --global init.defaultBranch <name>
+2026-06-21T11:20:37.4061440Z hint:
+2026-06-21T11:20:37.4062759Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-06-21T11:20:37.4064384Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-06-21T11:20:37.4065878Z hint:
+2026-06-21T11:20:37.4067261Z hint: 	git branch -m <name>
+2026-06-21T11:20:37.4068683Z hint:
+2026-06-21T11:20:37.4069865Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-06-21T11:20:37.4071429Z Initialized empty Git repository in /home/runner/work/Asset-Manager/Asset-Manager/.git/
+2026-06-21T11:20:37.4074400Z [command]/usr/bin/git remote add origin https://github.com/elisialandprogram-eng/Asset-Manager
+2026-06-21T11:20:37.4121135Z ##[endgroup]
+2026-06-21T11:20:37.4122776Z ##[group]Disabling automatic garbage collection
+2026-06-21T11:20:37.4124487Z [command]/usr/bin/git config --local gc.auto 0
+2026-06-21T11:20:37.4155813Z ##[endgroup]
+2026-06-21T11:20:37.4157444Z ##[group]Setting up auth
+2026-06-21T11:20:37.4162939Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-06-21T11:20:37.4200984Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-06-21T11:20:37.4497321Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-06-21T11:20:37.4532559Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-06-21T11:20:37.4771725Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-06-21T11:20:37.4805329Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-06-21T11:20:37.5043822Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-06-21T11:20:37.5079678Z ##[endgroup]
+2026-06-21T11:20:37.5083562Z [command]/usr/bin/git lfs install --local
+2026-06-21T11:20:37.5593104Z Updated Git hooks.
+2026-06-21T11:20:37.5594603Z Git LFS initialized.
+2026-06-21T11:20:37.5605429Z ##[group]Fetching the repository
+2026-06-21T11:20:37.5616500Z [command]/usr/bin/git -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-06-21T11:20:40.3669573Z From https://github.com/elisialandprogram-eng/Asset-Manager
+2026-06-21T11:20:40.3670872Z  * [new branch]      main       -> origin/main
+2026-06-21T11:20:40.3714455Z [command]/usr/bin/git branch --list --remote origin/main
+2026-06-21T11:20:40.3742742Z   origin/main
+2026-06-21T11:20:40.3752260Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2026-06-21T11:20:40.3784595Z 1561b6c9aeb2f2d4b61cdf018def2b07345972db
+2026-06-21T11:20:40.3789420Z ##[endgroup]
+2026-06-21T11:20:40.3790783Z ##[group]Determining the checkout info
+2026-06-21T11:20:40.3792702Z ##[endgroup]
+2026-06-21T11:20:40.3793949Z ##[group]Fetching LFS objects
+2026-06-21T11:20:40.3795948Z [command]/usr/bin/git lfs fetch origin refs/remotes/origin/main
+2026-06-21T11:20:40.4027232Z Fetching reference refs/remotes/origin/main
+2026-06-21T11:20:40.4751316Z ##[endgroup]
+2026-06-21T11:20:40.4756944Z [command]/usr/bin/git sparse-checkout disable
+2026-06-21T11:20:40.4802608Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-06-21T11:20:40.4832060Z ##[group]Checking out the ref
+2026-06-21T11:20:40.4835248Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-06-21T11:20:41.2103594Z Switched to a new branch 'main'
+2026-06-21T11:20:41.2104676Z branch 'main' set up to track 'origin/main'.
+2026-06-21T11:20:41.2522300Z ##[endgroup]
+2026-06-21T11:20:41.2527050Z [command]/usr/bin/git log -1 --format=%H
+2026-06-21T11:20:41.2551382Z 1561b6c9aeb2f2d4b61cdf018def2b07345972db
