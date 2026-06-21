@@ -1,0 +1,190 @@
+#    Building project     #
+###########################
+[UnityConnectServicesConfig] Local config successfully read: "/usr/share/unity3d/config/services-config.json"
+[UnityConnectServicesConfig] "clientConnectTimeoutSec" was overridden with "5"
+[UnityConnectServicesConfig] "clientHandshakeTimeoutSec" was overridden with "10"
+[UnityConnectServicesConfig] Service configuration:
+    "servicesConfigBaseUrl": "",
+    "disableServicesWindow": false,
+    "disableUserLogin": false,
+    "entitlementCacheTimeoutInSeconds": 60,
+    "clientConnectTimeoutSec": 5,
+    "clientHandshakeTimeoutSec": 10,
+    "clientResolveEntitlementsTimeoutSec": 30,
+    "clientUpdateLicenseTimeoutSec": 30,
+    "licensingServiceBaseUrl": "",
+    "enableProxyAutoconfig": "false"
+Unity Editor version:    6000.0.23f1 (1c4764c07fb4)
+Branch:                  6000.0/staging
+Build type:              Release
+Batch mode:              YES
+System name:             Linux
+Distro version:          #18~24.04.1-Ubuntu SMP Thu May 28 16:39:11 UTC 2026
+Kernel version:          6.17.0-1018-azure
+Architecture:            x86_64
+Available memory:        15989 MB
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Successfully connected to the License Client on channel: "LicenseClient-root" at "2026-06-21T08:30:20.979854Z"
+[SignatureVerifier] Application signature verification not supported on this platform.
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.16.0-alpha.1+3676804
+  Session Id:              4e3b81f4e9ad45d49804da89539ed91a
+  Correlation Id:          134a7140ccaaf78288dd09aa8c846580
+  External correlation Id: 1389084071211112550
+  Machine Id:              TAECWUMvsahA4MBxqm94M3zfY6g=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-root" (connect: 0.00s, validation: 0.01s, handshake: 0.00s)
+[Licensing::IpcConnector] Successfully connected to the License Notification on channel: "LicenseClient-root-notifications" at "2026-06-21T08:30:20.991155Z"
+[Licensing::Module] Error: Access token is unavailable; failed to update
+[Licensing::Client] Successfully updated license
+[Licensing::Client] Successfully resolved entitlement details
+[Licensing::Module] Serial number assigned to: "***"
+Pro License: NO
+The selected window backend is (null) 
+Desktop is 1280 x 1024 @ 60 Hz
+Initialize udev device monitor.
+[Licensing::Client] Successfully resolved entitlement details
+COMMAND LINE ARGUMENTS:
+/opt/unity/Editor/Unity
+-batchmode
+-logfile
+/dev/stdout
+-quit
+-customBuildName
+EternalKingdoms
+-projectPath
+/github/workspace/unity-client
+-buildTarget
+WebGL
+-customBuildTarget
+WebGL
+-customBuildPath
+/github/workspace/ci-build/WebGL/EternalKingdoms
+-customBuildProfile
+-executeMethod
+BuildScript.BuildWebGL
+-buildVersion
+none
+-androidVersionCode
+0
+-androidKeystoreName
+-androidKeystorePass
+-androidKeyaliasName
+-androidKeyaliasPass
+-androidTargetSdkVersion
+-androidExportType
+androidPackage
+-androidSymbolType
+none
+Successfully changed project path to: /github/workspace/unity-client
+(Unity:1467): Gtk-CRITICAL **: 08:30:22.703: gtk_label_set_markup: assertion 'GTK_IS_LABEL (label)' failed
+(Unity:1467): Gtk-CRITICAL **: 08:30:22.704: gtk_label_set_markup: assertion 'GTK_IS_LABEL (label)' failed
+/github/workspace/unity-client
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-allocator-temp-initial-block-size-main=262144"
+    "memorysetup-allocator-temp-initial-block-size-worker=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Player connection [140691751114048]  Target information:
+Player connection [140691751114048]  * "[IP] 172.17.0.2 [Port] 55504 [Flags] 2 [Guid] 3981116801 [EditorId] 3981116801 [Version] 1048832 [Id] LinuxEditor(16,172.17.0.2) [Debug] 1 [PackageName] LinuxEditor [ProjectName] Editor" 
+Player connection [140691751114048] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [140691751114048] Host joined alternative multi-casting on [225.0.0.222:34997]...
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+[Package Manager] Connected to IPC stream "Upm-1467" after 0.2 seconds.
+Library Redirect Path: Library/
+Rebuilding Library because the asset database could not be found!
+[Package Manager] Done resolving packages in 26.19 seconds
+[Licensing::Client] Successfully resolved entitlement details
+An error occurred while resolving packages:
+  Project has invalid dependencies:
+    com.unity.modules.unitywebreuesttexture: Package [com.unity.modules.unitywebreuesttexture@1.0.0] cannot be found
+SDL leaked 2 allocations
+Build failed, with exit code 1
+###########################
+#       Build output      #
+###########################
+total 8.0K
+drwxr-xr-x 2 root root 4.0K Jun 21 08:30 .
+drwxr-xr-x 3 root root 4.0K Jun 21 08:30 ..
+[UnityConnectServicesConfig] Local config successfully read: "/usr/share/unity3d/config/services-config.json"
+[UnityConnectServicesConfig] "clientConnectTimeoutSec" was overridden with "5"
+[UnityConnectServicesConfig] "clientHandshakeTimeoutSec" was overridden with "10"
+[UnityConnectServicesConfig] Service configuration:
+    "servicesConfigBaseUrl": "",
+    "disableServicesWindow": false,
+    "disableUserLogin": false,
+    "entitlementCacheTimeoutInSeconds": 60,
+    "clientConnectTimeoutSec": 5,
+    "clientHandshakeTimeoutSec": 10,
+    "clientResolveEntitlementsTimeoutSec": 30,
+    "clientUpdateLicenseTimeoutSec": 30,
+    "licensingServiceBaseUrl": "",
+    "enableProxyAutoconfig": "false"
+Unity Editor version:    6000.0.23f1 (1c4764c07fb4)
+Branch:                  6000.0/staging
+Build type:              Release
+Batch mode:              YES
+System name:             Linux
+Distro version:          #18~24.04.1-Ubuntu SMP Thu May 28 16:39:11 UTC 2026
+Kernel version:          6.17.0-1018-azure
+Architecture:            x86_64
+Available memory:        15989 MB
+User *** logged in successfully
+[UnityConnect::TryLogin] Request Succeeded.
+[Licensing::Module] Trying to connect to existing licensing client channel...
+[Licensing::IpcConnector] Connection attempt to the License Client on channel: "LicenseClient-root" failed because channel doesn't exist; code: "0x80000002"
+[Licensing::Module] Successfully launched the LicensingClient (PId: 1809)
+[Licensing::IpcConnector] Successfully connected to the License Client on channel: "LicenseClient-root" at "2026-06-21T08:30:50.742246Z"
+[SignatureVerifier] Application signature verification not supported on this platform.
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.16.0-alpha.1+3676804
+  Session Id:              cdffa40260d04365a35793b51f8012bd
+  Correlation Id:          105a5c2caf70e132c45968671f4a4f91
+  External correlation Id: 6989646279061376240
+  Machine Id:              TAECWUMvsahA4MBxqm94M3zfY6g=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-root" (connect: 0.57s, validation: 0.06s, handshake: 0.00s)
+[Licensing::IpcConnector] Successfully connected to the License Notification on channel: "LicenseClient-root-notifications" at "2026-06-21T08:30:50.805368Z"
+[Licensing::Module] Connected to LicensingClient (PId: 1809, launch time: 0.00, total connection time: 0.63s)
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated the access token 4WT40yFLBL...
+[Licensing::Client] Successfully processed license management request
+[Licensing::Module] Successfully returned the entitlement license
+[Licensing::Client] Successfully queried for the EntitlementGroupsDetails
+[Licensing::Client] Successfully returned ULF license with serial number : "***"
+###########################
+#         Failure         #
+###########################
+Please note that the exit code is not very descriptive.
+Most likely it will not help you solve the issue.
+To find the reason for failure: please search for errors in the log above and check for annotations in the summary view.
+Error: Build failed with exit code 1
