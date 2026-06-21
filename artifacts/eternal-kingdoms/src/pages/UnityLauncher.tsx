@@ -5,11 +5,20 @@ import { UNITY_BUILD_URL } from "@/config/unityConfig";
 import { motion, AnimatePresence } from "framer-motion";
 
 const TOKEN_KEY = "ek_token";
-// If Unity doesn't signal READY within this many ms after iframe load, show the
-// "build not deployed" screen instead of spinning forever.
-// 120 s — Unity WebGL WASM is ~14 MB compressed / 83 MB uncompressed and
-// needs time to download + compile before the READY signal fires.
 const READY_TIMEOUT_MS = 120_000;
+
+function checkWebGL(): boolean {
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(
+      canvas.getContext("webgl2") ||
+      canvas.getContext("webgl") ||
+      canvas.getContext("experimental-webgl")
+    );
+  } catch {
+    return false;
+  }
+}
 
 interface DebugState {
   iframeLoaded: boolean;
@@ -25,8 +34,12 @@ export default function UnityLauncher() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [unityReady, setUnityReady] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
-  const [loadError, setLoadError] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [showDebug, setShowDebug] = useState(false);
+  // True when WebGL API is absent entirely (very restrictive sandbox).
+  // Unity may also report a WebGL error even when the API is present (no GPU),
+  // so we also catch that case via loadError message check below.
+  const [webGLAbsent] = useState(() => !checkWebGL());
   const [debug, setDebug] = useState<DebugState>({
     iframeLoaded: false,
     readyReceived: false,
@@ -56,8 +69,9 @@ export default function UnityLauncher() {
     }
   }, []);
 
-  // Listen for UNITY_READY
+  // Listen for UNITY_READY / UNITY_LOAD_ERROR
   useEffect(() => {
+    if (webGLAbsent) return;
     function handleMessage(event: MessageEvent) {
       if (event.data?.type === "UNITY_READY") {
         unityReadyRef.current = true;
@@ -65,16 +79,18 @@ export default function UnityLauncher() {
         setDebug((d) => ({ ...d, readyReceived: true }));
         sendAuth();
       } else if (event.data?.type === "UNITY_LOAD_ERROR") {
-        console.error("[UnityLauncher] Unity reported a load error:", event.data.message);
-        setLoadError(true);
+        const msg = String(event.data.message ?? "Unknown error");
+        console.error("[UnityLauncher] Unity reported a load error:", msg);
+        setLoadError(msg);
       }
     }
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
-  }, [sendAuth]);
+  }, [sendAuth, webGLAbsent]);
 
-  // 3-second auth retry (in case READY fires before listener is set)
+  // 3-second auth retry
   useEffect(() => {
+    if (webGLAbsent) return;
     const t = setTimeout(() => {
       if (!unityReadyRef.current) {
         setDebug((d) => ({ ...d, retryFired: true }));
@@ -82,7 +98,7 @@ export default function UnityLauncher() {
       }
     }, 3_000);
     return () => clearTimeout(t);
-  }, [sendAuth]);
+  }, [sendAuth, webGLAbsent]);
 
   // Debug toggle via backtick
   useEffect(() => {
@@ -93,11 +109,9 @@ export default function UnityLauncher() {
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
-  // After iframe loads, give Unity READY_TIMEOUT_MS to signal — then bail out
   function handleIframeLoad() {
     setDebug((d) => ({ ...d, iframeLoaded: true }));
     sendAuth();
-
     setTimeout(() => {
       if (!unityReadyRef.current) {
         setTimedOut(true);
@@ -116,11 +130,53 @@ export default function UnityLauncher() {
     );
   }
 
-  const showError = loadError || timedOut;
+  // Show "open in new tab" when:
+  //  a) WebGL API is entirely absent (webGLAbsent), OR
+  //  b) Unity itself reports no WebGL support (sandboxed iframe with software GL)
+  const noGPU =
+    webGLAbsent ||
+    (loadError !== null && /webgl/i.test(loadError));
+
+  if (noGPU) {
+    const fullUrl = window.location.href;
+    return (
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-6 p-6">
+        <div className="w-16 h-16 rounded-2xl bg-amber-900/20 border border-amber-700/30 flex items-center justify-center">
+          <span className="text-3xl">🏰</span>
+        </div>
+        <div className="text-center space-y-2 max-w-sm">
+          <h2 className="font-serif text-2xl text-amber-400">
+            Open in Your Browser
+          </h2>
+          <p className="text-sm text-zinc-400 leading-relaxed">
+            The Eternal Kingdoms client requires WebGL, which isn't available
+            inside Replit's preview pane. Open the game in a full browser tab
+            to play.
+          </p>
+        </div>
+        <a
+          href={fullUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-3 bg-amber-600 hover:bg-amber-500 text-black font-semibold text-sm rounded-lg transition-colors"
+        >
+          Open Game in New Tab ↗
+        </a>
+        <button
+          onClick={() => setLocation("/")}
+          className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors"
+        >
+          Back to login
+        </button>
+      </div>
+    );
+  }
+
+  const showError = loadError !== null || timedOut;
 
   return (
     <div className="fixed inset-0 bg-black overflow-hidden">
-      {/* Loading spinner — hidden once Unity is ready OR we've timed out */}
+      {/* Loading spinner */}
       <AnimatePresence>
         {!unityReady && !showError && (
           <motion.div
@@ -151,7 +207,7 @@ export default function UnityLauncher() {
         )}
       </AnimatePresence>
 
-      {/* Build-not-found / timeout state */}
+      {/* Error state */}
       {showError && (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black gap-5 p-6">
           <div className="w-16 h-16 rounded-2xl bg-amber-900/20 border border-amber-700/30 flex items-center justify-center">
@@ -159,29 +215,19 @@ export default function UnityLauncher() {
           </div>
           <div className="text-center space-y-2">
             <h2 className="font-serif text-xl text-amber-400">
-              Unity Build Not Deployed
+              {timedOut ? "Connection Timeout" : "Failed to Load"}
             </h2>
             <p className="text-sm text-zinc-400 max-w-sm leading-relaxed">
               {timedOut
-                ? "The Unity client loaded but did not send a READY signal within 10 seconds."
-                : "The Unity build file could not be fetched."}
+                ? "Unity loaded but did not send a ready signal in time."
+                : loadError ?? "An unknown error occurred."}
             </p>
-          </div>
-          <div className="bg-zinc-900 border border-zinc-700 rounded-lg p-4 text-xs font-mono text-zinc-300 max-w-sm w-full space-y-1">
-            <div className="text-zinc-500 mb-2">To fix — add the WebGL build:</div>
-            <div className="text-emerald-400">
-              artifacts/eternal-kingdoms/public/
-            </div>
-            <div className="text-emerald-400 pl-4">unity/</div>
-            <div className="text-zinc-300 pl-8">index.html</div>
-            <div className="text-zinc-300 pl-8">Build/</div>
-            <div className="text-zinc-500 pl-10">*.wasm  *.js  *.data</div>
           </div>
           <div className="flex gap-3">
             <button
               onClick={() => {
                 setTimedOut(false);
-                setLoadError(false);
+                setLoadError(null);
                 setUnityReady(false);
                 unityReadyRef.current = false;
                 setDebug({ iframeLoaded: false, readyReceived: false, tokenSent: false, retryFired: false, timedOut: false });
@@ -201,7 +247,7 @@ export default function UnityLauncher() {
         </div>
       )}
 
-      {/* Unity iframe — always mounted so it can initialise in background */}
+      {/* Unity iframe */}
       <iframe
         ref={iframeRef}
         src={UNITY_BUILD_URL}
@@ -209,21 +255,21 @@ export default function UnityLauncher() {
         className="w-full h-full border-0"
         allow="fullscreen; autoplay; clipboard-write"
         onLoad={handleIframeLoad}
-        onError={() => setLoadError(true)}
+        onError={() => setLoadError("The Unity build could not be loaded.")}
       />
 
       {/* Debug overlay — toggle with ` */}
       {showDebug && (
         <div className="absolute bottom-4 left-4 z-50 bg-black/85 border border-zinc-700 rounded-lg p-3 text-xs font-mono text-zinc-300 space-y-1 pointer-events-none">
           <div className="text-amber-400 font-semibold mb-1">
-            Unity Debug{" "}
-            <span className="text-zinc-500">(` to toggle)</span>
+            Unity Debug <span className="text-zinc-500">(` to toggle)</span>
           </div>
+          <DebugRow label="webgl absent" value={webGLAbsent} warn />
           <DebugRow label="iframe loaded" value={debug.iframeLoaded} />
           <DebugRow label="UNITY_READY" value={debug.readyReceived} />
           <DebugRow label="token sent" value={debug.tokenSent} />
           <DebugRow label="3s retry fired" value={debug.retryFired} />
-          <DebugRow label="10s timeout hit" value={debug.timedOut} warn />
+          <DebugRow label="timeout hit" value={debug.timedOut} warn />
           <div className="text-zinc-500 pt-1 border-t border-zinc-700">
             url: {UNITY_BUILD_URL}
           </div>
