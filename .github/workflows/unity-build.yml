@@ -1,10 +1,6 @@
 name: Unity WebGL Build
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'unity-client/**'
   workflow_dispatch:
     inputs:
       environment:

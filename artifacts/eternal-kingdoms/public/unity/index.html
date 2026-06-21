@@ -115,8 +115,25 @@
                   unityInstance.SetFullscreen(1);
                 };
 
+                // Signal the React portal that Unity is ready
+                window.parent.postMessage({ type: "UNITY_READY" }, "*");
+
+                // Listen for auth token from the React portal
+                window.addEventListener("message", function(event) {
+                  if (event.data && event.data.type === "UNITY_AUTH") {
+                    try {
+                      unityInstance.SendMessage("AuthManager", "ReceiveAuthToken", event.data.token || "");
+                    } catch(e) {
+                      // AuthManager may not exist in stub builds — safe to ignore
+                    }
+                  }
+                });
+
               }).catch((message) => {
-                alert(message);
+                console.error("[Unity] createUnityInstance failed:", message);
+                // Surface the error to the parent React page so it can show a
+                // proper error state instead of waiting for the timeout.
+                window.parent.postMessage({ type: "UNITY_LOAD_ERROR", message: String(message) }, "*");
               });
             };
 

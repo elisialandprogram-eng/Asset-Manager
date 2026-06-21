@@ -7,7 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 const TOKEN_KEY = "ek_token";
 // If Unity doesn't signal READY within this many ms after iframe load, show the
 // "build not deployed" screen instead of spinning forever.
-const READY_TIMEOUT_MS = 10_000;
+// 120 s — Unity WebGL WASM is ~14 MB compressed / 83 MB uncompressed and
+// needs time to download + compile before the READY signal fires.
+const READY_TIMEOUT_MS = 120_000;
 
 interface DebugState {
   iframeLoaded: boolean;
@@ -62,6 +64,9 @@ export default function UnityLauncher() {
         setUnityReady(true);
         setDebug((d) => ({ ...d, readyReceived: true }));
         sendAuth();
+      } else if (event.data?.type === "UNITY_LOAD_ERROR") {
+        console.error("[UnityLauncher] Unity reported a load error:", event.data.message);
+        setLoadError(true);
       }
     }
     window.addEventListener("message", handleMessage);

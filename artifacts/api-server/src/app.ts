@@ -43,10 +43,19 @@ const distDir = path.join(
   "public",
 );
 
-// Correct MIME types for Unity WebGL assets
+// Correct MIME types for Unity WebGL assets.
+// .unityweb files are gzip-compressed by Unity and the Unity JS loader
+// decompresses them internally — do NOT set Content-Encoding here, or the
+// browser will try to double-decompress them and corrupt the data.
 app.use((req, res, next) => {
-  if (req.path.endsWith(".wasm")) res.type("application/wasm");
-  else if (req.path.endsWith(".data")) res.type("application/octet-stream");
+  const p = req.path;
+  if (p.endsWith(".wasm.unityweb") || p.endsWith(".wasm")) {
+    res.setHeader("Content-Type", "application/wasm");
+  } else if (p.endsWith(".data.unityweb") || p.endsWith(".data")) {
+    res.setHeader("Content-Type", "application/octet-stream");
+  } else if (p.endsWith(".js.unityweb")) {
+    res.setHeader("Content-Type", "application/javascript");
+  }
   next();
 });
 
