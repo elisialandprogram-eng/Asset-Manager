@@ -1,0 +1,74 @@
+Skip to content
+elisialandprogram-eng
+Asset-Manager
+Repository navigation
+Code
+Issues
+Pull requests
+Actions
+Projects
+Security and quality
+Insights
+Settings
+Unity WebGL Build
+Update build script to use Unity 6 APIs and increase memory allocation #23
+All jobs
+Run details
+Build WebGL
+failed now in 3m 46s
+Search logs
+3s
+4s
+1s
+0s
+3m 35s
+[Licensing::Module] Successfully launched the LicensingClient (PId: 5890)
+info: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+info: Unity.ILPP.Runner.PostProcessingAssemblyLoadContext[0]
+      ALC ILPP context 1 is unloading
+[Licensing::IpcConnector] Successfully connected to the License Client on channel: "LicenseClient-root" at "2026-06-21T10:32:51.653674Z"
+[SignatureVerifier] Application signature verification not supported on this platform.
+[Licensing::Client] Handshaking with LicensingClient:
+  Version:                 1.16.0-alpha.1+3676804
+  Session Id:              48e1d87f06f04a9eba4b8622b8698531
+  Correlation Id:          e6d060a6522df90994c85092dd93f069
+  External correlation Id: 6181696065191260702
+  Machine Id:              Pna8ygsw7HO+NsDXF3GDwjfksdQ=
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-root" (connect: 0.57s, validation: 0.09s, handshake: 0.00s)
+[Licensing::IpcConnector] Successfully connected to the License Notification on channel: "LicenseClient-root-notifications" at "2026-06-21T10:32:51.747438Z"
+[Licensing::Module] Connected to LicensingClient (PId: 5890, launch time: 0.00, total connection time: 0.66s)
+[Licensing::Client] Successfully updated the access token
+[Licensing::Module] Successfully updated the access token UsH_QQUNjb...
+[Licensing::Client] Successfully processed license management request
+[Licensing::Module] Successfully returned the entitlement license
+[Licensing::Client] Successfully queried for the EntitlementGroupsDetails
+[Licensing::Client] Successfully returned ULF license with serial number : "***"
+###########################
+#         Failure         #
+###########################
+Please note that the exit code is not very descriptive.
+Most likely it will not help you solve the issue.
+To find the reason for failure: please search for errors in the log above and check for annotations in the summary view.
+Error: Build failed with exit code 1
+0s
+0s
+0s
+0s
+0s
+Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Post job cleanup.
+/usr/bin/git version
+git version 2.54.0
+Temporarily overriding HOME='/home/runner/work/_temp/670db687-05f4-4d6f-aceb-21d6d460ab9b' before making global git config changes
+Adding repository directory to the temporary git global config as a safe directory
+/usr/bin/git config --global --add safe.directory /home/runner/work/Asset-Manager/Asset-Manager
+/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+http.https://github.com/.extraheader
+/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+0s
