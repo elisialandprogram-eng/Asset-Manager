@@ -28,7 +28,12 @@ using UnityEngine;
 /// </summary>
 public static class BuildScript
 {
-    private const string BuildPath = "ci-build/WebGL/EternalKingdoms";
+    // Relative-path fallback — only used when BUILD_PATH env var is not set.
+    // DO NOT rely on this path being resolved relative to Unity's CWD (which
+    // is the Unity editor install dir, not the project or workspace root).
+    // Instead we compute an absolute path from Application.dataPath at runtime.
+    // This const is kept only as the leaf structure hint.
+    private const string DefaultBuildSubPath = "ci-build/WebGL/EternalKingdoms";
 
     // ── Banner constants ──────────────────────────────────────────────────
     private const string Banner = "══════════════════════════════════════════════════";
@@ -148,11 +153,35 @@ public static class BuildScript
         if (scenes.Length == 0)
             throw new Exception("[BuildScript] No enabled scenes in EditorBuildSettings.");
 
-        string outputPath = Environment.GetEnvironmentVariable("BUILD_PATH") ?? BuildPath;
+        // BUILD_PATH is set by game-ci as an absolute path inside the Docker
+        // container (e.g. /github/workspace/ci-build/WebGL/EternalKingdoms).
+        // When running locally without game-ci, we derive the workspace root
+        // from Application.dataPath so the output lands at the repo root, not
+        // inside the Unity project directory where a bare relative path would go.
+        //
+        //   Application.dataPath  = <workspace>/unity-client/Assets
+        //   Path.Combine("..", "..") → <workspace>/unity-client/Assets/../..
+        //                           = <workspace>
+        //
+        string buildPath = Environment.GetEnvironmentVariable("BUILD_PATH");
+        if (string.IsNullOrEmpty(buildPath))
+        {
+            string workspaceRoot = Path.GetFullPath(
+                Path.Combine(Application.dataPath, "..", ".."));
+            buildPath = Path.Combine(workspaceRoot, DefaultBuildSubPath);
+            Debug.Log($"[BuildScript] BUILD_PATH not set — using derived path: {buildPath}");
+        }
+        else
+        {
+            buildPath = Path.GetFullPath(buildPath);
+            Debug.Log($"[BuildScript] BUILD_PATH from env: {buildPath}");
+        }
+
+        string outputPath = buildPath;
         Directory.CreateDirectory(outputPath);
 
         Debug.Log($"[BuildScript] Building {scenes.Length} scene(s): {string.Join(", ", scenes)}");
-        Debug.Log($"[BuildScript] Output: {outputPath}");
+        Debug.Log($"[BuildScript] Output (absolute): {outputPath}");
 
         return new BuildPlayerOptions
         {
