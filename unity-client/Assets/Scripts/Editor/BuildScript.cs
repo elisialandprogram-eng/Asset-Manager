@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
@@ -17,27 +18,25 @@ public static class BuildScript
     {
         BuildPlayerOptions opts = GetDefaultOptions(BuildTarget.WebGL);
 
-        // WebGL-specific settings
-        PlayerSettings.WebGL.compressionFormat   = WebGLCompressionFormat.Gzip;
+        // ── WebGL player settings ─────────────────────────────────────────
+        PlayerSettings.WebGL.compressionFormat     = WebGLCompressionFormat.Gzip;
         PlayerSettings.WebGL.decompressionFallback = true;
-        PlayerSettings.WebGL.exceptionSupport    = WebGLExceptionSupport.FullWithStacktrace;
-        PlayerSettings.WebGL.dataCaching          = true;
-        PlayerSettings.WebGL.linkerTarget         = WebGLLinkerTarget.Wasm;
+        PlayerSettings.WebGL.exceptionSupport      = WebGLExceptionSupport.FullWithStacktrace;
+        PlayerSettings.WebGL.dataCaching           = true;
+        PlayerSettings.WebGL.linkerTarget          = WebGLLinkerTarget.Wasm;
 
-        // Memory — 512 MB initial, 2 GB max
-        PlayerSettings.WebGL.initialMemorySize   = 32;  // in MB (Unity 6 uses growth mode)
-        PlayerSettings.WebGL.maximumMemorySize   = 2048;
-        PlayerSettings.WebGL.memoryGrowthMode    = WebGLMemoryGrowthMode.Geometric;
+        // Memory — 512 MB initial, up to 2 GB via geometric growth (Unity 6)
+        PlayerSettings.WebGL.initialMemorySize  = 512;
+        PlayerSettings.WebGL.maximumMemorySize  = 2048;
+        PlayerSettings.WebGL.memoryGrowthMode   = WebGLMemoryGrowthMode.Geometric;
 
-        // Optimisation
-        PlayerSettings.SetScriptingBackend(BuildTargetGroup.WebGL, ScriptingImplementation.IL2CPP);
+        // ── Unity 6 API: use NamedBuildTarget instead of BuildTargetGroup ─
+        var webgl = NamedBuildTarget.WebGL;
 
-        // Scripting defines for WebGL
-        PlayerSettings.SetScriptingDefineSymbolsForGroup(
-            BuildTargetGroup.WebGL,
-            "EK_CLIENT;EK_WEBGL"
-        );
+        PlayerSettings.SetScriptingBackend(webgl, ScriptingImplementation.IL2CPP);
+        PlayerSettings.SetScriptingDefineSymbols(webgl, "EK_CLIENT;EK_WEBGL");
 
+        // ── Build ─────────────────────────────────────────────────────────
         BuildReport  report  = BuildPipeline.BuildPlayer(opts);
         BuildSummary summary = report.summary;
 
@@ -52,7 +51,7 @@ public static class BuildScript
         }
     }
 
-    // ── helpers ────────────────────────────────────────────────────────────
+    // ── helpers ───────────────────────────────────────────────────────────
 
     private static BuildPlayerOptions GetDefaultOptions(BuildTarget target)
     {
@@ -62,20 +61,20 @@ public static class BuildScript
             .ToArray();
 
         if (scenes.Length == 0)
-            throw new Exception("[BuildScript] No scenes found in EditorBuildSettings.");
+            throw new Exception("[BuildScript] No enabled scenes in EditorBuildSettings.");
 
         string outputPath = Environment.GetEnvironmentVariable("BUILD_PATH") ?? BuildPath;
         Directory.CreateDirectory(outputPath);
 
-        Debug.Log($"[BuildScript] Building scenes: {string.Join(", ", scenes)}");
+        Debug.Log($"[BuildScript] Building {scenes.Length} scene(s): {string.Join(", ", scenes)}");
         Debug.Log($"[BuildScript] Output: {outputPath}");
 
         return new BuildPlayerOptions
         {
-            scenes      = scenes,
+            scenes           = scenes,
             locationPathName = outputPath,
-            target      = target,
-            options     = BuildOptions.None,
+            target           = target,
+            options          = BuildOptions.None,
         };
     }
 }
