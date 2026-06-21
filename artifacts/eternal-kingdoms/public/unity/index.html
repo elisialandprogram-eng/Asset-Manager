@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | Eternal Kingdoms</title>
+    <title>Eternal Kingdoms</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
@@ -17,130 +17,161 @@
         </div>
       </div>
       <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-logo-title-footer"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">Eternal Kingdoms</div>
-      </div>
     </div>
-    <script>
-      var canvas = document.querySelector("#unity-canvas");
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
+    <script>
+      "use strict";
+
+      var canvas      = document.querySelector("#unity-canvas");
+      var loadingBar  = document.querySelector("#unity-loading-bar");
+      var progressFull = document.querySelector("#unity-progress-bar-full");
+      var unityInstance = null;
+
+      // ── Warning banner ────────────────────────────────────────────────────────
       function unityShowBanner(msg, type) {
         var warningBanner = document.querySelector("#unity-warning");
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        function updateVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? "block" : "none";
         }
-        var div = document.createElement('div');
+        var div = document.createElement("div");
         div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
+        if (type === "error") {
+          div.style.cssText = "background:red;padding:10px;";
+          window.parent.postMessage({ type: "UNITY_LOAD_ERROR", message: msg }, "*");
+        } else if (type === "warning") {
+          div.style.cssText = "background:yellow;padding:10px;";
+          setTimeout(function() { warningBanner.removeChild(div); updateVisibility(); }, 5000);
         }
-        updateBannerVisibility();
+        warningBanner.appendChild(div);
+        updateVisibility();
       }
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/EternalKingdoms.loader.js";
-      var config = {
-        arguments: [],
-        dataUrl: buildUrl + "/EternalKingdoms.data.unityweb",
-        frameworkUrl: buildUrl + "/EternalKingdoms.framework.js.unityweb",
-        codeUrl: buildUrl + "/EternalKingdoms.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "EternalKingdoms",
-        productName: "Eternal Kingdoms",
-        productVersion: "1.0",
-        showBanner: unityShowBanner,
-      };
-
-      // By default, Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
-      // If you would like all file writes inside Unity Application.persistentDataPath
-      // directory to automatically persist so that the contents are remembered when
-      // the user revisits the site the next time, uncomment the following line:
-      // config.autoSyncPersistentDataPath = true;
-      // This autosyncing is currently not the default behavior to avoid regressing
-      // existing user projects that might rely on the earlier manual
-      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-      // expected to change.
-
+      // ── Canvas sizing ─────────────────────────────────────────────────────────
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
+        var meta = document.createElement("meta");
+        meta.name = "viewport";
+        meta.content = "width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes";
+        document.head.appendChild(meta);
         document.querySelector("#unity-container").className = "unity-mobile";
         canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
-
-
       } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "1280px";
-        canvas.style.height = "720px";
+        canvas.style.width  = "100vw";
+        canvas.style.height = "100vh";
       }
 
-      document.querySelector("#unity-loading-bar").style.display = "block";
+      // ── Build config ──────────────────────────────────────────────────────────
+      var buildUrl = "Build";
+      var config = {
+        arguments:          [],
+        dataUrl:            buildUrl + "/EternalKingdoms.data.unityweb",
+        frameworkUrl:       buildUrl + "/EternalKingdoms.framework.js.unityweb",
+        codeUrl:            buildUrl + "/EternalKingdoms.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName:        "EternalKingdoms",
+        productName:        "Eternal Kingdoms",
+        productVersion:     "1.0",
+        showBanner:         unityShowBanner,
+      };
 
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-          // Relay progress to the React parent so it can show a progress bar
-          try { window.parent.postMessage({ type: "UNITY_PROGRESS", value: progress }, "*"); } catch(e) {}
-              }).then((unityInstance) => {
-                document.querySelector("#unity-loading-bar").style.display = "none";
-                document.querySelector("#unity-fullscreen-button").onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
+      // ── Auth helpers ──────────────────────────────────────────────────────────
 
-                // Signal the React portal that Unity is ready
-                window.parent.postMessage({ type: "UNITY_READY" }, "*");
+      /**
+       * Forwards an auth token from the React parent to the Unity game.
+       * Targets the "AuthManager" GameObject whose ReceiveAuthToken() method
+       * is wired in AuthManager.cs.
+       */
+      function forwardAuthToken(token) {
+        if (!unityInstance || !token) return;
+        try {
+          unityInstance.SendMessage("AuthManager", "ReceiveAuthToken", token);
+          console.log("[EK-Bridge] Auth token forwarded to Unity AuthManager.");
+        } catch(e) {
+          console.warn("[EK-Bridge] SendMessage to AuthManager failed:", e);
+        }
+      }
 
-                // Listen for auth token from the React portal
-                window.addEventListener("message", function(event) {
-                  if (event.data && event.data.type === "UNITY_AUTH") {
-                    try {
-                      unityInstance.SendMessage("AuthManager", "ReceiveAuthToken", event.data.token || "");
-                    } catch(e) {
-                      // AuthManager may not exist in stub builds — safe to ignore
-                    }
-                  }
-                });
+      // ── Message bus ───────────────────────────────────────────────────────────
 
-              }).catch((message) => {
-                console.error("[Unity] createUnityInstance failed:", message);
-                // Surface the error to the parent React page so it can show a
-                // proper error state instead of waiting for the timeout.
-                window.parent.postMessage({ type: "UNITY_LOAD_ERROR", message: String(message) }, "*");
-              });
-            };
+      // Listen for messages from the React parent frame.
+      window.addEventListener("message", function(event) {
+        if (!event.data) return;
+        switch (event.data.type) {
 
-      document.body.appendChild(script);
+          // React host sends the JWT after Unity signals UNITY_READY.
+          case "UNITY_AUTH":
+            forwardAuthToken(event.data.token || "");
+            break;
 
+          // React host can request a re-send of the auth token (retry).
+          case "UNITY_AUTH_RETRY":
+            forwardAuthToken(event.data.token || "");
+            break;
+
+          // React host can instruct Unity to go to a specific scene.
+          case "UNITY_GOTO_SCENE":
+            if (unityInstance && event.data.scene) {
+              try {
+                unityInstance.SendMessage("SceneController", "GoToScene", event.data.scene);
+              } catch(e) {}
+            }
+            break;
+        }
+      });
+
+      // Listen for UNITY_GAME_READY fired by NativeBridge.jslib.
+      // Relay it to the parent React frame.
+      window.addEventListener("UNITY_GAME_READY", function(event) {
+        try {
+          window.parent.postMessage({
+            type: "UNITY_GAME_READY",
+            mode: event.detail && event.detail.mode ? event.detail.mode : "unknown"
+          }, "*");
+        } catch(e) {}
+      });
+
+      // ── Loader ────────────────────────────────────────────────────────────────
+      loadingBar.style.display = "block";
+
+      var loaderScript = document.createElement("script");
+      loaderScript.src = buildUrl + "/EternalKingdoms.loader.js";
+
+      loaderScript.onload = function() {
+        createUnityInstance(canvas, config, function(progress) {
+          // Real download/compile progress from Unity — relay to React.
+          progressFull.style.width = (100 * progress) + "%";
+          try {
+            window.parent.postMessage({ type: "UNITY_PROGRESS", value: progress }, "*");
+          } catch(e) {}
+
+        }).then(function(instance) {
+          unityInstance = instance;
+          loadingBar.style.display = "none";
+
+          // Notify React that Unity engine is ready (loader+WASM done).
+          try {
+            window.parent.postMessage({ type: "UNITY_READY" }, "*");
+          } catch(e) {}
+
+          console.log("[EK-Bridge] Unity engine ready. RuntimeBootstrap will take over.");
+
+        }).catch(function(message) {
+          var msg = String(message);
+          console.error("[EK-Bridge] createUnityInstance failed:", msg);
+          try {
+            window.parent.postMessage({ type: "UNITY_LOAD_ERROR", message: msg }, "*");
+          } catch(e) {}
+        });
+      };
+
+      loaderScript.onerror = function() {
+        var msg = "Failed to load Unity loader script. Build files may be missing.";
+        console.error("[EK-Bridge]", msg);
+        try {
+          window.parent.postMessage({ type: "UNITY_LOAD_ERROR", message: msg }, "*");
+        } catch(e) {}
+      };
+
+      document.body.appendChild(loaderScript);
     </script>
   </body>
 </html>

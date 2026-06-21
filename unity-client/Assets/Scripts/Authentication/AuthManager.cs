@@ -158,6 +158,46 @@ namespace EternalKingdoms.Authentication
                 SceneController.Instance.GoToLogin();
         }
 
+        // ── JS Bridge — called via SendMessage("AuthManager", "ReceiveAuthToken", token) ──
+
+        /// <summary>
+        /// Entry point for the React-to-Unity auth handshake.
+        /// The host page calls:
+        ///   unityInstance.SendMessage("AuthManager", "ReceiveAuthToken", jwtString)
+        /// This method validates the token against /api/auth/me and fires
+        /// OnLoginSuccess if valid, so RuntimeBootstrap can route to World.
+        /// The GameObject hosting this component MUST be named "AuthManager"
+        /// (RuntimeBootstrap.EnsureManager enforces this).
+        /// </summary>
+        public void ReceiveAuthToken(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                Debug.LogWarning("[AuthManager] ReceiveAuthToken called with empty token — ignored.");
+                return;
+            }
+
+            Debug.Log("[AuthManager] Received auth token from JS bridge — validating...");
+            SaveManager.Instance?.SetString(SaveManager.KEY_JWT, token);
+            StartCoroutine(ValidateReceivedToken(token));
+        }
+
+        private IEnumerator ValidateReceivedToken(string token)
+        {
+            yield return ValidateToken(token);
+
+            if (IsAuthenticated)
+            {
+                Debug.Log("[AuthManager] JS-bridged token validated successfully.");
+                _initialized = true;
+                OnLoginSuccess?.Invoke();
+            }
+            else
+            {
+                Debug.LogWarning("[AuthManager] JS-bridged token failed validation.");
+            }
+        }
+
         // ── Internal helpers ──────────────────────────────────────────────────
 
         private void ApplySession(string token, UserDto user)

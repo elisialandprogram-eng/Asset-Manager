@@ -1,0 +1,162 @@
+You are working on the Eternal Kingdoms Unity WebGL project.
+
+CRITICAL OBJECTIVE:
+Fix the black screen issue by implementing a FULL RUNTIME BOOTSTRAP SYSTEM that removes Unity Editor scene dependency, BUT WITHOUT BREAKING existing architecture.
+
+IMPORTANT:
+This project already contains a complete engineered system from Phase 0 → Phase 5.8:
+- World Streaming System
+- Kingdom System
+- Combat System
+- March System
+- UI System
+- Camera System
+- Addressables System
+- Entity Spawners
+- Managers (GameManager, BootstrapManager, NetworkManager, etc.)
+
+You MUST READ and RESPECT all existing systems in unity-client/ and integrate with them.
+
+DO NOT:
+- delete systems
+- rewrite architecture
+- replace existing managers blindly
+- ignore Phase-based architecture
+- break existing API contracts
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 1 — ANALYZE EXISTING ARCHITECTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Before coding:
+
+1. Scan unity-client/ structure
+2. Identify existing:
+   - BootstrapManager
+   - GameManager
+   - SceneController
+   - WorldStreamingManager
+   - KingdomSceneController
+   - UIManager
+   - CameraController
+3. Map dependencies between systems
+4. Identify why Unity renders black screen:
+   - missing scene initialization
+   - missing GameObject instantiation
+   - missing camera binding
+   - missing root scene bootstrap
+
+Generate a short internal dependency map before changes.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 2 — CREATE RUNTIME BOOTSTRAP LAYER (SAFE INTEGRATION)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create a new script:
+
+RuntimeBootstrap.cs
+
+BUT IT MUST NOT DUPLICATE EXISTING MANAGERS.
+
+Instead it must:
+
+1. Detect existing managers:
+   - If GameManager exists → use it
+   - If BootstrapManager exists → initialize it
+   - If missing → create fallback instance
+
+2. Attach only missing systems dynamically
+
+3. Ensure safe singleton pattern across all managers
+
+4. Respect existing initialization order:
+   Bootstrap → Config → Auth → World → Kingdom
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 3 — FIX SCENE INITIALIZATION (ROOT CAUSE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Fix black screen by ensuring:
+
+- At least one active Camera exists (reuse existing if present)
+- Camera is tagged MainCamera
+- Active Scene has a valid root GameObject container:
+  - WorldRoot
+  - UI Root
+  - EntityRoot
+
+If missing → create them
+
+DO NOT replace existing scene logic if already present.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 4 — INTEGRATE WITH EXISTING SYSTEMS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You MUST hook into existing systems:
+
+- WorldStreamingManager → initialize chunks
+- KingdomSceneController → spawn kingdom if world state exists
+- EntitySpawner → spawn fallback entities if empty world detected
+- NetworkManager → wait for auth before world load
+- UIManager → initialize HUD only after world ready
+
+DO NOT create duplicate systems.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 5 — GUARANTEED VISUAL OUTPUT FIX
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+If world is empty or not initialized:
+
+Spawn minimal debug world:
+
+- 1 Kingdom entity at center
+- 3 Resource nodes
+- 3 Monster entities
+- Simple terrain plane or grid
+- Basic lighting setup (directional light)
+
+This is ONLY a fallback to prevent black screen.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 6 — REMOVE UNITY EDITOR DEPENDENCY SAFELY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You must NOT require:
+
+- manual GameObject placement
+- inspector wiring
+- scene hierarchy setup
+- Unity Editor steps for runtime functionality
+
+BUT DO NOT BREAK existing scene support if present.
+
+System must support BOTH:
+- Editor-configured scenes (if available)
+- Runtime-generated fallback scenes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 7 — FINAL OUTPUT REQUIREMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After implementation, WebGL must always show:
+
+- visible camera-controlled world
+- at least one kingdom OR fallback kingdom
+- terrain or grid visible
+- at least one entity (monster/resource)
+- working UI overlay
+
+NO BLACK SCREEN IS ACCEPTED.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FINAL RULE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This is NOT a rewrite project.
+
+This is a "make existing Unity architecture self-bootable at runtime" fix.
+
+Respect all prior phases:
+Phase 0 → Phase 5.8 systems MUST remain intact and functional.

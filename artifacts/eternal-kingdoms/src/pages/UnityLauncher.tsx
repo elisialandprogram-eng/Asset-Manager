@@ -5,7 +5,7 @@ import { UNITY_BUILD_URL } from "@/config/unityConfig";
 import { motion, AnimatePresence } from "framer-motion";
 
 const TOKEN_KEY = "ek_token";
-const READY_TIMEOUT_MS = 120_000;
+const READY_TIMEOUT_MS = 90_000;
 
 function checkWebGL(): boolean {
   try {
@@ -20,11 +20,15 @@ function checkWebGL(): boolean {
   }
 }
 
+type GameMode = "world_active" | "fallback_world" | null;
+
 interface DebugState {
   iframeLoaded: boolean;
   readyReceived: boolean;
+  gameReady: boolean;
+  gameMode: GameMode;
   tokenSent: boolean;
-  retryFired: boolean;
+  retryCount: number;
   timedOut: boolean;
 }
 
@@ -32,22 +36,29 @@ export default function UnityLauncher() {
   const [, setLocation] = useLocation();
   const { user, isLoadingUser } = useAuth();
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
   const [unityReady, setUnityReady] = useState(false);
-  const [showEntryBanner, setShowEntryBanner] = useState(false);
+  const [gameReady, setGameReady] = useState(false);
+  const [gameMode, setGameMode] = useState<GameMode>(null);
   const [timedOut, setTimedOut] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [showDebug, setShowDebug] = useState(false);
   const [webGLAbsent] = useState(() => !checkWebGL());
+
   const [debug, setDebug] = useState<DebugState>({
     iframeLoaded: false,
     readyReceived: false,
+    gameReady: false,
+    gameMode: null,
     tokenSent: false,
-    retryFired: false,
+    retryCount: 0,
     timedOut: false,
   });
 
   const unityReadyRef = useRef(false);
+  const gameReadyRef = useRef(false);
+  const retryCountRef = useRef(0);
   const userRef = useRef(user);
   useEffect(() => { userRef.current = user; }, [user]);
 
@@ -64,49 +75,69 @@ export default function UnityLauncher() {
         { type: "UNITY_AUTH", token, userId: u.id },
         "*"
       );
-      setDebug((d) => ({ ...d, tokenSent: true }));
+      retryCountRef.current += 1;
+      setDebug((d) => ({ ...d, tokenSent: true, retryCount: retryCountRef.current }));
     }
   }, []);
 
   // Listen for messages from Unity iframe
   useEffect(() => {
     if (webGLAbsent) return;
+
     function handleMessage(event: MessageEvent) {
-      if (event.data?.type === "UNITY_READY") {
-        unityReadyRef.current = true;
-        setUnityReady(true);
-        setShowEntryBanner(true);
-        setProgress(1);
-        setDebug((d) => ({ ...d, readyReceived: true }));
-        sendAuth();
-        // Show the "Entering world" banner for 5 s after Unity signals ready,
-        // then fade it — gives time for the first game scene to render
-        setTimeout(() => setShowEntryBanner(false), 5_000);
-      } else if (event.data?.type === "UNITY_PROGRESS") {
-        setProgress(event.data.value ?? 0);
-      } else if (event.data?.type === "UNITY_LOAD_ERROR") {
-        const msg = String(event.data.message ?? "Unknown error");
-        console.error("[UnityLauncher] Unity reported a load error:", msg);
-        setLoadError(msg);
+      const msg = event.data;
+      if (!msg) return;
+
+      switch (msg.type) {
+        case "UNITY_READY":
+          // Engine loaded — send auth token immediately
+          unityReadyRef.current = true;
+          setUnityReady(true);
+          setProgress(1);
+          setDebug((d) => ({ ...d, readyReceived: true }));
+          sendAuth();
+          break;
+
+        case "UNITY_GAME_READY":
+          // RuntimeBootstrap confirmed a camera is rendering
+          gameReadyRef.current = true;
+          const mode = (msg.mode ?? null) as GameMode;
+          setGameReady(true);
+          setGameMode(mode);
+          setDebug((d) => ({ ...d, gameReady: true, gameMode: mode }));
+          break;
+
+        case "UNITY_PROGRESS":
+          setProgress(msg.value ?? 0);
+          break;
+
+        case "UNITY_LOAD_ERROR":
+          console.error("[UnityLauncher] Unity reported load error:", msg.message);
+          setLoadError(String(msg.message ?? "Unknown Unity load error"));
+          break;
       }
     }
+
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, [sendAuth, webGLAbsent]);
 
-  // 3-second auth retry
+  // Periodic auth token retry (every 3 s, up to 5 times)
   useEffect(() => {
     if (webGLAbsent) return;
-    const t = setTimeout(() => {
-      if (!unityReadyRef.current) {
-        setDebug((d) => ({ ...d, retryFired: true }));
-        sendAuth();
+    const intervals: ReturnType<typeof setInterval>[] = [];
+    const t = setInterval(() => {
+      if (retryCountRef.current >= 5 || gameReadyRef.current) {
+        intervals.forEach(clearInterval);
+        return;
       }
+      sendAuth();
     }, 3_000);
-    return () => clearTimeout(t);
+    intervals.push(t);
+    return () => intervals.forEach(clearInterval);
   }, [sendAuth, webGLAbsent]);
 
-  // Debug toggle via backtick
+  // Debug overlay toggle (backtick)
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (e.key === "`") setShowDebug((v) => !v);
@@ -118,6 +149,8 @@ export default function UnityLauncher() {
   function handleIframeLoad() {
     setDebug((d) => ({ ...d, iframeLoaded: true }));
     sendAuth();
+
+    // If UNITY_READY hasn't fired within the timeout, surface an error
     setTimeout(() => {
       if (!unityReadyRef.current) {
         setTimedOut(true);
@@ -126,7 +159,7 @@ export default function UnityLauncher() {
     }, READY_TIMEOUT_MS);
   }
 
-  // Auth loading
+  // Loading / auth spinner
   if (isLoadingUser || !user) {
     return (
       <div
@@ -143,20 +176,15 @@ export default function UnityLauncher() {
               transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
               className="w-4 h-4 border-2 border-amber-600/40 border-t-amber-400 rounded-full"
             />
-            <span className="text-amber-200/70 text-sm font-serif">
-              Authenticating…
-            </span>
+            <span className="text-amber-200/70 text-sm font-serif">Authenticating…</span>
           </div>
         </div>
       </div>
     );
   }
 
-  // WebGL not available (no GPU in sandbox or browser)
-  const noGPU =
-    webGLAbsent ||
-    (loadError !== null && /webgl/i.test(loadError));
-
+  // WebGL unavailable (sandbox, old browser)
+  const noGPU = webGLAbsent || (loadError !== null && /webgl/i.test(loadError));
   if (noGPU) {
     const fullUrl = window.location.href;
     return (
@@ -203,10 +231,27 @@ export default function UnityLauncher() {
   const showError = (loadError !== null && !noGPU) || timedOut;
   const pct = Math.round(progress * 100);
 
+  function loadingLabel(): string {
+    if (pct === 0) return "Connecting…";
+    if (pct < 90) return `Downloading game client… ${pct}%`;
+    if (pct < 100) return `Compiling shaders… ${pct}%`;
+    if (!gameReady) return "Initialising world…";
+    return gameMode === "fallback_world" ? "Fallback world ready" : "World loaded";
+  }
+
+  function gameModeLabel(): string {
+    if (!gameReady) return "";
+    if (gameMode === "fallback_world")
+      return "Preview world active — awaiting live game scene";
+    if (gameMode === "world_active")
+      return "World scene live";
+    return "";
+  }
+
   return (
     <div className="fixed inset-0 overflow-hidden" style={{ background: "#0a0a0a" }}>
 
-      {/* Loading overlay — shown until Unity signals READY */}
+      {/* Loading overlay — shown until Unity engine is ready */}
       <AnimatePresence>
         {!unityReady && !showError && (
           <motion.div
@@ -217,7 +262,6 @@ export default function UnityLauncher() {
             className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-10"
             style={{ background: "radial-gradient(ellipse at 50% 40%, #1f1000 0%, #0a0802 60%, #000 100%)" }}
           >
-            {/* Title */}
             <div className="flex flex-col items-center gap-2">
               <motion.h1
                 animate={{ opacity: [0.7, 1, 0.7] }}
@@ -231,7 +275,6 @@ export default function UnityLauncher() {
               </p>
             </div>
 
-            {/* Progress bar */}
             <div className="w-80 flex flex-col items-center gap-3">
               <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                 <motion.div
@@ -247,13 +290,7 @@ export default function UnityLauncher() {
                   className="w-3.5 h-3.5 border-2 border-amber-800 border-t-amber-400 rounded-full flex-shrink-0"
                 />
                 <span className="text-amber-300/70 text-xs font-mono tabular-nums">
-                  {pct === 0
-                    ? "Connecting…"
-                    : pct < 90
-                    ? `Downloading game client… ${pct}%`
-                    : pct < 100
-                    ? `Compiling shaders… ${pct}%`
-                    : "Entering world…"}
+                  {loadingLabel()}
                 </span>
               </div>
               {pct < 10 && (
@@ -267,36 +304,32 @@ export default function UnityLauncher() {
         )}
       </AnimatePresence>
 
-      {/* "Entering world" banner — shown for 5 s after UNITY_READY so the user
-          has visible feedback while the first game scene renders */}
+      {/* Game-mode status badge — shown after UNITY_GAME_READY */}
       <AnimatePresence>
-        {unityReady && showEntryBanner && (
+        {gameReady && gameModeLabel() && (
           <motion.div
-            key="entry-banner"
-            initial={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
-            className="absolute top-0 inset-x-0 z-20 flex flex-col items-center justify-center pt-12 pb-10 pointer-events-none"
-            style={{ background: "linear-gradient(to bottom, rgba(10,6,0,0.92) 0%, transparent 100%)" }}
+            key="game-mode-badge"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.6 }}
+            className="absolute top-3 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 rounded-full
+                       bg-black/60 border border-amber-700/40 backdrop-blur-sm"
           >
-            <motion.p
-              animate={{ opacity: [0.6, 1, 0.6] }}
-              transition={{ repeat: Infinity, duration: 2.5 }}
-              className="font-serif text-amber-400 text-xl tracking-widest"
-            >
-              ⚔ Entering your kingdom…
-            </motion.p>
-            <p className="text-amber-200/40 text-xs mt-2 tracking-wider">
-              Game engine initialised — loading world scene
-            </p>
+            <span className="text-amber-400/80 text-xs font-mono tracking-wide">
+              {gameMode === "fallback_world" ? "⚠ " : "⚔ "}
+              {gameModeLabel()}
+            </span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Error state (non-WebGL errors) */}
+      {/* Error state */}
       {showError && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-6 p-8"
-          style={{ background: "radial-gradient(ellipse at center, #1a0800 0%, #0a0a0a 100%)" }}>
+        <div
+          className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-6 p-8"
+          style={{ background: "radial-gradient(ellipse at center, #1a0800 0%, #0a0a0a 100%)" }}
+        >
           <div className="text-amber-400 font-serif text-4xl font-bold">Eternal Kingdoms</div>
           <div className="max-w-sm w-full bg-zinc-900/80 border border-zinc-700 rounded-2xl p-6 flex flex-col items-center gap-4 text-center">
             <span className="text-3xl">⚔️</span>
@@ -305,8 +338,8 @@ export default function UnityLauncher() {
             </h2>
             <p className="text-zinc-400 text-sm leading-relaxed">
               {timedOut
-                ? "Unity loaded but didn't signal ready in time."
-                : loadError ?? "An unknown error occurred."}
+                ? "Unity engine didn't signal ready in time. Try opening the game in a full browser tab."
+                : (loadError ?? "An unknown error occurred.")}
             </p>
             <div className="flex gap-3 w-full">
               <button
@@ -315,8 +348,15 @@ export default function UnityLauncher() {
                   setLoadError(null);
                   setProgress(0);
                   setUnityReady(false);
+                  setGameReady(false);
+                  setGameMode(null);
                   unityReadyRef.current = false;
-                  setDebug({ iframeLoaded: false, readyReceived: false, tokenSent: false, retryFired: false, timedOut: false });
+                  gameReadyRef.current = false;
+                  retryCountRef.current = 0;
+                  setDebug({
+                    iframeLoaded: false, readyReceived: false, gameReady: false,
+                    gameMode: null, tokenSent: false, retryCount: 0, timedOut: false,
+                  });
                   if (iframeRef.current) iframeRef.current.src = UNITY_BUILD_URL;
                 }}
                 className="flex-1 py-2 border border-amber-700/50 text-amber-400 text-sm rounded-lg hover:bg-amber-900/20 transition-colors"
@@ -351,17 +391,20 @@ export default function UnityLauncher() {
           <div className="text-amber-400 font-semibold mb-1">
             Unity Debug <span className="text-zinc-500">(` to toggle)</span>
           </div>
-          <DebugRow label="webgl absent" value={webGLAbsent} warn />
-          <DebugRow label="iframe loaded" value={debug.iframeLoaded} />
-          <DebugRow label="UNITY_READY" value={debug.readyReceived} />
-          <DebugRow label="token sent" value={debug.tokenSent} />
-          <DebugRow label="3s retry fired" value={debug.retryFired} />
-          <DebugRow label="timeout hit" value={debug.timedOut} warn />
+          <DebugRow label="webgl absent"    value={webGLAbsent}      warn />
+          <DebugRow label="iframe loaded"   value={debug.iframeLoaded} />
+          <DebugRow label="UNITY_READY"     value={debug.readyReceived} />
+          <DebugRow label="UNITY_GAME_READY" value={debug.gameReady} />
+          <DebugRow label="token sent"      value={debug.tokenSent} />
+          <DebugRow label="timeout hit"     value={debug.timedOut}   warn />
           <div className="text-zinc-500 pt-1 border-t border-zinc-700">
-            progress: {pct}%
+            progress: {pct}% · retries: {debug.retryCount}
           </div>
-          <div className="text-zinc-500">
-            url: {UNITY_BUILD_URL}
+          {debug.gameMode && (
+            <div className="text-amber-400/70">mode: {debug.gameMode}</div>
+          )}
+          <div className="text-zinc-600 text-[10px] break-all max-w-[220px]">
+            {UNITY_BUILD_URL}
           </div>
         </div>
       )}
@@ -369,7 +412,15 @@ export default function UnityLauncher() {
   );
 }
 
-function DebugRow({ label, value, warn = false }: { label: string; value: boolean; warn?: boolean }) {
+function DebugRow({
+  label,
+  value,
+  warn = false,
+}: {
+  label: string;
+  value: boolean;
+  warn?: boolean;
+}) {
   const color = value ? (warn ? "text-amber-400" : "text-emerald-400") : "text-zinc-600";
   return (
     <div className="flex items-center gap-2">
