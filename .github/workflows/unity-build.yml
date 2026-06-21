@@ -27,6 +27,28 @@ jobs:
     timeout-minutes: 90
 
     steps:
+      # ── Pre-flight: verify required secrets are configured ──────────────────
+      - name: Check required secrets
+        run: |
+          MISSING=()
+          [ -z "${{ secrets.UNITY_EMAIL }}"    ] && MISSING+=("UNITY_EMAIL")
+          [ -z "${{ secrets.UNITY_PASSWORD }}" ] && MISSING+=("UNITY_PASSWORD")
+          if [ ${#MISSING[@]} -gt 0 ]; then
+            echo "ERROR: Missing required GitHub Actions secrets: ${MISSING[*]}"
+            echo ""
+            echo "Add them at:"
+            echo "  Settings → Secrets and variables → Actions → New repository secret"
+            echo ""
+            echo "Required:"
+            echo "  UNITY_EMAIL    — your Unity account email"
+            echo "  UNITY_PASSWORD — your Unity account password"
+            echo ""
+            echo "Optional (only for Unity Pro/Plus seats):"
+            echo "  UNITY_LICENSE  — XML content from a manual Unity license activation"
+            exit 1
+          fi
+          echo "All required secrets are present."
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -45,7 +67,25 @@ jobs:
       - name: Fix workspace permissions
         run: chmod -R 777 $GITHUB_WORKSPACE
 
+      # ── Step 1: Compilation validation (fast pre-flight) ───────────────────
+      - name: Validate C# compilation
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE:  ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath:     unity-client
+          targetPlatform:  WebGL
+          unityVersion:    6000.0.23f1
+          buildMethod:     BuildScript.ValidateOnly
+          buildsPath:      ci-validate
+          versioning:      None
+          allowDirtyBuild: true
+
+      # ── Step 2: Full WebGL build ────────────────────────────────────────────
       - name: Build Unity WebGL
+        id: unity_build
         uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE:  ${{ secrets.UNITY_LICENSE }}
@@ -61,29 +101,62 @@ jobs:
           versioning:      None
           allowDirtyBuild: true
 
+      # ── Upload build log on failure (debugging) ────────────────────────────
+      - name: Upload Unity build log (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unity-build-log-${{ github.sha }}
+          path: |
+            unity-client/Logs/
+            /root/.config/unity3d/
+          retention-days: 7
+          if-no-files-found: warn
+
+      # ── Dynamic verification step: locates files wherever they built ─────────
+      - name: Verify build output
+        run: |
+          if [ -d "ci-build/WebGL/EternalKingdoms" ]; then
+            export SRC_DIR="ci-build/WebGL/EternalKingdoms"
+          elif [ -d "build/WebGL/WebGL" ]; then
+            export SRC_DIR="build/WebGL/WebGL"
+          elif [ -d "build/WebGL" ]; then
+            export SRC_DIR="build/WebGL"
+          else
+            echo "ERROR: Build folders not found. Printing directory fallback maps:"
+            ls -R build || ls -R ci-build || echo "No folders exist at all"
+            exit 1
+          fi
+
+          echo "SRC_DIR=$SRC_DIR" >> $GITHUB_ENV
+          echo "Build output found at: $SRC_DIR"
+          find "$SRC_DIR" -type f | sort
+          TOTAL=$(du -sh "$SRC_DIR" | cut -f1)
+          echo "Total size: $TOTAL"
+
+      # ── Upload WebGL artifact ──────────────────────────────────────────────
       - name: Upload WebGL artifact
         uses: actions/upload-artifact@v4
         with:
           name: unity-webgl-${{ github.sha }}
-          path: ci-build/WebGL/EternalKingdoms
+          path: ${{ env.SRC_DIR }}
           retention-days: 30
+          if-no-files-found: error
 
+      # ── Deploy to React portal public/unity ────────────────────────────────
       - name: Deploy build to public/unity
         run: |
           DEST="artifacts/eternal-kingdoms/public/unity"
           echo "Clearing $DEST..."
           rm -rf "$DEST"
           mkdir -p "$DEST"
-          echo "Copying WebGL output..."
-          if [ -d "ci-build/WebGL/EternalKingdoms" ]; then
-            cp -r ci-build/WebGL/EternalKingdoms/. "$DEST/"
-          else
-            echo "ERROR: No WebGL build output found at ci-build/WebGL/EternalKingdoms"
-            exit 1
-          fi
+          echo "Copying WebGL output from ${{ env.SRC_DIR }}..."
+          cp -r ${{ env.SRC_DIR }}/. "$DEST/"
           echo "Files deployed:"
           find "$DEST" -type f | sort
+          echo "Deploy complete."
 
+      # ── Commit the final assets ─────────────────────────────────────────────
       - name: Commit built WebGL to repository
         run: |
           git config user.name  "github-actions[bot]"
