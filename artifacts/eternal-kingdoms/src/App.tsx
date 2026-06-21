@@ -10,8 +10,11 @@ import UnityLauncher from "@/pages/UnityLauncher";
 const queryClient = new QueryClient();
 
 // Warm the browser cache for the Unity loader before the user hits /dashboard
-const _unityPreload = new Image();
-_unityPreload.src = "/unity/Build/UnityLoader.js";
+const _unityPreload = document.createElement("link");
+_unityPreload.rel = "prefetch";
+_unityPreload.as = "script";
+_unityPreload.href = "/unity/Build/EternalKingdoms.loader.js";
+document.head.appendChild(_unityPreload);
 
 function Router() {
   return (

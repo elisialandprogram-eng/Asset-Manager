@@ -43,6 +43,17 @@ const distDir = path.join(
   "public",
 );
 
+// Unity WebGL requires SharedArrayBuffer for WASM multithreading.
+// SharedArrayBuffer is only available when the page is cross-origin isolated,
+// which requires these two headers on every response within the Unity iframe.
+app.use((req, res, next) => {
+  if (req.path.startsWith("/unity/")) {
+    res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+    res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  }
+  next();
+});
+
 // Correct MIME types for Unity WebGL assets.
 // .unityweb files are gzip-compressed by Unity and the Unity JS loader
 // decompresses them internally — do NOT set Content-Encoding here, or the
