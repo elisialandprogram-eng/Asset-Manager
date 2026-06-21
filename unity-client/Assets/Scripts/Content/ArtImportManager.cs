@@ -214,7 +214,7 @@ namespace EternalKingdoms.Content
             }
         }
 
-        private void AutoAssignMonsters(Monsters.MonsterSpawnManager msm)
+        private void AutoAssignMonsters(World.MonsterSpawnManager msm)
         {
             string[] monsterKeys = AssetManifest["Monsters"];
             foreach (var key in monsterKeys)

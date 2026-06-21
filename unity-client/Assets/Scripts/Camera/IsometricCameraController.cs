@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace EternalKingdoms.Camera
+namespace EternalKingdoms.Cameras
 {
     /// <summary>
     /// Shared isometric camera controller for World and Kingdom scenes.

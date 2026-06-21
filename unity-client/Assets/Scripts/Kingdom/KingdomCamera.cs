@@ -1,5 +1,5 @@
 using UnityEngine;
-using EternalKingdoms.Camera;
+using EternalKingdoms.Cameras;
 
 namespace EternalKingdoms.Kingdom
 {

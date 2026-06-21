@@ -25,8 +25,8 @@ namespace EternalKingdoms.Kingdom
     {
         [Header("UI")]
         [SerializeField] private GameObject loadingOverlay;
-        [SerializeField] private UnityEngine.UI.Canvas hudCanvas;
-        [SerializeField] private UnityEngine.UI.Canvas popupCanvas;
+        [SerializeField] private UnityEngine.Canvas hudCanvas;
+        [SerializeField] private UnityEngine.Canvas popupCanvas;
 
         private void Awake()
         {

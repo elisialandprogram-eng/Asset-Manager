@@ -42,8 +42,8 @@ namespace EternalKingdoms.World
         [SerializeField] private GameObject   loadingOverlay;
 
         [Header("Canvas")]
-        [SerializeField] private UnityEngine.UI.Canvas hudCanvas;
-        [SerializeField] private UnityEngine.UI.Canvas popupCanvas;
+        [SerializeField] private UnityEngine.Canvas hudCanvas;
+        [SerializeField] private UnityEngine.Canvas popupCanvas;
 
         [Header("Polling")]
         [SerializeField] private float mapPollIntervalSeconds   = 60f;

@@ -336,4 +336,9 @@ namespace EternalKingdoms.Monsters
     {
         Idle, Patrol, Sleep, Roam, Investigate, CombatAlert, ReturnHome
     }
+
+    public enum MonsterCategory
+    {
+        Bandit, Wolf, DireWolf, Orc, Troll, Dragon, Skeleton, Golem, Wraith
+    }
 }

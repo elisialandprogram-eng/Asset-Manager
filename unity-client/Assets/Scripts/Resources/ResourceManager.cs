@@ -46,7 +46,7 @@ namespace EternalKingdoms.Resources
         public long Iron => _resources?.iron ?? 0;
         public long Gold => _resources?.gold ?? 0;
 
-        public bool CanAfford(NetworkingDTOs.ResourceCostDto cost)
+        public bool CanAfford(ResourceCostDto cost)
         {
             if (cost == null || _resources == null) return false;
             return _resources.food >= cost.food &&
@@ -56,10 +56,4 @@ namespace EternalKingdoms.Resources
                    _resources.gold >= cost.gold;
         }
     }
-}
-
-// Alias to avoid namespace conflict with Unity's built-in Resources class
-namespace EternalKingdoms.Resources.NetworkingDTOs
-{
-    using EternalKingdoms.Networking.DTOs;
 }
