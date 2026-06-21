@@ -84,10 +84,11 @@ jobs:
           allowDirtyBuild: true
 
       # ── Step 2: Full WebGL build ────────────────────────────────────────────
-      # BUILD_PATH is set explicitly to an absolute path so BuildScript.BuildWebGL
-      # resolves it correctly inside the game-ci Docker container.
-      # Without this, a bare relative path resolves against Unity's install dir
-      # (not the workspace root) and the output is never visible to the runner.
+      # game-ci passes TWO env vars into the Docker container:
+      #   BUILD_PATH = ci-build/WebGL          (buildsPath/targetPlatform)
+      #   BUILD_FILE = EternalKingdoms         (buildName)
+      # game-ci OVERRIDES any BUILD_PATH set here — do NOT set it in env:.
+      # BuildScript.BuildWebGL reads both and combines them correctly.
       - name: Build Unity WebGL
         id: unity_build
         uses: game-ci/unity-builder@v4
@@ -95,7 +96,6 @@ jobs:
           UNITY_LICENSE:  ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL:    ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          BUILD_PATH:     ${{ github.workspace }}/ci-build/WebGL/EternalKingdoms
         with:
           projectPath:     unity-client
           targetPlatform:  WebGL

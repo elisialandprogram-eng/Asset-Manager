@@ -153,31 +153,47 @@ public static class BuildScript
         if (scenes.Length == 0)
             throw new Exception("[BuildScript] No enabled scenes in EditorBuildSettings.");
 
-        // BUILD_PATH is set by game-ci as an absolute path inside the Docker
-        // container (e.g. /github/workspace/ci-build/WebGL/EternalKingdoms).
-        // When running locally without game-ci, we derive the workspace root
-        // from Application.dataPath so the output lands at the repo root, not
-        // inside the Unity project directory where a bare relative path would go.
+        // game-ci/unity-builder@v4 passes TWO separate env vars into the Docker
+        // container (confirmed from CI logs — the docker run command shows):
         //
-        //   Application.dataPath  = <workspace>/unity-client/Assets
-        //   Path.Combine("..", "..") → <workspace>/unity-client/Assets/../..
-        //                           = <workspace>
+        //   BUILD_PATH=ci-build/WebGL        ← buildsPath/targetPlatform
+        //   BUILD_FILE=EternalKingdoms       ← buildName (the output folder name)
         //
-        string buildPath = Environment.GetEnvironmentVariable("BUILD_PATH");
-        if (string.IsNullOrEmpty(buildPath))
+        // The full output path is BUILD_PATH/BUILD_FILE.
+        // game-ci OVERRIDES any BUILD_PATH set in the workflow's env: block,
+        // so setting it there has no effect — this code is the only fix point.
+        //
+        // When running locally (no game-ci), we derive the workspace root from
+        // Application.dataPath so output lands at the repo root rather than
+        // Unity's install dir (where bare relative paths resolve to).
+        //
+        string gameCiBuildPath = Environment.GetEnvironmentVariable("BUILD_PATH");
+        string gameCiBuildFile = Environment.GetEnvironmentVariable("BUILD_FILE")
+                              ?? Environment.GetEnvironmentVariable("BUILD_NAME");
+
+        string outputPath;
+        if (!string.IsNullOrEmpty(gameCiBuildPath))
         {
-            string workspaceRoot = Path.GetFullPath(
-                Path.Combine(Application.dataPath, "..", ".."));
-            buildPath = Path.Combine(workspaceRoot, DefaultBuildSubPath);
-            Debug.Log($"[BuildScript] BUILD_PATH not set — using derived path: {buildPath}");
+            // Combine BUILD_PATH + BUILD_FILE, then resolve to absolute.
+            // Docker workdir = /github/workspace, so relative paths resolve there.
+            string combined = string.IsNullOrEmpty(gameCiBuildFile)
+                ? gameCiBuildPath
+                : Path.Combine(gameCiBuildPath, gameCiBuildFile);
+            outputPath = Path.GetFullPath(combined);
+            Debug.Log($"[BuildScript] game-ci env  BUILD_PATH : {gameCiBuildPath}");
+            Debug.Log($"[BuildScript] game-ci env  BUILD_FILE : {gameCiBuildFile ?? "(not set)"}");
+            Debug.Log($"[BuildScript] Resolved output path    : {outputPath}");
         }
         else
         {
-            buildPath = Path.GetFullPath(buildPath);
-            Debug.Log($"[BuildScript] BUILD_PATH from env: {buildPath}");
+            // Local / editor fallback:
+            //   Application.dataPath = <workspace>/unity-client/Assets
+            //   two levels up        = <workspace>   (repo root)
+            string workspaceRoot = Path.GetFullPath(
+                Path.Combine(Application.dataPath, "..", ".."));
+            outputPath = Path.Combine(workspaceRoot, DefaultBuildSubPath);
+            Debug.Log($"[BuildScript] BUILD_PATH not set — derived path: {outputPath}");
         }
-
-        string outputPath = buildPath;
         Directory.CreateDirectory(outputPath);
 
         Debug.Log($"[BuildScript] Building {scenes.Length} scene(s): {string.Join(", ", scenes)}");
