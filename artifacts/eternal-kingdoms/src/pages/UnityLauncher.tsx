@@ -33,6 +33,7 @@ export default function UnityLauncher() {
   const { user, isLoadingUser } = useAuth();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [unityReady, setUnityReady] = useState(false);
+  const [showEntryBanner, setShowEntryBanner] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
@@ -74,9 +75,13 @@ export default function UnityLauncher() {
       if (event.data?.type === "UNITY_READY") {
         unityReadyRef.current = true;
         setUnityReady(true);
+        setShowEntryBanner(true);
         setProgress(1);
         setDebug((d) => ({ ...d, readyReceived: true }));
         sendAuth();
+        // Show the "Entering world" banner for 5 s after Unity signals ready,
+        // then fade it — gives time for the first game scene to render
+        setTimeout(() => setShowEntryBanner(false), 5_000);
       } else if (event.data?.type === "UNITY_PROGRESS") {
         setProgress(event.data.value ?? 0);
       } else if (event.data?.type === "UNITY_LOAD_ERROR") {
@@ -258,6 +263,32 @@ export default function UnityLauncher() {
                 </p>
               )}
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* "Entering world" banner — shown for 5 s after UNITY_READY so the user
+          has visible feedback while the first game scene renders */}
+      <AnimatePresence>
+        {unityReady && showEntryBanner && (
+          <motion.div
+            key="entry-banner"
+            initial={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+            className="absolute top-0 inset-x-0 z-20 flex flex-col items-center justify-center pt-12 pb-10 pointer-events-none"
+            style={{ background: "linear-gradient(to bottom, rgba(10,6,0,0.92) 0%, transparent 100%)" }}
+          >
+            <motion.p
+              animate={{ opacity: [0.6, 1, 0.6] }}
+              transition={{ repeat: Infinity, duration: 2.5 }}
+              className="font-serif text-amber-400 text-xl tracking-widest"
+            >
+              ⚔ Entering your kingdom…
+            </motion.p>
+            <p className="text-amber-200/40 text-xs mt-2 tracking-wider">
+              Game engine initialised — loading world scene
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
