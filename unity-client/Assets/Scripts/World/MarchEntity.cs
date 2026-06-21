@@ -42,7 +42,9 @@ namespace EternalKingdoms.World
 
         private MarchModel   _model;
         private MaterialPropertyBlock _mpb;
+#pragma warning disable CS0414
         private bool _hovered;
+#pragma warning restore CS0414
 
         // -------------------------------------------------------------------------
         // Pool interface

@@ -37,7 +37,9 @@ namespace EternalKingdoms.World.FogOfWar
         private const TileVisibility DEFAULT_VISIBILITY = TileVisibility.Visible;
 
         private WorldGrid _grid;
+#pragma warning disable CS0414
         private bool _initialized;
+#pragma warning restore CS0414
 
         // Vision data — 2 bits per tile, packed into int[]
         // Full world: 2048×2048 = 4,194,304 tiles × 2 bits ÷ 32 bits/int = 262,144 ints ≈ 1 MB

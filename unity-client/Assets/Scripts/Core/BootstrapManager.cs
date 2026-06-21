@@ -19,7 +19,9 @@ namespace EternalKingdoms.Core
         public static BootstrapManager Instance { get; private set; }
 
         [Header("Bootstrap Settings")]
+#pragma warning disable CS0414
         [SerializeField] private float initTimeoutSeconds = 30f;
+#pragma warning restore CS0414
 
         private bool _initialized = false;
 

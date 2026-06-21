@@ -29,7 +29,9 @@ namespace EternalKingdoms.Environment
         public static EnvironmentDecorationManager Instance { get; private set; }
 
         [Header("Placement Rules")]
+#pragma warning disable CS0414
         [SerializeField] private float kingdomExclusionRadius = 20f;
+#pragma warning restore CS0414
         [SerializeField] private float waterExclusionHeight   = 0.5f;
         [SerializeField] private int   maxSpawnPerFrame       = 30;
 

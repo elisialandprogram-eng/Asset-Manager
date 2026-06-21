@@ -34,7 +34,9 @@ namespace EternalKingdoms.Monsters
 
         [Header("Animation")]
         [SerializeField] private Animator monsterAnimator;
+#pragma warning disable CS0414
         [SerializeField] private string idleTrigger    = "Idle";
+#pragma warning restore CS0414
         [SerializeField] private string spawnTrigger   = "Spawn";
         [SerializeField] private string dieTrigger     = "Die";
 

@@ -37,7 +37,9 @@ namespace EternalKingdoms.Population
         [Header("Population Scale")]
         [SerializeField] private AnimationCurve populationByPalaceLevel = AnimationCurve.Linear(1, 5, 25, 60);
         [SerializeField] private int maxCitizens = 60;
+#pragma warning disable CS0414
         [SerializeField] private int civiliansPerSoldier = 6;
+#pragma warning restore CS0414
 
         [Header("Road Waypoints")]
         [SerializeField] private Transform[] roadWaypoints;
@@ -48,7 +50,9 @@ namespace EternalKingdoms.Population
         [Range(0f, 1f)] [SerializeField] private float ratioVillagers  = 0.40f;
         [Range(0f, 1f)] [SerializeField] private float ratioFarmers    = 0.25f;
         [Range(0f, 1f)] [SerializeField] private float ratioSoldiers   = 0.20f;
+#pragma warning disable CS0414
         [Range(0f, 1f)] [SerializeField] private float ratioMerchants  = 0.15f;
+#pragma warning restore CS0414
 
         [Header("Behaviour Timings")]
         [SerializeField] private float idleMinDuration = 3f;

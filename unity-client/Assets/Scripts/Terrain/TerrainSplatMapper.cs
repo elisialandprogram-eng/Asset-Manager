@@ -22,7 +22,9 @@ namespace EternalKingdoms.Terrain
     {
         [Header("Slope Blending")]
         [Range(0f, 90f)] [SerializeField] private float cliffAngle = 45f;
+#pragma warning disable CS0414
         [Range(0f, 1f)]  [SerializeField] private float cliffBlend = 0.3f;
+#pragma warning restore CS0414
 
         [Header("Noise Variation")]
         [Range(0f, 1f)] [SerializeField] private float noiseStrength = 0.25f;

@@ -75,7 +75,9 @@ namespace EternalKingdoms.Demo
         public event Action<SliceStep> OnStepReached;
         public event Action           OnSliceComplete;
 
+#pragma warning disable CS0414
         private bool _overlayShowing;
+#pragma warning restore CS0414
 
         private void Awake()
         {
