@@ -186,4 +186,5 @@ jobs:
           git add artifacts/eternal-kingdoms/public/unity
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "ci: deploy Unity WebGL build [${{ github.sha }}]"
+          git pull --rebase origin main
           git push
