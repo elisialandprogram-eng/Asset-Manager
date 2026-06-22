@@ -187,7 +187,7 @@ namespace EternalKingdoms.Core
             int count = SceneManager.sceneCountInBuildSettings;
             for (int i = 0; i < count; i++)
             {
-                string path = SceneUtility.GetScenePathByIndex(i);
+                string path = SceneUtility.GetScenePathByBuildIndex(i);
                 if (path.EndsWith($"/{sceneName}.unity") ||
                     path.EndsWith($"\\{sceneName}.unity") ||
                     path == sceneName)
